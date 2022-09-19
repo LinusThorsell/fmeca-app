@@ -9,6 +9,7 @@ const router = createRouter({
       name: "home",
       component: WebApp,
     },
+	// for later
     // {
       // path: "/about",
       // name: "about",

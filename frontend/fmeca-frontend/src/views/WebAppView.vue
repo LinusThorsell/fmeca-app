@@ -1,9 +1,11 @@
 <script setup>
-import WebApp from "../components/WebApp.vue";
+import VisTable from "../components/VisTable.vue";
+import VisHeader from "../components/VisHeader.vue";
 </script>
 
 <template>
   <main>
-    <WebApp />
+    <VisHeader />
+    <VisTable />
   </main>
 </template>
