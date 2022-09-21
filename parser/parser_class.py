@@ -1,4 +1,3 @@
-from ssl import ALERT_DESCRIPTION_UNEXPECTED_MESSAGE
 import xml.etree.ElementTree as ET
 import sys, string
 
@@ -9,12 +8,6 @@ class Parser:
         self._arguments = []
         self._flags = {}
 
-    def get_arguments(self):
-        nr_arguments = len(sys.argv)
-        if(nr_arguments >= 1):
-            self._arguments = sys.argv[1:nr_arguments]
-        print(self._arguments)
-
     def delete(self):
         print("Vi är i delete")
 
@@ -23,6 +16,7 @@ class Parser:
 
     def print(self):
         print("Vi är i print")
+        self._debug = True
 
     def parse(self, path):
         tree = ET.parse(path)
@@ -39,23 +33,35 @@ class Parser:
             temp_argument = arguments.lower()
             print(temp_argument)
             if(temp_argument in self._flags):
-                self.flags[temp_argument]()
+                if(self._flags[temp_argument] == 0):
+                    self._functions[temp_argument]()
+                if(self._flags[temp_argument] == 1):
+                    pass
+                    #self._functions[temp_argument](arg)
             else:
                 print("The flag(s) you used is not valid!")
                 print("The valid flags are:")
                 for flags in self._flags:
                     print(flags)
+                print("If the flag requires a path, you put the path right after the flag\n-flag -path")
                 exit()
     
     ##If you want to add more flags and corresponding functions you simply
     ##add the flag and function to the dictionary below
-    def initialize_flags(self):
-        self._flags = {"print":self.print,"add":self.add,"delete":self.delete}
+    ##in self._flags we should have the flag and how many arguments we should
+    ## have after that
+    def initialize(self):
+        self._flags = {"print":0,"add":0,"delete":0}
+        self._functions = {"print":self.print,"add":self.add,"delete":self.delete}
+
+    def get_arguments(self):
+        nr_arguments = len(sys.argv)
+        if(nr_arguments >= 1):
+            self._arguments = sys.argv[1:nr_arguments]
+        print(self._arguments)
 
 
-
-
-
+'''
 #print('Number of arguments:', len(sys.argv), 'arguments.')
 #print('Argument List:', str(sys.argv))
 
@@ -82,3 +88,4 @@ elif (sys.argv[1].lower== "-d"):
 
 else:
     pass
+'''
