@@ -1,0 +1,19 @@
+<?xml version='1.0' ?>
+
+<SWTopology>
+
+   <AvailableIfs>
+    <Ifs name="my_ifs"/>
+  </AvailableIfs>
+
+  <AvailableIoManagers>
+    <!-- Defined IO-Manager configurations: -->
+    <IoManager name="tmc_pdcm_1"/>
+  </AvailableIoManagers>
+
+  <PP ref="TMC1_PDCM1.PP" ioManagerName="IOM_PDCM1_1" ioManagerType="tmc_pdcm" ioManagerConfigType="tmc_pdcm_1" ioManagerAffinity="22">
+    <DipsApplication name="Port_Gateway_1" rampool="0x10000" instanceOf="port_gateway" affinity="0"/>
+    <Application name="Pdcm_Scheduler_Test" affinity="1"/>
+  </PP>
+
+</SWTopology>

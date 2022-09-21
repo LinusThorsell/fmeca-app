@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<idb:Interface xmlns:idb="" name="Test_Status_I" supportedRoles="ProviderAndRequirer" providerExpectsIdentity="true">
+
+  <TypeList>
+    <Array name="String_Info_Type" type="Byte_Type" numberOfElements="64"/>
+  </TypeList>
+
+  <ContinuousInterface name="Test_Data" direction="ToProvider" supportMultipleDataPerConnection="true">
+    <DataItem name="Status" type="Unsigned_Type" startupValue="0" defaultValue="0xffffffff"/>
+    <DataItem name="Info" type="String_Info_Type"/>
+  </ContinuousInterface>
+
+</idb:Interface>
+

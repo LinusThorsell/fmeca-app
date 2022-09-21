@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<idb:Application xmlns:idb="Can_Be_Here" name="LTM">
+
+  <PeriodicThread name="LTM_60" rateGroup="P60" startWithoutSync="true">
+    <PACPort name="Dummy"                  interface="ifc1"                             role="Provider"/>
+    <PACPort name="port_1"                 interface="ifc1"                             role="Requirer"/>
+    <PACPort name="Computation_Monitoring" interface="ACCS_I.HM.Computation_Monitoring" role="Requirer"/>
+    <PACPort name="Test_Results"           interface="Results.Test_Status_I"            role="Requirer" maximumConnections="1"/>
+  </PeriodicThread>
+
+</idb:Application>
