@@ -7,9 +7,14 @@ from parser_class import Parser
 
 def main():
     _parser = Parser()
-    _parser.analyse_cli
+    _parser.initialize_flags()
+    _parser.get_arguments()
+    _parser.analyse_cli()
 
-if (__name__ == "__main__"):
+
+
+if __name__ == "__main__":
+    print("innan main()")
     main()
 
 
