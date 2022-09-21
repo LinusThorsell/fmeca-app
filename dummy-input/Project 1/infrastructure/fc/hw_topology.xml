@@ -1,0 +1,41 @@
+<?xml version='1.0' ?>
+
+
+<HWTopology>
+
+  <AvailablePlatforms>
+    <Platform name="fgst_v3"/>
+    <Platform name="pdcm_v3"/>
+  </AvailablePlatforms>
+
+  <DCM name="FMC" loadsetTypeRef="FMC" redundant="true" platformRef="fgs_v3" syncLostBehavior="EQ-SPECIFIC">
+    <TargetHwId id="LADDAD   "/>
+    <APP name="APP" unitId="1" IOPRef="IOP"/>	
+    <IOP name="IOP" unitId="0" ACCSSyncMaster="true">
+	
+      <SerialChannel name="OBOG_EBRAG" protocolRef="OBOG_EBRAG"
+                     hwId="1" direction="RXTX" physicalProtocol="rs485"
+                     baudRate="19200" dataBits="DB_8" stopBits="SB_1" parity="Parity_Odd"/>
+					 
+      <RTHINetwork phyChA="0" phyChB="1" id="FMC-L1.IOP">
+        <RedundantModuleConfig id="FMC-L2.IOP"/>
+      </RTHINetwork>
+	  
+     </IOP>
+	 
+  </DCM>
+
+  <RTHIPath networkSpecRef="RTHI1">
+    <Node ref="FMC.IOP"/>
+  </RTHIPath>
+
+  <MB1553Path name="Bus_T50">
+    <BusController ref="IOM_FMC" hwDeviceId="1"/>
+    <Equipment name="FCEA_A"/>
+  </MB1553Path>
+
+ <XTALKPath>
+    <Node ref="FMC.IOP"/>
+ </XTALKPath>
+
+</HWTopology>

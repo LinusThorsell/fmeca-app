@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<idb:Application xmlns:idb="Can_Be_Here" name="pdcm_scheduler_test" automatedTestLevel="E">
+
+  <PeriodicThread name="Sched_Test_P60A" rateGroup="P60">
+    <PACPort name="Test_Results" interface="Results.Test_Status_I" role="Requirer"/>
+    <PACPort name="Test_Results_Input" interface="Results.Test_Status_I" role="Provider"/>
+  </PeriodicThread>
+
+  <PeriodicThread name="Sched_Test_P60B" rateGroup="P60">
+    <PACPort name="Test_Results" interface="Results.Test_Status_I" role="Requirer"/>
+    <PACPort name="Test_Results_Input" interface="Results.Test_Status_I" role="Provider"/>
+  </PeriodicThread>
+
+  <PeriodicThread name="Sched_Test_P15" rateGroup="P15">
+    <PACPort name="Test_Results" interface="Results.Test_Status_I" role="Requirer"/>
+    <PACPort name="Test_Results_Input" interface="Results.Test_Status_I" role="Provider"/>
+  </PeriodicThread>
+
+</idb:Application>

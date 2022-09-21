@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<idb:ApplicationInstances xmlns:idb="Can_Be_Here" domain="FlightCritical">
+  <ApplicationInstance name="LTM_FMC" instanceOf="LTM"/>
+</idb:ApplicationInstances>
