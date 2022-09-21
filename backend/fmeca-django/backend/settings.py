@@ -86,7 +86,7 @@ DATABASES = {
         'NAME': 'fmeca_database',
         'USER': 'admin',
         'PASSWORD': 'saab',
-        'HOST': 'localhost',
+        'HOST': 'localhost', 
         'PORT': '',
 
     }
