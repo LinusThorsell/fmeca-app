@@ -87,6 +87,8 @@
         textarea {
             height: auto;
             width: auto;
+	    
+	    resize: vertical;
         }
 
         tr:nth-child(even) textarea {
