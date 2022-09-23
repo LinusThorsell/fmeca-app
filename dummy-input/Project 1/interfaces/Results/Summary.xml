@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<idb:Interface xmlns:idb="" name="Summary" supportedRoles="ProviderAndRequirer">
-
-  <ContinuousInterface name="Result" direction="FromProvider">
-    <DataItem name="Success" type="Boolean_Type" startupValue="true" defaultValue="false"/>
-  </ContinuousInterface>
-
-</idb:Interface>
