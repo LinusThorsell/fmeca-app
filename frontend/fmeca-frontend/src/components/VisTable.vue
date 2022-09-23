@@ -15,7 +15,7 @@
     
     function getTable() {
     
-        const array_columns = 4;
+        const array_columns = 8;
         const array_rows = 4;
     
         if (table_array.length === 0) {
@@ -70,11 +70,13 @@
     <style>
 
         table {
+            /* visibility: hidden; */
             border: 1px solid black;
+            margin-top: 5px;
         }
 
         tr  {
-            height: fit-content;
+             height: fit-content;
         }
 
         th, td {
