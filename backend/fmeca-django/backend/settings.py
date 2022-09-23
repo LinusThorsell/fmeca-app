@@ -40,7 +40,7 @@ INSTALLED_APPS = [
 
     # installed aps
     'rest_framework',
-    'database_api',
+    'api',
 ]
 
 MIDDLEWARE = [
