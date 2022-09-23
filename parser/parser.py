@@ -2,14 +2,14 @@
 
 from ctypes import sizeof
 import sys, string
-from parser_class import Parser
+from CLI_class import CLI
 
 
 def main():
-    _parser = Parser()
-    _parser.initialize()
-    _parser.get_arguments()
-    _parser.analyse_cli()
+    _CLI = CLI()
+    _CLI.initialize()
+    _CLI.get_arguments()
+    _CLI.analyse_cli()
 
 
 

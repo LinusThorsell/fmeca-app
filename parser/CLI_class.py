@@ -1,8 +1,9 @@
 import xml.etree.ElementTree as ET
 import sys, string
 
-class Parser:
-
+#Command Line Interface
+class CLI:
+    
     def __init__(self):
         self._debug = False
         self._delete = False
