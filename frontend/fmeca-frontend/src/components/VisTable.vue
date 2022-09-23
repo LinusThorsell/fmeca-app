@@ -4,7 +4,7 @@
     
     function getTable() {
     
-        const array_columns = 4;
+        const array_columns = 8;
         const array_rows = 4;
     
         if (table_array.length === 0) {
@@ -81,33 +81,6 @@
         </div>
     </div>
 </template>
-
-    <!-- <template>
-        <table>
-            <tr>
-                <th v-for="column in getRow(0, getTable())">
-                    <div class="table_div">
-                        <h5>{{ column }}</h5>
-                    </div>
-                </th>
-            </tr>
-            <tr v-for="rows in getTable()[0].length-1">
-                <td>
-                    <div class="table_div_col0" style="width: fit-content; padding-left: 0.5em; padding-right: 0.5em;">
-                        <h5>{{ getTable()[0][rows] }} </h5>
-                    </div>
-                </td>
-                <td v-for="cols in getTable().length-1">
-                    <div class="table_div">
-                        <textarea name="" id="" cols="30" rows="10">{{ getTable()[cols][rows] }}</textarea>
-                    </div>
-                </td>
-            </tr>
-    
-            <button @click="addRow([1,2,3,4,5], getTable())">Add row</button>
-        </table>
-    </template> -->
-    
 
 
 
