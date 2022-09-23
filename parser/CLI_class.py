@@ -1,4 +1,5 @@
 import xml.etree.ElementTree as ET
+from Parser_class import Parser
 import sys, string
 
 #Command Line Interface
@@ -22,17 +23,17 @@ class CLI:
         ##Add this project given by the path to the database
         print("Vi är i add, path = " + str(xml_file_path))
         self._add = True
+        self._add_path = xml_file_path
     
     def print(self):
         print("Vi är i print")
         self._debug = True
 
-    def parse(self, path):
-        tree = ET.parse(path)
-        root = tree.getroot()
-        for child in root:
-            print(child)
-    
+    def parse(self):
+        _parser = Parser()
+        _parser.parse(self._add_path)
+        _parser.recursive_parser()
+
     def test_func_with_two_args(self, arg1, arg2):
         print("test_func_with_two_args")
     
@@ -91,7 +92,9 @@ class CLI:
             
         if (self._add):
             ##anropa funktionen som ska posta till databasen
-            print("Anropa funktionen som ska lägga till ett projekt i databasen databasen") 
+            print("Anropa funktionen som ska lägga till ett projekt i databasen databasen")
+            self.parse()
+            
         
         
 
