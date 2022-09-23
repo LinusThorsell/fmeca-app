@@ -10,6 +10,7 @@ def main():
     _CLI.initialize()
     _CLI.get_arguments()
     _CLI.analyse_cli()
+    _CLI.add_and_delete()
 
 
 

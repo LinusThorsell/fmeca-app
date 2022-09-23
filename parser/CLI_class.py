@@ -16,11 +16,13 @@ class CLI:
     def delete(self,project):
         ##Tell the database to delete the project
         print("Vi är i delete, project = " + str(project))
+        self._delete = True
 
     def add(self,xml_file_path):
         ##Add this project given by the path to the database
         print("Vi är i add, path = " + str(xml_file_path))
-
+        self._add = True
+    
     def print(self):
         print("Vi är i print")
         self._debug = True
@@ -53,7 +55,10 @@ class CLI:
                 print("Nr argumets = " + str(nr_arguments))
                 argument_list = self._arguments[i+1:i+1+nr_arguments]
                 print(argument_list)
-                self._functions[temp_argument](*argument_list)
+                if (self._flags[temp_argument] != len(argument_list)):
+                    print("The Flag \"" + temp_argument + "\" does not have enough arguments, it expects " + str(nr_arguments) + " but " + str(len(argument_list)) + " were given" )
+                else:
+                    self._functions[temp_argument](*argument_list)
                 i+=nr_arguments + 1
             else:
                 print("The flag(s) you used is not valid!")
@@ -78,4 +83,15 @@ class CLI:
             self._nr_arguments = len(self._arguments)
 
         print(self._arguments)
+        
+    def add_and_delete(self):
+        
+        if(self._delete):
+            print("Anropa funktionen som ska deletea ett projekt i databasen")
+            
+        if (self._add):
+            ##anropa funktionen som ska posta till databasen
+            print("Anropa funktionen som ska lägga till ett projekt i databasen databasen") 
+        
+        
 
