@@ -1,44 +1,7 @@
-/*
-
-table {
-    border: 1px solid black;
-}
-tr {
-    height: 5em;
-}
-th {
-    height: 100%;
-    width: 100%;
-
-    border: 1px solid black;
-}
-
-td {
-    width: 100%;
-    width: 100%;
-    
-    border: 1px solid black;
-}
-textarea {
-    height: 100%;
-    width: 100%;
-    
-    resize: none;
-}
-
-tr:nth-child(even) textarea {
-    background-color: #dddddd;
-}
-
-.table_div_col0 {
-    background-color: red;
-    height: 100%;
-    width: 100%;
-}
-*/
-
 #vis-table {
     border: 1px solid black;
+
+    margin-top: 5em;
 
     height: fit-content;
     width: fit-content;
@@ -56,11 +19,35 @@ tr:nth-child(even) textarea {
     border: 1px solid blue;
 
     display: flex;
-    height: 5em;
+    height: fit-content;
 }
 .vis-columnbox {
     border: 1px solid pink;
     padding: 0.5em;
+    min-width: 5em;
+    min-height: 5em;
+    /*
+    overflow: auto;
+    resize: both;
+    */
+    margin: 0;
+    padding: 0;
+}
+.vis-textarea {
+    height: 100%;
+    width: 100%;
+    resize: none;
     
-    width: 7em;
+    visibility: show;
+
+    padding: 0;
+    margin: 0;
+}
+.vis-resizable-row {
+    resize: vertical;
+    overflow: auto;
+}
+.vis-resizable-column {
+    resize: horizontal;
+    overflow: auto;
 }
