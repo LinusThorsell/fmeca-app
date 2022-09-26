@@ -21,6 +21,39 @@ class Parser:
     def get_values(self):
         pass
 
+    def build_paths(self,):
+        
+
+
+    def parse(self, path):
+        print("path = " + path)
+        tree = ET.parse(path)
+        root = tree.getroot()
+        #parsed_data = []
+        
+        catalogs = {}
+
+        for obj in root:
+            print(obj.tag, obj.attrib)
+            if(obj.tag == "idb"):
+                self._dictionary[obj.attrib["key"]] = obj.attrib["value"]
+            else:
+                catalogs[obj.tag] = obj.attrib
+        print("\n\n\n")
+
+        print("Content of self._dicitonary: ")
+        print(self._dictionary)
+        print("\n\n\n")
+        print("Content of catalogs: ")
+        print(catalogs)
+        
+        for c in catalogs:
+            if "dir" in c:
+                build_path(c)
+            
+        
+        
+'''
     def replace_varible_with_value(self, s):
         while ']' in s:
         split_s = s.split('/')
@@ -38,8 +71,8 @@ class Parser:
         #print(done_s)
         
         return s
-
-
+'''
+'''
     def vaild_path_to_parse(self, value):
         path = self.replace_varible_with_value(value)
         print(path)
@@ -47,7 +80,6 @@ class Parser:
             return path 
         else:
             return False
-
     def recursive_parser(self):
         print("PATHS:\n\n")
         for obj in self.data:
@@ -57,54 +89,4 @@ class Parser:
                 if (path):
                     print(path)
         print("\n\n\n")
-        
-        
-    def parse(self, path):
-        tree = ET.parse(path)
-        root = tree.getroot()
-        #parsed_data = []
-
-        for obj in root:
-            print(obj.tag, obj.attrib)
-            if(obj.tag == "idb"):
-                self._dictionary[obj.attrib["key"]] = obj.attrib["value"]
-        print("\n\n\n")
-
-        print("Content of self._dicitonary: ")
-        print(self._dictionary)
-        print("\n\n\n")
-
         '''
-        for child in root:
-            #print(child.tag)
-            pure_value = xml_data(child.tag)
-            parsed_value = xml_data(child.tag)
-            pure_value.data[child.attrib.get("key")] = child.attrib.get("value")
-            parsed_value.name = child.tag
-            parsed_value.data = child.attrib
-            #print(child.attrib)
-            # for obj in child.attrib.items():
-            #     #print("    " + obj[0] + " = " + obj[1])
-            #     parsed_value.data[obj[0]] = obj[1]
-            self.data.append(parsed_value)
-            self.pure_data.append(pure_value)
-        print("Pure data")
-        for obj in self.pure_data:
-            print(obj.data)
-        counter =0
-        '''
-        #while counter < 
-
-                
-
-
-
-'''
-try:
-    f = open("filename.txt")
-    # Do something with the file
-except IOError:
-    print("File not accessible")
-finally:
-    f.close()
-'''

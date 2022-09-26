@@ -32,7 +32,7 @@ class CLI:
     def parse(self):
         _parser = Parser()
         _parser.parse(self._add_path)
-        _parser.recursive_parser()
+        #_parser.recursive_parser()
 
     def test_func_with_two_args(self, arg1, arg2):
         print("test_func_with_two_args")
