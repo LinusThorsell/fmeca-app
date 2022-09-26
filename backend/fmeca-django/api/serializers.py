@@ -7,6 +7,11 @@ class PersonSerializer(serializers.ModelSerializer):
         model = Person
         fields = '__all__'
 
+class ProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = '__all__'
+
 
 
 

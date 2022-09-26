@@ -1,3 +1,5 @@
+from email.mime import application
+from functools import partial
 from django.db import models
 
 # Create your models here.
@@ -9,25 +11,22 @@ class Person(models.Model):
 class Project(models.Model):
     project_id = models.CharField(max_length=50, primary_key=True)
 
+class Node(models.Model):
+    node_id = models.CharField(max_length=50, primary_key=True)
+
+class NodeFailure(models.Model):
+    node = models.ForeignKey(Node, on_delete=models.CASCADE)
+    event = models.TextField(max_length=200)
+    flight_phase = models.CharField(max_length=50)
+    # maybe future refrence to PartitionFailure
 
 class Partition(models.Model):
-    partition_id = models.CharField(max_length=50, primary_key=True)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    partition_id = models.CharField(max_length=20, primary_key=True)
+    node = models.ForeignKey(Node, on_delete=models.CASCADE, default="")
 
-class Application(models.Model):
-    application_id = models.CharField(max_length=50, primary_key=True)
+class PartitionFailure(models.Model):
     partition = models.ForeignKey(Partition, on_delete=models.CASCADE)
-
-    failure_mode_effect = models.CharField(max_length=50)
-    flight_phase = models.CharField(max_length=50)
-    aircraft_level_effect  = models.TextField(max_length=500)
-    mission = models.CharField(max_length=50)
-    category = models.CharField(max_length=50)
-
-class Subsystem(models.Model):
-    material_group = models.CharField(max_length=50, primary_key=True)
-    effect = models.TextField(max_length=200)
-    comment = models.TextField(max_length=500)
-
-
-
+    
+class Application(models.Model):
+    application_id = models.CharField(max_length=20, primary_key=True)
+    partition_failure = models.ManyToManyField(PartitionFailure)
