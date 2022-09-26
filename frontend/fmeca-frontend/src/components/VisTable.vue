@@ -19,7 +19,9 @@
                 }
             }
         }
-    
+        
+        //setupResizeEventListeners()
+        
         return table_array;
     }
     
@@ -61,6 +63,19 @@
         return "width: " + columnWidths[column] + "px;"
     }
 
+    function handleResize({ width, height }, { __currentTarget__ }) {
+        console.log(width)
+        console.log(height)
+        console.log(__currentTarget__)
+        console.log("resize")
+
+        var column = document.querySelectorAll(__currentTarget__.classList[2])
+        column.forEach(col => {
+            // change width
+        });
+
+    }
+    
     export default {
         data() {
             return {
@@ -73,6 +88,7 @@
                 getClass,
                 getColumnWidth,
                 columnWidths: [],
+                handleResize,
             }
         }
     }
@@ -85,18 +101,6 @@
 
 <template>
     <div id="vis-table">
-        <!--<div id="vis-header">
-            Header info
-        </div> -->
-        <!--<div class="vis-row">
-            <div v-for="column in getTable().length" 
-                class="vis-columnbox"
-                :style="getColumnWidth(column-1)"
-                :class="getClass(column-1)"
-            >
-                {{ column-1 }}
-            </div>
-        </div> -->
         <div v-for="row in getTable()[0].length" class="vis-row">
             <div class="vis-columnbox vis-resizable-row"> Resizable Row </div>
             
@@ -104,6 +108,7 @@
                 class="vis-columnbox vis-resizable-column" 
                 :style="getColumnWidth(column-1)" 
                 :class="getClass(column-1)"
+                v-resize="handleResize"
             >
                 Resizable Column
             </div>
@@ -119,6 +124,7 @@
             </div>
         </div>
     </div>
+    <!--{{ setupResizeEventListeners() }}-->
 </template>
 
 
