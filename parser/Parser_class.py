@@ -1,23 +1,12 @@
 import xml.etree.ElementTree as ET
 from os import path as OSPATH
 
-class xml_data:
-     def __init__(self, name):
-        self.name = name
-        self.data = {}        
-
 class Parser:
     def __init__(self):
         self.data = []
         self.pure_data = []
         self._dictionary = {}
         
-    def get_keys(self):
-        pass
-
-    def get_values(self):
-        pass
-
     def build_path(self,index):
         
         #print("The catalog")
@@ -28,12 +17,12 @@ class Parser:
         print("The content of the lists dictionary:")
         print(self.catalogs[index][1])
         
-        if("value" in dictionary):
+        if "value" in dictionary:
             path = dictionary["value"]
         elif "dir" in dictionary:
             path = dictionary["dir"]
         elif "src" in dictionary:
-            path = dictionary["src"] ##fix this
+            path = dictionary["src"]
         else:
             return "nopath"       
         
@@ -43,9 +32,7 @@ class Parser:
             for temp in self._dictionary:
                 if ( "[" + temp + "]") in path:
                     path = path.replace("[" + temp + "]",self._dictionary[temp])
-        #print(path)
         dictionary["path"] = path
-        return path
 
     def parsefunction(self,index):
         print("PATH:")
