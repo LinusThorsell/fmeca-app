@@ -28,6 +28,9 @@ class Parser:
         path = ""
         dictionary = self.catalogs[index][1]
 
+        print("The content of the lists dictionary:")
+        print(self.catalogs[index][1])
+        
         if("value" in dictionary):
             path = dictionary["value"]
         elif "dir" in dictionary:
