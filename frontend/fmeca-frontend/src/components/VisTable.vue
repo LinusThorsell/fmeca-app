@@ -51,7 +51,7 @@
         }
         console.log(table_array)
     }
-    
+
     function addColumn() {
     
     }
