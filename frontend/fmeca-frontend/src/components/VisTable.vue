@@ -64,16 +64,11 @@
     }
 
     function handleResize({ width, height }, { __currentTarget__ }) {
-        console.log(width)
-        console.log(height)
-        console.log(__currentTarget__)
-        console.log("resize")
-
-        var column = document.querySelectorAll(__currentTarget__.classList[2])
+        var column = document.querySelectorAll("." + __currentTarget__.classList[2])
         column.forEach(col => {
-            // change width
+            // change width.
+            col.style.width = width + "px";
         });
-
     }
     
     export default {

@@ -9,8 +9,6 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
-    "tree-sitter": "^0.20.0",
-    "tree-sitter-vue": "^0.2.1",
     "vue": "^3.2.39",
     "vue-resize-observer": "^2.0.15",
     "vue-router": "^4.1.5"
