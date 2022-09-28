@@ -1,8 +1,5 @@
-from logging import root
 import xml.etree.ElementTree as ET
-import os.path
 from os import path as OSPATH
-import time
 
 class xml_data:
      def __init__(self, name):
@@ -40,11 +37,6 @@ class Parser:
         else:
             return "nopath"       
         
-        templist = path.split("/")
-        
-        #print(templist)
-        
-        rootinpath = False
         while "[" and "]" in path:
             if(path.count("[") == 1 and "[root]" in path): 
                 break
@@ -52,11 +44,12 @@ class Parser:
                 if ( "[" + temp + "]") in path:
                     path = path.replace("[" + temp + "]",self._dictionary[temp])
         #print(path)
+        dictionary["path"] = path
         return path
 
-    def parsefunction(self,path):
+    def parsefunction(self,index):
         print("PATH:")
-        print(path)
+        print(self.catalogs[index][1]["path"])
 
     def parse(self, path):
         print("path = " + path)
@@ -82,6 +75,9 @@ class Parser:
     
         counter = 0
         while counter < len(self.catalogs):
-            path = self.build_path(counter)
-            self.parsefunction(path)
+            self.build_path(counter)
+            self.parsefunction(counter)
             counter +=1
+
+        print("KATALOGEN")
+        print(self.catalogs)
