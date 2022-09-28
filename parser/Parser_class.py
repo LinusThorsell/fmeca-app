@@ -21,19 +21,22 @@ class Parser:
     def get_values(self):
         pass
 
-    def build_path(self,c):
+    def build_path(self,index):
         
         #print("The catalog")
         #print(self.catalogs[c])
         path = ""
-        dictionary = self.catalogs[c][1]
+        dictionary = self.catalogs[index][1]
 
         if("value" in dictionary):
             path = dictionary["value"]
         elif "dir" in dictionary:
             path = dictionary["dir"]
+        elif "src" in dictionary:
+            path = dictionary["src"] ##fix this
         else:
-            return "nopath" ##fix this
+            return "nopath"       
+        
         templist = path.split("/")
         
         #print(templist)
@@ -74,7 +77,7 @@ class Parser:
         #print("Content of catalogs: ")
         #print(self.catalogs)
     
-        counter =0
+        counter = 0
         while counter < len(self.catalogs):
             path = self.build_path(counter)
             self.parsefunction(path)

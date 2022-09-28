@@ -32,7 +32,6 @@ class CLI:
     def parse(self):
         _parser = Parser()
         _parser.parse(self._add_path)
-        #_parser.recursive_parser()
 
     def test_func_with_two_args(self, arg1, arg2):
         print("test_func_with_two_args")
@@ -82,7 +81,9 @@ class CLI:
         if(nrarguments >= 2):
             self._arguments = sys.argv[1:nrarguments]
             self._nr_arguments = len(self._arguments)
-
+        else:
+            print("No arguments given!")
+            exit()
         print(self._arguments)
         
     def add_and_delete(self):
