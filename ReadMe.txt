@@ -5,7 +5,7 @@ Här kommer ett litet dummy projekt ni kan analysera.
 Ni kommer få något mer komplett senare... 
 ...jag insåg när jag satt med det att det blir lite för enkelt...
 
-Efter att ni sett detta så kommer ni ha många frågor. :) :) :)
+Efter att ni sett dta så kommer ni ha många frågor. :) :) :)
 Förhoppningsvis kan ni börja prototypa lite, ni kommer behöva mer input från oss.
 
 Mvh,
@@ -34,7 +34,7 @@ system.xml beskriver vilka delar vi har och var/path de kan hittas.
 
 Prio Hög att hantera.
 
-Kommentar 3
+Kommentar 3ss
 =======
 
 Den kommer peka ut topologier som ser olika ut beroende på om de är fc eller mc.
