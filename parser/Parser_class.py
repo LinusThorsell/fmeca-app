@@ -2,12 +2,30 @@ import xml.etree.ElementTree as ET
 from os import path as OSPATH
 import json
 import os
+import requests
+class xml_file:
+    def __init__(self, path):
+        self.path = path
+        self.data = []
+        self.xml = None
+
+    def get_values(self):
+        return self.data.values()
+
+
+class xml_data:
+     def __init__(self, name):
+        self.name = name
+        self.data = {}
+        self.children = []
 
 class Parser:
     def __init__(self):
         self.data = []
         self.pure_data = []
         self._dictionary = {}
+        self.all_file_paths = []
+        self.parsed_files = []
         
         
     def send_project_name(self,path):
@@ -15,8 +33,9 @@ class Parser:
         temp = path.split("/")
         name = temp[0]
         
-        x = {project_id:name}
-        string = json.dump(x)
+        x = {"project_id":name}
+        string = json.dumps(x)
+        print("Postar detta:",string)
         requests.post(url,string)
 
     def fc_hw_topology(self,path):
@@ -97,6 +116,18 @@ class Parser:
         if os.path.exists(newpath):
             if ".xml" in newpath:
                 print(ET.tostring(ET.parse(newpath).getroot(),encoding="ISO-8859-1").decode('utf8'))
+                tree = ET.parse(newpath)
+                root = tree.getroot()
+                curr_file = xml_file(newpath)     
+                
+                for child in root:
+                    # Store data
+                    parsed_value = xml_data(child.tag)
+                    parsed_value.data = child.attrib
+                    curr_file.data.append(parsed_value)
+                    
+                curr_file.xml = tree
+                self.parsed_files.append(curr_file)
             elif os.path.isdir(newpath):
                 print("Kollar igenom directories")
                 for filename in os.scandir(newpath):
@@ -110,6 +141,40 @@ class Parser:
     def initial_path(self,path):
         self.fc_path = path + "/fc/system.xml"
         self.mc_path = path + "/mc/system.xml"
+    
+    def parse_all(self, path):
+        # Get all xml to parse
+        print("Parsing the following files:")
+        for path, subdirs, files in os.walk(path):
+            for name in files:
+                file_path = os.path.join(path, name)
+                if "xml" in file_path: 
+                    print(file_path)
+                    self.all_file_paths.append(file_path)
+
+
+        # Parse all files
+        for xml in self.all_file_paths:
+            print("Now parsing: " + xml)
+            try:
+                 tree = ET.parse(xml)
+            except:
+                print("File could not be parsed: " + xml)
+                self.all_file_paths.remove(xml)
+  
+            else:
+
+                root = tree.getroot()
+                curr_file = xml_file(xml)     
+                
+                for child in root:
+                    # Store data
+                    parsed_value = xml_data(child.tag)
+                    parsed_value.data = child.attrib
+                    curr_file.data.append(parsed_value)
+                    
+                curr_file.xml = tree
+                self.parsed_files.append(curr_file)
 
 
     def parse(self, path):

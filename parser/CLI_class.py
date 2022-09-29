@@ -17,6 +17,7 @@ class CLI:
         self._nr_arguments = 0
         self._all_parser = 0
         self._keep_alive = False
+        self._parser = Parser()
 
     def delete(self,project):
         ##Tell the database to delete the project
@@ -35,15 +36,14 @@ class CLI:
     
 
     def parse_all(self, path):
-        self._all_parser = Parser()
         self._all_parser.parse_all(path)
     
 
     def parse(self):
-        _parser = Parser()
-        _parser.initial_path(self._add_path)
-        _parser.parse(_parser.fc_path)
-        _parser.parse(_parser.mc_path)
+        self._parser = Parser()
+        self._parser.initial_path(self._add_path)
+        self._parser.parse(_parser.fc_path)
+        self._parser.parse(_parser.mc_path)
         
         _parser.sendall()
 
@@ -167,7 +167,8 @@ class CLI:
         if (self._add):
             ##anropa funktionen som ska posta till databasen
             print("Anropa funktionen som ska lägga till ett projekt i databasen databasen")
-            self.parse()
+            self._parser.send_project_name(self._add_path)
+            #self.parse()
             
         
         
