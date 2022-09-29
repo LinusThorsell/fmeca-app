@@ -42,9 +42,9 @@ class Parser:
         dictionary["path"] = path
 
     def parsefunction(self,index):
-        print("PATH:")
+        #print("PATH:")
         #print(self.catalogs[index][1])
-        print(self.catalogs[index][1]["path"])
+        #print(self.catalogs[index][1]["path"])
         temppath = self.catalogs[index][1]["path"]
         if temppath == "nopath":
             return
@@ -61,16 +61,18 @@ class Parser:
                 counter +=1
         else:
             return
-        
-        ##newpath = "../" + newpath
+
         print(newpath)
-        if ".xml" in newpath:
-            print(ET.tostring(ET.parse(newpath).getroot(),encoding="ISO-8859-1").decode('utf8'))
-        else:
-            for filename in os.scandir(newpath):
-                if filename.is_file():
-                    print(filename.path)
-                    #print(ET.tostring(ET.parse(filename.path).getroot(),encoding="ISO-8859-1").decode('utf8'))
+        if os.path.exists(newpath):
+            if ".xml" in newpath:
+                print(ET.tostring(ET.parse(newpath).getroot(),encoding="ISO-8859-1").decode('utf8'))
+            elif os.path.isdir(newpath):
+                print("Kollar igenom directories")
+                for filename in os.scandir(newpath):
+                    if filename.is_file():
+                        #print("LALALALAL")
+                        #print(filename.path)
+                        print(ET.tostring(ET.parse(filename.path).getroot(),encoding="ISO-8859-1").decode('utf8'))
 
             
 
@@ -80,7 +82,7 @@ class Parser:
 
 
     def parse(self, path):
-        print("path = " + path)
+        #print("path = " + path)
         tree = ET.parse(path)
         root = tree.getroot()
         #parsed_data = []
