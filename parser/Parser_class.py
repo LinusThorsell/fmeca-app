@@ -32,11 +32,11 @@ class Parser:
         url = 'http://127.0.0.1:8000/projects/'
         temp = path.split("/")
         name = temp[0]
-        
+        headers = {"Content-Type":"application/json"}
         x = {"project_id":name}
         string = json.dumps(x)
-        print("Postar detta:",string)
-        requests.post(url,string)
+        print("Postar detta:",headers,string)
+        requests.post(url,string,headers=headers)
 
     def fc_hw_topology(self,path):
         #path = 'Project_1/infrastructure/fc/hw_topology.xml'
