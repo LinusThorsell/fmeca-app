@@ -36,6 +36,7 @@ class CLI:
     
 
     def parse_all(self, path):
+        self._all_parser = Parser()
         self._all_parser.parse_all(path)
     
 
@@ -64,9 +65,9 @@ class CLI:
         self._keep_alive = False
     
     def show_all_parsed_files(self):
-        if(self._parser):
+        if(self._all_parser):
             i = 0
-            for file_path in self._parser.all_file_paths:
+            for file_path in self._all_parser.all_file_paths:
                 print(str(i) + ": " + file_path)
                 i += 1
         else:
@@ -77,9 +78,9 @@ class CLI:
 
         try:
             file_id = int(file_id)
-            file = self._parser.parsed_files[file_id]
+            file = self._all_parser.parsed_files[file_id]
         except:
-            for parsed_file in self._parser.parsed_files:
+            for parsed_file in self._all_parser.parsed_files:
                 if(parsed_file.path == file):
                     file = parsed_file
                     break
@@ -87,7 +88,7 @@ class CLI:
 
     def get_xml_id(self, path):
         i = 0
-        for parsed_file in self._parser.parsed_files:
+        for parsed_file in self._all_parser.parsed_files:
             if(parsed_file.path == path):
                 return i
             i += 1
@@ -104,7 +105,7 @@ class CLI:
     
     def find(self, arg, search_in):
         if(search_in.lower() == "all"):
-            for file in self._parser.parsed_files:
+            for file in self._all_parser.parsed_files:
                 root = file.xml.getroot()
                 result = root.findall(arg)
                 if (len(result) > 0):
@@ -170,6 +171,3 @@ class CLI:
             self._parser.send_project_name(self._add_path)
             #self.parse()
             
-        
-        
-
