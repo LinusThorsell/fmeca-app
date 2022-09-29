@@ -1,7 +1,7 @@
 import xml.etree.ElementTree as ET
 from os import path as OSPATH
 import json
-
+import os
 class Parser:
     def __init__(self):
         self.data = []
@@ -45,6 +45,34 @@ class Parser:
         print("PATH:")
         #print(self.catalogs[index][1])
         print(self.catalogs[index][1]["path"])
+        temppath = self.catalogs[index][1]["path"]
+        if temppath == "nopath":
+            return
+        templist = temppath.split("/")
+        
+        newpath = ""
+        counter = 3
+        if len(templist) >= 3:       
+            while counter < len(templist):
+                
+                newpath += templist[counter]
+                if counter+1 != len(templist):
+                    newpath += "/" 
+                counter +=1
+        else:
+            return
+        
+        ##newpath = "../" + newpath
+        print(newpath)
+        if ".xml" in newpath:
+            print(ET.tostring(ET.parse(newpath).getroot(),encoding="ISO-8859-1").decode('utf8'))
+        else:
+            for filename in os.scandir(newpath):
+                if filename.is_file():
+                    print(filename.path)
+                    #print(ET.tostring(ET.parse(filename.path).getroot(),encoding="ISO-8859-1").decode('utf8'))
+
+            
 
     def initial_path(self,path):
         self.fc_path = path + "/fc/system.xml"
