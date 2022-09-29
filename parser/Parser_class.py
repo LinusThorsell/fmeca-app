@@ -23,18 +23,20 @@ class Parser:
             path = dictionary["dir"]
         elif "src" in dictionary:
             path = dictionary["src"]
+        elif "conf" in dictionary:
+            path = dictionary["conf"]
         else:
             return "nopath"       
         
         if "[acs_src]" in path:
-            return "nopath"
-        
-        while "[" and "]" in path:         
-            if(path.count("[") == 1 and "[root]" in path): 
-                break
-            for temp in self._dictionary:
-                if ( "[" + temp + "]") in path:
-                    path = path.replace("[" + temp + "]",self._dictionary[temp])
+            path = "nopath"
+        else:
+            while "[" and "]" in path:         
+                if(path.count("[") == 1 and "[root]" in path): 
+                    break
+                for temp in self._dictionary:
+                    if ( "[" + temp + "]") in path:
+                        path = path.replace("[" + temp + "]",self._dictionary[temp])
         dictionary["path"] = path
 
     def parsefunction(self,index):
