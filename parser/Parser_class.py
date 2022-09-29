@@ -2,12 +2,43 @@ import xml.etree.ElementTree as ET
 from os import path as OSPATH
 import json
 import os
+
 class Parser:
     def __init__(self):
         self.data = []
         self.pure_data = []
         self._dictionary = {}
         
+        
+    def send_project_name(self,path):
+        url = 'http://127.0.0.1:8000/projects/'
+        temp = path.split("/")
+        name = temp[0]
+        
+        x = {project_id:name}
+        string = json.dump(x)
+        requests.post(url,string)
+
+    def fc_hw_topology(self,path):
+        #path = 'Project_1/infrastructure/fc/hw_topology.xml'
+        tree = ET.parse(path)
+        root = tree.getroot()
+        for i in root.findall('DCM'):
+            name = i.get('name')
+            print(name)
+            #add to database?
+            
+            
+    def fc_sw_topology(self,path):
+        #path = 'Project_1/infrastructure/fc/sw_topology.xml'
+        tree = ET.parse(path)
+        root = tree.getroot()
+        for i in root.findall('APP'):
+            name = i.get('ref')
+            print(name)
+            #add to database?
+            #x = {""}
+
     def build_path(self,index):
         
         #print("The catalog")
