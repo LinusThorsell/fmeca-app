@@ -1,5 +1,6 @@
 import xml.etree.ElementTree as ET
 from os import path as OSPATH
+import json
 
 class Parser:
     def __init__(self):
@@ -28,6 +29,7 @@ class Parser:
         else:
             return "nopath"       
         
+        
         if "[acs_src]" in path:
             path = "nopath"
         else:
@@ -41,7 +43,7 @@ class Parser:
 
     def parsefunction(self,index):
         print("PATH:")
-        print(self.catalogs[index][1])
+        #print(self.catalogs[index][1])
         print(self.catalogs[index][1]["path"])
 
     def initial_path(self,path):
