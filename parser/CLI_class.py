@@ -31,7 +31,9 @@ class CLI:
 
     def parse(self):
         _parser = Parser()
-        _parser.parse(self._add_path)
+        _parser.initial_path(self._add_path)
+        _parser.parse(_parser.fc_path)
+        _parser.parse(_parser.mc_path)
 
     def test_func_with_two_args(self, arg1, arg2):
         print("test_func_with_two_args")

@@ -14,8 +14,8 @@ class Parser:
         path = ""
         dictionary = self.catalogs[index][1]
 
-        print("The content of the lists dictionary:")
-        print(self.catalogs[index][1])
+        #print("The content of the lists dictionary:")
+        #print(self.catalogs[index][1])
         
         if "value" in dictionary:
             path = dictionary["value"]
@@ -26,7 +26,10 @@ class Parser:
         else:
             return "nopath"       
         
-        while "[" and "]" in path:
+        if "[acs_src]" in path:
+            return "nopath"
+        
+        while "[" and "]" in path:         
             if(path.count("[") == 1 and "[root]" in path): 
                 break
             for temp in self._dictionary:
@@ -36,7 +39,13 @@ class Parser:
 
     def parsefunction(self,index):
         print("PATH:")
+        print(self.catalogs[index][1])
         print(self.catalogs[index][1]["path"])
+
+    def initial_path(self,path):
+        self.fc_path = path + "/fc/system.xml"
+        self.mc_path = path + "/mc/system.xml"
+
 
     def parse(self, path):
         print("path = " + path)
@@ -66,5 +75,5 @@ class Parser:
             self.parsefunction(counter)
             counter +=1
 
-        print("KATALOGEN")
-        print(self.catalogs)
+        #print("KATALOGEN")
+        #print(self.catalogs)
