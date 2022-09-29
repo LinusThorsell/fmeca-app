@@ -16,6 +16,8 @@ def PersonList(request):
     serializers = PersonSerializer(persons, many=True)
     return Response(serializers.data)
 
+
+
 @api_view(['GET', 'POST', 'DELETE'])
 def FmecaProject(request):
     projects = Project.objects.all()
