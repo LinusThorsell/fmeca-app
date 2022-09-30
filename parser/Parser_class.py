@@ -39,7 +39,7 @@ class Parser:
         #string = json.dumps(x)
         string = json.dumps(lista)
         print("Postar detta:",self._headers,string)
-        requests.post(self._url+ "/projects/",string,headers=headers)
+        requests.post(self._url+ "/projects/",string,headers=self._headers)
 
     def fc_hw_topology(self,path):
         #path = 'Project_1/infrastructure/fc/hw_topology.xml'
