@@ -9,17 +9,11 @@ from django.db import models
 
 class Project(models.Model):
     project_id = models.CharField(max_length=50, primary_key=True)
-    
-    def __str__(self):
-        return self.project_id
 
 class Node(models.Model):
-    id = models.BigAutoField(primary_key=True, default=0)
+    # id = models.BigAutoField(primary_key=True, default=0)
     name = models.CharField(max_length=50, default="")
     project = models.ForeignKey(Project, on_delete=models.CASCADE, default="")
-    
-    def __str__(self):
-        return self.name
 
 class NodeFailure(models.Model):
     id = models.BigAutoField(primary_key=True, default=0)
@@ -28,16 +22,10 @@ class NodeFailure(models.Model):
     flight_phase = models.CharField(max_length=50)    
     comments = models.TextField(max_length=500, default="")
 
-    def __str__(self):
-        return self.event
-
 class Partition(models.Model):
     id = models.BigAutoField(primary_key=True, default=0)
     name = models.CharField(max_length=20, default="")
     node = models.ForeignKey(Node, on_delete=models.CASCADE, default="")
-
-    def __str__(self):
-        return self.name
 
 class PartitionFailure(models.Model):
     id = models.BigAutoField(primary_key=True, default=0)
@@ -50,24 +38,14 @@ class PartitionFailure(models.Model):
     category = models.CharField(max_length=50, default="")
     criticality = models.CharField(max_length=50, default="")
     comments = models.TextField(max_length=500, default="")
-
-    def __str__(self):
-        return self.event 
-
     
 class Application(models.Model):
     id = models.BigAutoField(primary_key=True, default=0)
     name = models.CharField(max_length=50, default="")
     partition_failure = models.ManyToManyField(PartitionFailure, default="")
 
-    def __str__(self):
-        return self.name
-
 class MaterialGroup(models.Model):
     materal_group = models.CharField(max_length=50)
     application = models.ForeignKey(Application, on_delete=models.CASCADE, default="")
     partition = models.ForeignKey(Partition, on_delete=models.CASCADE, default="")
-
-    def __str__(self):
-        return self.name
  
