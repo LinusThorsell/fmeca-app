@@ -26,17 +26,20 @@ class Parser:
         self._dictionary = {}
         self.all_file_paths = []
         self.parsed_files = []
-        
+        self._headers = {"Content-Type":"application/json"}
+        self._url = 'http://127.0.0.1:8000/'
         
     def send_project_name(self,path):
-        url = 'http://127.0.0.1:8000/projects/'
         temp = path.split("/")
         name = temp[0]
-        headers = {"Content-Type":"application/json"}
-        x = {"project_id":name}
-        string = json.dumps(x)
-        print("Postar detta:",headers,string)
-        requests.post(url,string,headers=headers)
+        
+        x = {"project_id":"PROJEKT"}
+        y ={"project_id":"PROJEKT2"}
+        lista = [x,y]
+        #string = json.dumps(x)
+        string = json.dumps(lista)
+        print("Postar detta:",self._headers,string)
+        #requests.post(self._url+ "/projects/",string,headers=headers)
 
     def fc_hw_topology(self,path):
         #path = 'Project_1/infrastructure/fc/hw_topology.xml'
@@ -47,7 +50,15 @@ class Parser:
             print(name)
             #add to database?
             
-            
+    def mc_hw_topology(self,path):
+        tree = ET.parse(path)
+        root = tree.getroot()
+        for i in root.findall('DCM'):
+            name = i.get('name')
+            print(name)
+            #add to database?
+    
+    
     def fc_sw_topology(self,path):
         #path = 'Project_1/infrastructure/fc/sw_topology.xml'
         tree = ET.parse(path)
@@ -57,6 +68,18 @@ class Parser:
             print(name)
             #add to database?
             #x = {""}
+
+
+    def mc_sw_topology(self,path):
+        #path = 'Project_1/infrastructure/fc/sw_topology.xml'
+        tree = ET.parse(path)
+        root = tree.getroot()
+        for i in root.findall('APP'):
+            name = i.get('ref')
+            print(name)
+            #add to database?
+            #x = {""}
+
 
     def build_path(self,index):
         
