@@ -94,6 +94,9 @@ class CLI:
                 return i
             i += 1
         return -1
+    
+    def get_values(self, xml_id, arg1, arg2):
+        print(self._all_parser.get_values_from_xml(self.get_xml_file(xml_id), arg1, arg2))
             
     def print_xml_file(self, file_id):
         
@@ -150,9 +153,9 @@ class CLI:
     ##in self._flags we should have the flag and how many arguments we should
     ## have after that
     def initialize(self):
-        self._flags = {"print":0,"add":1,"delete":1,"-c":1, "test":2, "-kp":0, "quit":0, "parse":1,"print_xml":1, "ls":0, "find":2}
+        self._flags = {"print":0,"add":1,"delete":1,"-c":1, "test":2, "-kp":0, "quit":0, "parse":1,"print_xml":1, "ls":0, "find":2, "get":3}
         self._functions = {"print":self.print,"add":self.add,"delete":self.delete,"-c":self.config_database, "test":self.test_func_with_two_args,
-        "-kp":self.keep_alive,"quit":self.quit, "parse":self.parse_all, "ls":self.show_all_parsed_files, "print_xml":self.print_xml_file, "find":self.find}
+        "-kp":self.keep_alive,"quit":self.quit, "parse":self.parse_all, "ls":self.show_all_parsed_files, "print_xml":self.print_xml_file, "find":self.find, "get":self.get_values}
 
     def get_arguments(self):
         nrarguments = len(sys.argv)

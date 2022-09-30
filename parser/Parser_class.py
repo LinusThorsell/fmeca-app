@@ -27,7 +27,6 @@ class Parser:
         self.all_file_paths = []
         self.parsed_files = []
         
-        
     def send_project_name(self,path):
         url = 'http://127.0.0.1:8000/projects/'
         temp = path.split("/")
@@ -47,7 +46,7 @@ class Parser:
             print(name)
             #add to database?
             
-            
+
     def fc_sw_topology(self,path):
         #path = 'Project_1/infrastructure/fc/sw_topology.xml'
         tree = ET.parse(path)
@@ -142,6 +141,17 @@ class Parser:
         self.fc_path = path + "/fc/system.xml"
         self.mc_path = path + "/mc/system.xml"
     
+    def get_values_from_xml(self, xml, element_to_search_for, value_to_search_for):
+        tree = ET.parse(xml.path)
+        root = tree.getroot()
+
+        results = []
+        elements = root.findall(element_to_search_for)
+        for element in elements:
+            results.append(element.get(value_to_search_for))
+        return results
+
+
     def parse_all(self, path):
         # Get all xml to parse
         print("Parsing the following files:")
