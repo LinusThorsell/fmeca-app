@@ -29,6 +29,7 @@ class CLI:
         print("Vi är i add, path = " + str(xml_file_path))
         self._add = True
         self._add_path = xml_file_path
+        
     
     def print(self):
         print("Vi är i print")
