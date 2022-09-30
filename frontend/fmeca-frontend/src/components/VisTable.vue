@@ -1,21 +1,10 @@
 <script>
-    export default {
-        data() {
-            return {
-                getTable,
-                getRow,
-                getColumn,
-                addRow,
-                addColumn
-            }
-        }
-    }
-    
+
     const table_array = [];
     
     function getTable() {
     
-        const array_columns = 4;
+        const array_columns = 8;
         const array_rows = 4;
     
         if (table_array.length === 0) {
@@ -28,9 +17,6 @@
             }
         }
     
-        // console.log("Full array")
-        // console.log(table_array);
-    
         return table_array;
     }
     
@@ -42,7 +28,7 @@
     
         // console.log("Columns of array")
         // console.log(Row)
-    
+        
         return Row;
     }
     function getColumn(index, table_array) {
@@ -64,61 +50,43 @@
     function addColumn() {
     
     }
-    
+ 
+    export default {
+        data() {
+            return {
+                getTable,
+                getRow,
+                getColumn,
+                addRow,
+                addColumn,     
+            }
+        }
+    }
+
     </script>
     
-    <style>
+<style>
+   @import './style/VisTable.css'
+</style>
 
-        table {
-            border: 1px solid black;
-        }
+<template>
+    <div id="vis-table">
+        <!--<div id="vis-header">
+            Header info
+        </div> -->
+        <div v-for="row in getTable()[0].length" class="vis-row">
+            <div v-for="column in getTable().length" class="vis-columnbox">
+                row: {{ row-1 }} and col: {{ column-1 }}
+            </div>
+        </div>
+    </div>
+</template>
 
-        tr  {
-            height: fit-content;
-        }
 
-        th, td {
-            width: fit-content;
-            border: 1px solid black;
-        }
 
-        textarea {
-            height: auto;
-            width: auto;
-	    
-	    resize: vertical;
-        }
 
-        tr:nth-child(even) textarea {
-            background-color: #dddddd;
-        }
 
-    
-    </style>
-        
-    <template>
-        <table>
-            <tr>
-                <th v-for="column in getRow(0, getTable())">
-                    <div class="table_div">
-                        <h5>{{ column }}</h5>
-                    </div>
-                </th>
-            </tr>
-            <tr v-for="rows in getTable()[0].length-1">
-                <td>
-                    <div class="table_div" style="width: fit-content; padding-left: 0.5em; padding-right: 0.5em;">
-                        <h5>{{ getTable()[0][rows] }} </h5>
-                    </div>
-                </td>
-                <td v-for="cols in getTable().length-1">
-                    <div class="table_div">
-                        <textarea name="" id="" cols="30" rows="10">{{ getTable()[cols][rows] }}</textarea>
-                    </div>
-                </td>
-            </tr>
-    
-            <button @click="addRow([1,2,3,4,5], getTable())">Add row</button>
-        </table>
-    </template>
-    
+
+
+
+

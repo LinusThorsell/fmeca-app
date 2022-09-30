@@ -40,7 +40,7 @@ INSTALLED_APPS = [
 
     # installed aps
     'rest_framework',
-    'database_api',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -86,7 +86,7 @@ DATABASES = {
         'NAME': 'fmeca_database',
         'USER': 'admin',
         'PASSWORD': 'saab',
-        'HOST': 'localhost',
+        'HOST': 'localhost', 
         'PORT': '',
 
     }
