@@ -12,7 +12,6 @@ class xml_file:
     def get_values(self):
         return self.data.values()
 
-
 class xml_data:
      def __init__(self, name):
         self.name = name
@@ -79,18 +78,6 @@ class Parser:
             print(name)
             #add to database?
             #x = {""}
-
-
-    def mc_sw_topology(self,path):
-        #path = 'Project_1/infrastructure/fc/sw_topology.xml'
-        tree = ET.parse(path)
-        root = tree.getroot()
-        for i in root.findall('APP'):
-            name = i.get('ref')
-            print(name)
-            #add to database?
-            #x = {""}
-
 
     def build_path(self,index):
         
