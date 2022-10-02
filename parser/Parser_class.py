@@ -33,13 +33,22 @@ class Parser:
         temp = path.split("/")
         name = temp[0]
         
-        x = {"project_id":"PROJEKT"}
-        y ={"project_id":"PROJEKT2"}
+        x = {"project_id":"PROJEKT3"}
+        y ={"project_id":"PROJEKT4"}
         lista = [x,y]
-        #string = json.dumps(x)
-        string = json.dumps(lista)
+        string = json.dumps(x)
+        # string = json.dumps(lista)
+
+        payload = {
+            { 
+                'project_id': 'PROJECT3'
+            }, {
+                'Project_id': 'PROJECT4'
+            }
+        }
+        
         print("Postar detta:",self._headers,string)
-        requests.post(self._url+ "/projects/",string,headers=self._headers)
+        requests.post(self._url+ "projects/",json=payload,headers=self._headers)
 
     def fc_hw_topology(self,path):
         #path = 'Project_1/infrastructure/fc/hw_topology.xml'

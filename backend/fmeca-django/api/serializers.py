@@ -13,6 +13,19 @@ class NodeSerializer(serializers.ModelSerializer):
         model = Node
         fields = '__all__'
 
+# class ProjectSerializer(serializers.ModelSerializer, many=True):
+#     node = NodeSerializer()
+
+#     class Meta:
+#         model = Project
+#         fields = '__all__'
+
+#     def create(self, validated_data):
+#         node_data = validated_data.pop('node')
+#         node.objects.create()
+#         pass
+
+
 class NodeFailureSerializer(serializers.ModelSerializer):
     class Meta:
         model = NodeFailure

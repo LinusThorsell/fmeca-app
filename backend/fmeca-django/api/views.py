@@ -16,7 +16,7 @@ permission = '__all__'
 
 class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
-    serializer_class = ProjectSerializer
+    serializer_class = ProjectSerializer(queryset, many=True)
     permissions = permission
 
 class NodeViewSet(viewsets.ModelViewSet):
