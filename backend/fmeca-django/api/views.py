@@ -1,7 +1,7 @@
 from gc import get_objects
 from django.shortcuts import render, get_object_or_404
 from .models import *
-from .serializers import PersonSerializer, ProjectSerializer
+from .serializers import *
 from rest_framework import viewsets
 # from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -12,18 +12,43 @@ from . import serializers
 
 # Create your views here.
 
-class PersonViewSet(viewsets.ModelViewSet):
-    queryset = Person.objects.all()
-    serializer_class = PersonSerializer
-    permissions = ['__all__']
+permission = '__all__'
 
+class ProjectViewSet(viewsets.ModelViewSet):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+    permissions = permission
+    http_method_names = ['get','post','retrieve','put','patch']
 
+class NodeViewSet(viewsets.ModelViewSet):
+    queryset = Node.objects.all()
+    serializer_class = NodeSerializer
+    permissions = permission
 
-# class ProjectViewSet(view.ModelViewSet):
-#     queryset = Project.objects.all()
+class NodeFailureViewSet(viewsets.ModelViewSet):
+    queryset = NodeFailure.objects.all()
+    serializer_class = NodeFailureSerializer 
+    permissions = permission
 
+class PartitionViewSet(viewsets.ModelViewSet):
+    queryset = Partition.objects.all()
+    serializer_class = NodeFailureSerializer
+    permissions = permission
 
+class PartitionFailureViewSet(viewsets.ModelViewSet):
+    queryset = PartitionFailure.objects.all()
+    serializer_class = NodeFailureSerializer
+    permissions = permission
 
+class ApplicationViewSet(viewsets.ModelViewSet): 
+    queryset = Application.objects.all()
+    serializer_class = NodeFailureSerializer
+    permissions = permission
+
+class MaterialGroupViewSet(viewsets.ModelViewSet):
+    queryset = MaterialGroup.objects.all()
+    serializer_class = MaterialGroupSerializer
+    permissions = permission
 
 # @api_view(['GET'])
 # def PersonList(request):

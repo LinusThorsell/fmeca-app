@@ -1,0 +1,19 @@
+Jag har lite fråga om projektet.
+
+Fråga om readme.txt-filen:
+
+"Ni kan utgå från att vi kommer peka ut en path.
+I den pathen hittar ni: infrastructure"
+
+Betyder det att vi kommer få en path till mappen infratsructure?? så får vi sedan gå till fc/system.xml och mc/system.xml??
+
+Har lite frågor om system.xml filerna som ligger under infrastructure/mc/system.xml och infrastructure/fc/system.xml. 
+Säg till om jag har fel men så som jag förstår det är att första halvan isch är en massa variabler som med key som variabelnamn och value som
+en delmängd av en path som också håller placeholders (de variabler som följer mönstret [variabel]). Det som jag inte förstår är varför första halvan har 
+idb som tag medan andra halvan har t.ex functional_topology, domain_border osv.
+
+Om de som har idb som tag enbart var en variabel med variabelenamn och delpath som värde så förstår jag inte varför vi får pathen till configfilerna under samma tag.
+<idb key="hw_topology"               value="[fc_dir]/hw_topology.xml"/>
+<idb key="sw_topology"               value="[fc_dir]/sw_topology.xml"/>
+
+Jag förstår helt enkelt inte logiken bakom typ hela/halva system.xml filerna
