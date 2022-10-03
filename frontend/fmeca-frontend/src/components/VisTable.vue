@@ -3,14 +3,14 @@ import '../worker/vis-table-worker.js'
 
     //var vis_table_worker = null;
 
-    var selector, rule, i, /*rowStyles=[], // not currently in use*/ colStyles=[];
+    var selector, rule, i, rowStyles=[], colStyles=[];
 
     const table_array = [];
     const columnWidths = [];
 
-    const array_columns = 100;
-    const array_rows = 100;
-    const default_column_width = 150;
+    const array_columns = 10;
+    const array_rows = 10;
+    const default_column_width = 100;
 
 
     function getTable() {    
@@ -135,7 +135,7 @@ import '../worker/vis-table-worker.js'
 //Create rules dynamically
         /*for (i=0; i<array_rows; i++) {
             selector=".vis-row-"+i;
-            rule="{height: 300px;}";
+            rule="{height:" + default_column_width + "px;}";
             if (sheet.insertRule)
                 sheet.insertRule(selector+rule, 0);//This puts the rule at index 0
             
@@ -156,7 +156,24 @@ import '../worker/vis-table-worker.js'
     export default {
         mounted() {
             //vis_table_worker = new Worker(new URL('./../worker/vis-table-worker.js', import.meta.url))
+            console.log("Mounted")
             generateCustomStylesheet()
+            console.log("Done making stylesheets") 
+
+            for (var i = 0; i < getColumn(1, table_array).length; i++)
+            {
+                colStyles[i].width = default_column_width
+            }
+
+            setTimeout(() => { // Required to run on chrome TODO : describe issue more.
+                console.log("Fixing chrome")
+                document.getElementsByClassName("chrome_is_messy_fix")[0].style.height="100px";
+                setTimeout(() => {
+                    Array.from(document.getElementsByClassName("chrome_is_messy_fix")).forEach(div => {
+                        div.style.display="none";
+                    });
+                }, 500);
+            }, 1500);
             //calculateWidthOfRows()
             //console.log(document.styleSheets)
         },
@@ -187,7 +204,29 @@ import '../worker/vis-table-worker.js'
     {{ $log("Rerender") }}
     <div id="vis-table">
         <div v-for="row in getTable()[0].length" class="vis-row">
-            <div class="vis-columnbox vis-resizable-row"> Resizable Row </div>
+            <div v-if="row-1 !== 0">
+                <div class="vis-columnbox vis-resizable-row"> Resizable Row </div>
+            </div>
+            <div v-if="row-1 === 0"
+                class="vis-columnbox"
+                style="
+                    border: 1px solid black;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                "
+            >
+                <p 
+                    style="
+                        margin: 0; 
+                        padding: 0; 
+                        font-size: 20px; 
+                        color: gray;
+                        "
+                    >
+                        FMECA<br>Analys
+                    </p>
+            </div>
             
             <div v-if="row-1 === 0" v-for="column in getTable().length" 
                 class="vis-columnbox vis-resizable-column" 
@@ -195,6 +234,7 @@ import '../worker/vis-table-worker.js'
                 v-resize="handleResize"
             >
                 Resizable Column
+                <div class="chrome_is_messy_fix">Loading...</div>
             </div>
             
             <div v-if="row-1 !== 0" v-for="column in getTable().length" 
