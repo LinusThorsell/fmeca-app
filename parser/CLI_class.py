@@ -3,7 +3,7 @@ import os.path
 from Parser_class import Parser
 import sys, string, os
 from os import path as OSPATH
-
+from Encoder_Class import *
 #Command Line Interface
 class CLI:
     
@@ -18,6 +18,7 @@ class CLI:
         self._all_parser = 0
         self._keep_alive = False
         self._parser = Parser()
+        self._encoder = Encoder()
 
     def delete(self,project):
         ##Tell the database to delete the project
@@ -172,7 +173,7 @@ class CLI:
         if (self._add):
             ##anropa funktionen som ska posta till databasen
             print("Anropa funktionen som ska lägga till ett projekt i databasen databasen")
-            name = self._parser.get_project_name(self._add_path)
-            print(name)
-            #self.parse()
-            
+            print(self._add_path)
+            self.parse(self._add_path)
+            self._parser.get_project_name(self._add_path,self._encoder)
+            self._parser.get_fc_mc_hw()

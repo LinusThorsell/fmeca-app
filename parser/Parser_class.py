@@ -41,7 +41,8 @@ class Parser:
         #print("Postar detta:",self._headers,string)
         #requests.post(self._url+ "/projects/",string,headers=self._headers)
         Encoder.createProject(name)
-        return name
+        #print(Encoder.Project.project_id)
+
 
     def fc_hw_topology(self,path):
         #path = 'Project_1/infrastructure/fc/hw_topology.xml'
@@ -81,7 +82,14 @@ class Parser:
             print(name)
             #add to database?
             #x = {""}
-
+            
+    def get_fc_mc_hw(self,fc_hw_path,mc_hw_path,encoder):
+        lista = []
+        lista += self.fc_hw_topology(fc_hw_path)
+        lista += self.mc_hw_topology(mc_hw_path)
+        encoder.add_nodes(lista)
+        
+        
     def build_path(self,index):
         
         #print("The catalog")
@@ -165,6 +173,7 @@ class Parser:
     def initial_path(self,path):
         self.fc_path = path + "/fc/system.xml"
         self.mc_path = path + "/mc/system.xml"
+        
     
     def get_values_from_xml(self, xml, element_to_search_for, value_to_search_for):
         tree = ET.parse(xml.path)
