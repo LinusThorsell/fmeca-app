@@ -12,7 +12,6 @@ class xml_file:
     def get_values(self):
         return self.data.values()
 
-
 class xml_data:
      def __init__(self, name):
         self.name = name
@@ -79,7 +78,6 @@ class Parser:
             print(name)
             #add to database?
             #x = {""}
-
 
     def build_path(self,index):
         
@@ -165,6 +163,17 @@ class Parser:
         self.fc_path = path + "/fc/system.xml"
         self.mc_path = path + "/mc/system.xml"
     
+    def get_values_from_xml(self, xml, element_to_search_for, value_to_search_for):
+        tree = ET.parse(xml.path)
+        root = tree.getroot()
+
+        results = []
+        elements = root.findall(element_to_search_for)
+        for element in elements:
+            results.append(element.get(value_to_search_for))
+        return results
+
+
     def parse_all(self, path):
         # Get all xml to parse
         print("Parsing the following files:")
