@@ -4,25 +4,6 @@ from .models import *
 from rest_framework import serializers
 from rest_flex_fields import FlexFieldsModelSerializer
 
-# class NodeSerializer(FlexFieldsModelSerializer):
-#     class Meta:
-#         model = Node
-#         fields = '__all__'
-
-# class ProjectSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Project
-#         fields = '__all__'
-#         expandable_fields = {
-#         #     'nodes' : (NodeSerializer, {'many': True})
-#         # }
-
-
-# class ProjectSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Project
-#         fields = '__all__'
-
 class NodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Node
