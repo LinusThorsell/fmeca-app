@@ -28,17 +28,20 @@ class Parser:
         self._headers = {"Content-Type":"application/json"}
         self._url = 'http://127.0.0.1:8000/'
         
-    def send_project_name(self,path):
+    def get_project_name(self,path,Encoder):
+        print(path)
         temp = path.split("/")
         name = temp[0]
         
-        x = {"project_id":"PROJEKT"}
-        y ={"project_id":"PROJEKT2"}
-        lista = [x,y]
+        #x = {"project_id":"PROJEKT"}
+        #y ={"project_id":"PROJEKT2"}
+        #lista = [x,y]
         #string = json.dumps(x)
-        string = json.dumps(lista)
-        print("Postar detta:",self._headers,string)
-        requests.post(self._url+ "/projects/",string,headers=self._headers)
+        #string = json.dumps(lista)
+        #print("Postar detta:",self._headers,string)
+        #requests.post(self._url+ "/projects/",string,headers=self._headers)
+        Encoder.createProject(name)
+        return name
 
     def fc_hw_topology(self,path):
         #path = 'Project_1/infrastructure/fc/hw_topology.xml'
