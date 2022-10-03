@@ -9,5 +9,6 @@ const app = createApp(App);
 
 app.use(router);
 app.use(VueResizeObserver);
+app.config.globalProperties.$log = console.log
 
 app.mount("#app");

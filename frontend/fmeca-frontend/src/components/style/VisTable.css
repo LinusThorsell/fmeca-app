@@ -1,11 +1,16 @@
-#vis-table {
-    border: 1px solid black;
-
-    margin-top: 5em;
-
-    height: fit-content;
+/** {
+    background-color: gray;
     width: fit-content;
-}
+    height: fit-content;
+    overflow: scroll;
+}*/
+
+/*#vis-table {
+    border-bottom: 1px solid black;
+    height:fit-content;
+    width: fit-content;
+    overflow: scroll;
+}*/
 
 /*#vis-header {
     border: 1px solid green;
@@ -16,15 +21,20 @@
     display: flex;
 }*/
 .vis-row {
-    border: 1px solid blue;
 
     display: flex;
+    /*float: left;*/
     height: fit-content;
+    /*width: fit-content;*/
 }
+.vis-row:nth-child(odd) textarea {
+    background-color: lightgrey;
+}
+
 .vis-columnbox {
-    border: 1px solid pink;
+    /*border: 1px solid pink;*/
     padding: 0.5em;
-    min-width: 5em;
+    min-width: 150px;
     min-height: 5em;
     /*
     overflow: auto;
@@ -46,8 +56,27 @@
 .vis-resizable-row {
     resize: vertical;
     overflow: auto;
+
+    background-color: lightgray;
+
+    /*border: 1px solid black;*/
+
+    /*
+    position: sticky;
+    left: 0;
+
+    background-color: gray;*/
 }
+
 .vis-resizable-column {
     resize: horizontal;
     overflow: auto;
+    
+    background-color: lightgray;
+    /*border: 1px solid black;*/
+
+    /*position: sticky;
+    top: 0;
+    
+    background-color: red;*/
 }
