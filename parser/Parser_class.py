@@ -39,12 +39,26 @@ class Parser:
         string = json.dumps(x)
         # string = json.dumps(lista)
 
+        # payload = {
+        #     'name': 'FMC-1',
+        #     'project': {
+        #         'project_id': 'nestled-test'
+        #     }
+        # }
+
         payload = {
-            { 
-                'project_id': 'PROJECT3'
-            }, {
-                'Project_id': 'PROJECT4'
-            }
+                'project_id': 'projekt-15',
+                'node_set': [
+                    {
+                        "name": "FMC"
+                    },
+                    {
+                        "name": "FMC-1"
+                    },
+                    {
+                        "name": "FMC-2"
+                    }
+                ]
         }
         
         print("Postar detta:",self._headers,string)
