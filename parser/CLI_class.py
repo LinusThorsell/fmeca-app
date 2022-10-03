@@ -44,7 +44,7 @@ class CLI:
     def parse(self):
         self._parser = Parser()
         self._parser.initial_path(self._add_path)
-        self._parser.parse(_parser.fc_path)
+        self._parser.parse(_parser.fc_path,self.dadadaad)
         self._parser.parse(_parser.mc_path)
         
         _parser.sendall()
@@ -172,6 +172,7 @@ class CLI:
         if (self._add):
             ##anropa funktionen som ska posta till databasen
             print("Anropa funktionen som ska lägga till ett projekt i databasen databasen")
-            self._parser.send_project_name(self._add_path)
+            name = self._parser.get_project_name(self._add_path)
+            print(name)
             #self.parse()
             
