@@ -45,10 +45,12 @@ class CLI:
     def parse(self):
         self._parser = Parser()
         self._parser.initial_path(self._add_path)
-        self._parser.parse(_parser.fc_path,self.dadadaad)
-        self._parser.parse(_parser.mc_path)
+        self._parser.parse(self._parser.fc_path)
+        self._parser.parse(self._parser.mc_path)
+        print("PATHS:")
+        print(self._parser._paths)
         
-        _parser.sendall()
+        #_parser.sendall()
 
 
     def test_func_with_two_args(self, arg1, arg2):
@@ -174,6 +176,9 @@ class CLI:
             ##anropa funktionen som ska posta till databasen
             print("Anropa funktionen som ska lägga till ett projekt i databasen databasen")
             print(self._add_path)
-            self.parse(self._add_path)
-            self._parser.get_project_name(self._add_path,self._encoder)
-            self._parser.get_fc_mc_hw()
+            self.parse()
+            #Efter self.parse() kan du iterera igenom self._parser._paths (ett set) för att göra det mer generellt
+            
+            
+            #self._parser.get_project_name(self._add_path,self._encoder)
+            #self._parser.get_fc_mc_hw()
