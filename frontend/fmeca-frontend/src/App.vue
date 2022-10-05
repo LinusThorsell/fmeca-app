@@ -1,18 +1,18 @@
 <script setup>
-import { RouterLink, RouterView } from "vue-router";
+import { RouterView } from "vue-router";
 </script>
 
 <template>
-    <div id="app">
+<!--    <div id="app">
     <header>
-      <Navbar />
+        <Navbar />
     </header>
-  </div>
+  </div>-->
   <RouterView />
 </template>
 
 <style scoped>
-  * {
+/*  * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -24,7 +24,7 @@ import { RouterLink, RouterView } from "vue-router";
     width: 100vw;
     background-color: #222;
     padding: 15px;
-  }
+  }*/
 </style>
 
 <script>
