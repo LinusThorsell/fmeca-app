@@ -17,3 +17,51 @@ Om de som har idb som tag enbart var en variabel med variabelenamn och delpath s
 <idb key="sw_topology"               value="[fc_dir]/sw_topology.xml"/>
 
 Jag förstår helt enkelt inte logiken bakom typ hela/halva system.xml filerna
+
+
+
+Frågor:
+    <DCM name="FMC" loadsetTypeRef="FMC" redundant="true" platformRef="fgs_v3" syncLostBehavior="EQ-SPECIFIC">
+    Är DCM nodtypen? kallas alla noder DCM?
+
+
+    <APP ref="FMC.APP" partitionPbitType="fmc" partitionIdleId="0" partitionPbitId="1" userBspType="raw_app">
+    Vad är APP ref?, partition? eller inte?
+
+
+    <APP ref="FMC.APP" partitionPbitType="fmc" partitionIdleId="0" partitionPbitId="1" userBspType="raw_app">
+
+    <Partition fixedStartNs="500000" isLTM="true" id="3" name="LTM_FMC">
+      <Attribute name="StartLogAuthorized" value="true"/>
+      <Application name="LTM"/>
+    </Partition>
+
+    <Partition fixedStartNs="500000" isLTM="true" id="3" name="FUN_FMC">
+      <Attribute name="StartLogAuthorized" value="true"/>
+      <Application name="FUN"/>
+    </Partition>
+
+  </APP>
+
+  </APP ref NOD.APP..... Är detta så som strukturern sw_topology ska se ut?
+  
+
+<RTHIPath networkSpecRef="RTHI1">
+    <Node ref="FMC.IOP"/>
+  </RTHIPath>
+
+  <MB1553Path name="Bus_T50">
+    <BusController ref="IOM_FMC" hwDeviceId="1"/>
+    <Equipment name="FCEA_A"/>
+  </MB1553Path>
+
+ <XTALKPath>
+    <Node ref="FMC.IOP"/>
+ </XTALKPath>
+
+Ska dessa vara med som noder(items) i tabellen? hur ska de parsas?
+
+Kan en partition köra flera applicationer?
+
+
+  
