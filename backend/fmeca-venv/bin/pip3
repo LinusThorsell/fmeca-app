@@ -1,4 +1,4 @@
-#!/home/linus/TDDI17/fmeca-app/backend/fmeca-venv/bin/python3
+#!/home/linus/Documents/liu/kurser/tddi17/fmeca-app/backend/fmeca-venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
