@@ -3,6 +3,8 @@ from os import path as OSPATH
 import json
 import os
 import requests
+import Encoder_Class
+import Partitions
 class xml_file:
     def __init__(self, path):
         self.path = path
@@ -25,24 +27,15 @@ class Parser:
         self._dictionary = {}
         self.all_file_paths = []
         self.parsed_files = []
-        self._headers = {"Content-Type":"application/json"}
-        self._url = 'http://127.0.0.1:8000/'
         self._paths = set()
         
     def get_project_name(self,path,Encoder):
         print(path)
         temp = path.split("/")
         name = temp[0]
-        
-        #x = {"project_id":"PROJEKT"}
-        #y ={"project_id":"PROJEKT2"}
-        #lista = [x,y]
-        #string = json.dumps(x)
-        #string = json.dumps(lista)
-        #print("Postar detta:",self._headers,string)
-        #requests.post(self._url+ "/projects/",string,headers=self._headers)
         Encoder.createProject(name)
         #print(Encoder.Project.project_id)
+        Encoder.send_to_database(Encoder.Project)
 
 
     def fc_hw_topology(self,path):
@@ -74,17 +67,24 @@ class Parser:
         path = 'Project_1/infrastructure/fc/sw_topology.xml'
         tree = ET.parse(path)
         root = tree.getroot()
+        list = []
         for i in root.findall('APP'):
+            referenced_node = i.get("ref")
+            templist = referenced_node.split(".")
+            
+            referenced_node = templist[0]            
             for partitions in i.findall("Partition"):
                 name = partitions.get("name")
 
             #name = partitions.get("name")
-                print(name)
+                #print(name)
+                list.append(Partitions.Partition_Data_Class(name,referenced_node))
             #print(i)
             #name = i.get('ref')
             #print(name)
             #add to database?
             #x = {""}
+        return list
 
 
     def mc_sw_topology(self,path):
@@ -98,16 +98,18 @@ class Parser:
             #x = {""}
             
     def get_fc_mc_sw(self,fc_sw_path,mc_sw_path,encoder):
-        list = []
-        list += self.fc_sw_topology(fc_sw_path)
+        partitions = []
+        partitions += self.fc_sw_topology(fc_sw_path)
         #list += self.mc_sw_topology(mc_hw_path)
-        encoder.add_partitions(list)
+        encoder.add_partitions(partitions)
+        encoder.send_to_database(encoder.partitions)
     
     def get_fc_mc_hw(self,fc_hw_path,mc_hw_path,encoder):
         list = []
         list += self.fc_hw_topology(fc_hw_path)
         list += self.mc_hw_topology(mc_hw_path)
         encoder.add_nodes(list)
+        encoder.send_to_database(encoder.nodes)
         
         
     def build_full_path(self,index):

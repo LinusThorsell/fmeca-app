@@ -193,4 +193,5 @@ class CLI:
             self._parser.get_fc_mc_hw("","",self._encoder)
             self._parser.get_fc_mc_sw("","",self._encoder)
             #print(self._encoder.Project)
-            self._encoder.send_to_database()
+            #Skickar jsut nu i alla getfunktioner
+            #self._encoder.send_to_database()
