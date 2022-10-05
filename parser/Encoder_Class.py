@@ -1,8 +1,9 @@
 import json
     
 class Partitionset_Data_Class:
-    def __init__(self,namn):
-        self.name = namn
+    def __init__(self,name):
+        self.name = name
+        #self.apps = []
     def reprJSON(self):
         return {"name":self.name}
 
@@ -12,11 +13,12 @@ class Node_Data_Class:
         self.partition_set = partitioner
     def reprJSON(self):
         return {"name":self.name,"partition_set":self.partition_set}
-
+        #return {"name":self.name}
+ 
 class Project_Data_Class:
-    def __init__(self,namn,lista):
-        self.project_id = namn
-        self.node_set = lista
+    def __init__(self,name,list):
+        self.project_id = name
+        self.node_set = list
     def reprJSON(self):
         return {"project_id":self.project_id,"node_set":self.node_set}
 
@@ -35,8 +37,21 @@ class Encoder:
     def createProject(self,name):
         self.Project = Project_Data_Class(name,[]) 
     
+    def add_nodes(self,node_list):
+        __node_list =[]
+        for nodes in node_list:
+            __node_list.append(Node_Data_Class(nodes,[]))
+        self.Project.node_set = __node_list
+    
+    def add_partitions(self,partitions_list):
+        _partitions_list = []
+        for partitions in partitions_list:
+            _partitions_list.append(Partitionset_Data_Class(partitions))
+        self.Project
+    
     def send_to_database(self):
         string = json.dumps(self.Project,cls=ComplexEncoder,indent=4)
+        print(string)
         #########
 
 def main():

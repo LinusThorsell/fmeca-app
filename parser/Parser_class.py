@@ -46,36 +46,49 @@ class Parser:
 
 
     def fc_hw_topology(self,path):
-        #path = 'Project_1/infrastructure/fc/hw_topology.xml'
+        path = 'Project_1/infrastructure/fc/hw_topology.xml'
         tree = ET.parse(path)
         root = tree.getroot()
+        data = []
         for i in root.findall('DCM'):
             name = i.get('name')
-            print(name)
+            #print(name)
+            data.append(name)
             #add to database?
+        return data
+        
             
     def mc_hw_topology(self,path):
+        path = 'Project_1/infrastructure/mc/hw_topology.xml'
         tree = ET.parse(path)
         root = tree.getroot()
-        for i in root.findall('DCM'):
+        data = []
+        for i in root.findall('PDCM'):
             name = i.get('name')
-            print(name)
+            #print(name)
+            data.append(name)
             #add to database?
-    
+        return data
     
     def fc_sw_topology(self,path):
-        #path = 'Project_1/infrastructure/fc/sw_topology.xml'
+        path = 'Project_1/infrastructure/fc/sw_topology.xml'
         tree = ET.parse(path)
         root = tree.getroot()
         for i in root.findall('APP'):
-            name = i.get('ref')
-            print(name)
+            for partitions in i.findall("Partition"):
+                name = partitions.get("name")
+
+            #name = partitions.get("name")
+                print(name)
+            #print(i)
+            #name = i.get('ref')
+            #print(name)
             #add to database?
             #x = {""}
 
 
     def mc_sw_topology(self,path):
-        #path = 'Project_1/infrastructure/fc/sw_topology.xml'
+        path = 'Project_1/infrastructure/mc/sw_topology.xml'
         tree = ET.parse(path)
         root = tree.getroot()
         for i in root.findall('APP'):
@@ -84,11 +97,17 @@ class Parser:
             #add to database?
             #x = {""}
             
+    def get_fc_mc_sw(self,fc_sw_path,mc_sw_path,encoder):
+        list = []
+        list += self.fc_sw_topology(fc_sw_path)
+        #list += self.mc_sw_topology(mc_hw_path)
+        encoder.add_partitions(list)
+    
     def get_fc_mc_hw(self,fc_hw_path,mc_hw_path,encoder):
-        lista = []
-        lista += self.fc_hw_topology(fc_hw_path)
-        lista += self.mc_hw_topology(mc_hw_path)
-        encoder.add_nodes(lista)
+        list = []
+        list += self.fc_hw_topology(fc_hw_path)
+        list += self.mc_hw_topology(mc_hw_path)
+        encoder.add_nodes(list)
         
         
     def build_full_path(self,index):

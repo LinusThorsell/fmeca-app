@@ -42,7 +42,7 @@ class CLI:
         self._all_parser.parse_all(path)
     
 
-    def parse(self):
+    def get_paths(self):
         self._parser = Parser()
         self._parser.initial_path(self._add_path)
         self._parser.parse(self._parser.fc_path)
@@ -176,9 +176,21 @@ class CLI:
             ##anropa funktionen som ska posta till databasen
             print("Anropa funktionen som ska lägga till ett projekt i databasen databasen")
             print(self._add_path)
-            self.parse()
+            self.get_paths()
+            
+            #ording = []
+            
+            #for  in ording:
+            #    if path in self._parser._path:
+                    
+            
             #Efter self.parse() kan du iterera igenom self._parser._paths (ett set) för att göra det mer generellt
             
             
-            #self._parser.get_project_name(self._add_path,self._encoder)
-            #self._parser.get_fc_mc_hw()
+            self._parser.get_project_name(self._add_path,self._encoder)
+            #self._parser.fc_hw_topology("")
+            #self._parser.mc_hw_topology("")
+            self._parser.get_fc_mc_hw("","",self._encoder)
+            self._parser.get_fc_mc_sw("","",self._encoder)
+            #print(self._encoder.Project)
+            self._encoder.send_to_database()
