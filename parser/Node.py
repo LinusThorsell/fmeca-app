@@ -9,7 +9,7 @@ class Node_Set:
     def __init__(self,nodeset):
         self.nodes = nodeset
     def reprJSON(self):
-        return {"node_set":self.nodes}
+        return self.nodes
     
     
     

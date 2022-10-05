@@ -35,7 +35,7 @@ class Parser:
         name = temp[0]
         Encoder.createProject(name)
         #print(Encoder.Project.project_id)
-        Encoder.send_to_database(Encoder.Project)
+        #Encoder.send_to_database(Encoder.Project,"projects/")
 
 
     def fc_hw_topology(self,path):
@@ -102,14 +102,14 @@ class Parser:
         partitions += self.fc_sw_topology(fc_sw_path)
         #list += self.mc_sw_topology(mc_hw_path)
         encoder.add_partitions(partitions)
-        encoder.send_to_database(encoder.partitions)
+        #encoder.send_to_database(encoder.partitions,"partitions/")
     
     def get_fc_mc_hw(self,fc_hw_path,mc_hw_path,encoder):
         list = []
         list += self.fc_hw_topology(fc_hw_path)
         list += self.mc_hw_topology(mc_hw_path)
         encoder.add_nodes(list)
-        encoder.send_to_database(encoder.nodes)
+        encoder.send_to_database(encoder.nodes,"nodes/")
         
         
     def build_full_path(self,index):

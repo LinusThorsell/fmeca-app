@@ -3,6 +3,7 @@ import json
 import Project
 import Node
 import Partitions
+import requests
 
 
 class ComplexEncoder(json.JSONEncoder):
@@ -43,7 +44,9 @@ class Encoder:
         print(string)
         
         #print("Postar detta:",self._headers,string)
-        requests.post(self._url+ "/projects/",string,headers=self._headers)
+        print("Till foldern: ",self._url + folder)
+        print(string)
+        requests.post(self._url+ folder,string,headers=self._headers)
         #########
 
 #def main():

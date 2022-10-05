@@ -2,7 +2,6 @@
 from dataclasses import field
 from .models import *
 from rest_framework import serializers
-from rest_flex_fields import FlexFieldsModelSerializer
 
 class NodeSerializer(serializers.ModelSerializer):
     class Meta:
