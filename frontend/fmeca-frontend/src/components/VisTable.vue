@@ -1,18 +1,14 @@
 <script>
-import '../worker/vis-table-worker.js'
 
-    //var vis_table_worker = null;
-
-    var selector, rule, i, rowStyles=[], colStyles=[];
+    var selector, rule, i, /*rowStyles=[],*/ colStyles=[];
 
     const table_array = [];
-    const columnWidths = [];
 
     const array_columns = 10;
     const array_rows = 10;
     const default_column_width = 100;
 
-
+    // Gets entire table ( TODO : interface with backend here )
     function getTable() {    
     
         if (table_array.length === 0) {
@@ -25,26 +21,25 @@ import '../worker/vis-table-worker.js'
             }
         }
         
-        //setupResizeEventListeners()
-        
         return table_array;
     }
-    
+   
+    // Gets a specific row ( index ) as an array from the input array ( table_array ).
     function getRow(index, table_array) {
         const Row = [];
         for (var column = 0; column < table_array.length; column++) {
             Row[column] = table_array[column][index];
         }
     
-        // console.log("Columns of array")
-        // console.log(Row)
-        
         return Row;
     }
+
+    // Gets a specific column ( index ) as an array from the input array ( table_array )
     function getColumn(index, table_array) {
         return table_array[index]
     }
     
+    // TODO : Fix, Is currently not working with rest of program structure.
     function addRow(row, table_array) {
         if (row.length !== table_array[0].length) {
             console.log("Error: in addRow. Input row not of same length as input array.")
@@ -56,18 +51,18 @@ import '../worker/vis-table-worker.js'
         }
         console.log(table_array)
     }
-
+    // TODO : Fix, Implement function
     function addColumn() {
     
     }
 
+    // Gets the class for a specific vis-columnbox element.
+    // These styles are used by the generated stylesheet to allow resizing.
     function getClass(column, row) {
         return "vis-column-" + column + " vis-row-" + row;
     }
-    function getColumnWidth(column) {
-        return "width: " + columnWidths[column] + "px;"
-    }
     
+    // Calculates with of a row, to resize table container element to fit all content.
     function calculateWidthOfRows() {
         var max_width = 0;
 
@@ -77,71 +72,41 @@ import '../worker/vis-table-worker.js'
                 max_width += column.offsetWidth;
             }
         });
-        
-        /*var temp_width = max_width + 1000 + "px;"
-        document.querySelectorAll('.vis-row').forEach(row => {
-            row.style.width = temp_width;
-        });*/
 
         document.getElementById("vis-table").style.width = max_width + 100 + "px";
     }
 
-    //const resizeWorker = new Worker(vistableworker)
+    // Called by vue-resize-observer when a column is resized.
+    // Changes stylesheet to resize elements
     function handleResize({ width }, { __currentTarget__ }) {
         
         var column_array = __currentTarget__.classList[2]
         var column_id = column_array.slice(column_array.lastIndexOf('-')+1)
         console.log(column_id)
         colStyles[parseInt(column_id)].width=width+"px"
-       // console.log(colStyles[parseInt(__currentTarget__.classList[2].slice(-1))]);
 
         calculateWidthOfRows()
-
-        //colStyles[__currentTarget__.classList[2]:1]
-        //vis_table_worker.postMessage({ 
-        //    action: "fix_column_sizes", 
-        //    document: "" 
-        //})
-
-        // console.log(column[2].offsetWidth)
-        /*column.forEach((col, index) => {
-            var diff = Math.abs(column[index].offsetWidth - width)
-            if (3 < diff && index <= 10) {
-                // change width.
-                // let temp = Math.floor(width/10)*10;
-                col.style.width = width + "px";
-                calculateWidthOfRows()
-            h}
-            else if (30 < diff && 2 < index && index <= 30) {
-                col.style.width = width + "px";
-                calculateWidthOfRows()
-            }
-            else if (60 < diff && 20 < index && index <= 100) {
-                col.style.width = width + "px";
-                calculateWidthOfRows()
-            }
-        })*/
     }
 
+    // Generates custom stylesheet.
+    // Used to effectively resize big amounts of elements fast.
     function generateCustomStylesheet() {
         console.log("Generating stylesheet")
-        
-        //var numRows=9, numCols=9;
-        
         document.getElementsByTagName('head')[0].appendChild(document.createElement('style'));
         var sheet=document.styleSheets[1];
-//Or instead of creating a new sheet we could just get the first exisiting one like this:
-//var sheet=document.styleSheets[0]; 
-//Create rules dynamically
+
+        // Generate stylesheet for row height.
+        // Not currently in use because native resizing is working.
         /*for (i=0; i<array_rows; i++) {
             selector=".vis-row-"+i;
             rule="{height:" + default_column_width + "px;}";
             if (sheet.insertRule)
                 sheet.insertRule(selector+rule, 0);//This puts the rule at index 0
             
-            rowStyles[i]=(sheet.cssRules)[0].style;//Remember you have to fetch the rules-array from the sheet and not hold on to the old rules-array, since a new one is created during each insertion. Oh, and IE does things differently again; cssRules instead of rules
+            rowStyles[i]=(sheet.cssRules)[0].style;
         }*/
         
+        // Creates classes for vis-columnbox width.
         for (i=0; i<array_columns; i++) {
             selector=".vis-column-"+i;
             rule="{width: " + default_column_width + "px;}";
@@ -149,33 +114,35 @@ import '../worker/vis-table-worker.js'
                 sheet.insertRule(selector+rule, 0);
             colStyles[i]=(sheet.cssRules)[0].style;
         }
-
-        console.log(document.styleSheets)
+        
+        // Debug print
+        // console.log(document.styleSheets)
     }
     
     export default {
         mounted() {
-            //vis_table_worker = new Worker(new URL('./../worker/vis-table-worker.js', import.meta.url))
-            console.log("Mounted")
             generateCustomStylesheet()
-            console.log("Done making stylesheets") 
 
-            for (var i = 0; i < getColumn(1, table_array).length; i++)
-            {
-                colStyles[i].width = default_column_width
-            }
+            setTimeout(() => {
+                /*
+                    Function to fix bug on most chromium based browsers.
+                    Required for resizing to work on a majority of browsers
+                    that do not support native custom stylesheets.
 
-            setTimeout(() => { // Required to run on chrome TODO : describe issue more.
-                console.log("Fixing chrome")
+                    Firefox will gain a performance advantage for supporting this,
+                    while for example Google Chrome has to be forced to reload the
+                    styles by nudging the elements downwards slightly.
+                */
+
+                // Get all the 'Loading...' text elements, and nudge the rest down slightly.
                 document.getElementsByClassName("chrome_is_messy_fix")[0].style.height="100px";
+                // Wait until the stylesheet is triggered to reload, then hide elements.
                 setTimeout(() => {
                     Array.from(document.getElementsByClassName("chrome_is_messy_fix")).forEach(div => {
                         div.style.display="none";
                     });
                 }, 500);
             }, 1500);
-            //calculateWidthOfRows()
-            //console.log(document.styleSheets)
         },
 
         data() {
@@ -187,8 +154,6 @@ import '../worker/vis-table-worker.js'
                 addColumn,
 
                 getClass,
-                getColumnWidth,
-                columnWidths: [],
                 handleResize,
             }
         }
@@ -242,12 +207,10 @@ import '../worker/vis-table-worker.js'
                 :class="getClass(column-1, row-1)"
             >
                 
-                <!-- <div v-if="row === 1" class="vis-columnbox vis-resizable-column"> Resizable Column </div> -->
-                <textarea class="vis-textarea">row: {{ row-1 }} and col: {{ column-1 }}</textarea>
+                <textarea class="vis-textarea">row: {{ row-2 }} and col: {{ column-1 }}</textarea>
             </div>
         </div>
     </div>
-    <!--{{ setupResizeEventListeners() }}-->
 </template>
 
 
