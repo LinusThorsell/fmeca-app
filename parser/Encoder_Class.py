@@ -28,6 +28,17 @@ class ComplexEncoder(json.JSONEncoder):
         else:
             return json.JSONEncoder.default(self, obj)
 
+class Encoder:
+    def __init__(self):
+        self.Project = ""
+        
+    def createProject(self,name):
+        self.Project = Project_Data_Class(name,[]) 
+    
+    def send_to_database(self):
+        string = json.dumps(self.Project,cls=ComplexEncoder,indent=4)
+        #########
+
 def main():
     Name = "Project"
     '''
@@ -48,7 +59,7 @@ def main():
     #string = json.dumps(Data,cls=ProjectEncoder,indent=4)
     print(string)
     
-main()
+#main()
 
 
 #{

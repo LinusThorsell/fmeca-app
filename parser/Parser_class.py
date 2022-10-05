@@ -27,6 +27,7 @@ class Parser:
         self.parsed_files = []
         self._headers = {"Content-Type":"application/json"}
         self._url = 'http://127.0.0.1:8000/'
+        self._paths = set()
         
     def get_project_name(self,path,Encoder):
         print(path)
@@ -41,7 +42,8 @@ class Parser:
         #print("Postar detta:",self._headers,string)
         #requests.post(self._url+ "/projects/",string,headers=self._headers)
         Encoder.createProject(name)
-        return name
+        #print(Encoder.Project.project_id)
+
 
     def fc_hw_topology(self,path):
         #path = 'Project_1/infrastructure/fc/hw_topology.xml'
@@ -81,9 +83,15 @@ class Parser:
             print(name)
             #add to database?
             #x = {""}
-
-    def build_path(self,index):
+            
+    def get_fc_mc_hw(self,fc_hw_path,mc_hw_path,encoder):
+        lista = []
+        lista += self.fc_hw_topology(fc_hw_path)
+        lista += self.mc_hw_topology(mc_hw_path)
+        encoder.add_nodes(lista)
         
+        
+    def build_full_path(self,index):
         #print("The catalog")
         #print(self.catalogs[c])
         path = ""
@@ -103,7 +111,6 @@ class Parser:
         else:
             return "nopath"       
         
-        
         if "[acs_src]" in path:
             path = "nopath"
         else:
@@ -113,9 +120,10 @@ class Parser:
                 for temp in self._dictionary:
                     if ( "[" + temp + "]") in path:
                         path = path.replace("[" + temp + "]",self._dictionary[temp])
+        #print(path)
         dictionary["path"] = path
 
-    def parsefunction(self,index):
+    def build_relative_paths(self,index):
         #print("PATH:")
         #print(self.catalogs[index][1])
         #print(self.catalogs[index][1]["path"])
@@ -136,35 +144,13 @@ class Parser:
         else:
             return
 
-        print(newpath)
-        if os.path.exists(newpath):
-            if ".xml" in newpath:
-                print(ET.tostring(ET.parse(newpath).getroot(),encoding="ISO-8859-1").decode('utf8'))
-                tree = ET.parse(newpath)
-                root = tree.getroot()
-                curr_file = xml_file(newpath)     
-                
-                for child in root:
-                    # Store data
-                    parsed_value = xml_data(child.tag)
-                    parsed_value.data = child.attrib
-                    curr_file.data.append(parsed_value)
-                    
-                curr_file.xml = tree
-                self.parsed_files.append(curr_file)
-            elif os.path.isdir(newpath):
-                print("Kollar igenom directories")
-                for filename in os.scandir(newpath):
-                    if filename.is_file():
-                        #print("LALALALAL")
-                        #print(filename.path)
-                        print(ET.tostring(ET.parse(filename.path).getroot(),encoding="ISO-8859-1").decode('utf8'))
-
-            
+        #print(newpath)
+        self._paths.add(newpath)
 
     def initial_path(self,path):
         self.fc_path = path + "/fc/system.xml"
         self.mc_path = path + "/mc/system.xml"
+        
     
     def get_values_from_xml(self, xml, element_to_search_for, value_to_search_for):
         tree = ET.parse(xml.path)
@@ -236,9 +222,38 @@ class Parser:
     
         counter = 0
         while counter < len(self.catalogs):
-            self.build_path(counter)
-            self.parsefunction(counter)
+            self.build_full_path(counter)
+            self.build_relative_paths(counter)
             counter +=1
 
         #print("KATALOGEN")
         #print(self.catalogs)
+
+
+#Iterera igenom alla paths
+'''
+        if os.path.exists(newpath):
+            if ".xml" in newpath:
+                print(ET.tostring(ET.parse(newpath).getroot(),encoding="ISO-8859-1").decode('utf8'))
+                tree = ET.parse(newpath)
+                root = tree.getroot()
+                curr_file = xml_file(newpath)     
+                
+                for child in root:
+                    # Store data
+                    parsed_value = xml_data(child.tag)
+                    parsed_value.data = child.attrib
+                    curr_file.data.append(parsed_value)
+                    
+                curr_file.xml = tree
+                self.parsed_files.append(curr_file)
+            elif os.path.isdir(newpath):
+                print("Kollar igenom directories")
+                for filename in os.scandir(newpath):
+                    if filename.is_file():
+                        pass
+                        #print("LALALALAL")
+                        #print(filename.path)
+                        #print(ET.tostring(ET.parse(filename.path).getroot(),encoding="ISO-8859-1").decode('utf8'))
+
+'''

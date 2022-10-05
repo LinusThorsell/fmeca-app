@@ -3,7 +3,7 @@ import os.path
 from Parser_class import Parser
 import sys, string, os
 from os import path as OSPATH
-
+from Encoder_Class import *
 #Command Line Interface
 class CLI:
     
@@ -18,6 +18,7 @@ class CLI:
         self._all_parser = 0
         self._keep_alive = False
         self._parser = Parser()
+        self._encoder = Encoder()
 
     def delete(self,project):
         ##Tell the database to delete the project
@@ -44,10 +45,12 @@ class CLI:
     def parse(self):
         self._parser = Parser()
         self._parser.initial_path(self._add_path)
-        self._parser.parse(_parser.fc_path,self.dadadaad)
-        self._parser.parse(_parser.mc_path)
+        self._parser.parse(self._parser.fc_path)
+        self._parser.parse(self._parser.mc_path)
+        print("PATHS:")
+        print(self._parser._paths)
         
-        _parser.sendall()
+        #_parser.sendall()
 
 
     def test_func_with_two_args(self, arg1, arg2):
@@ -172,7 +175,10 @@ class CLI:
         if (self._add):
             ##anropa funktionen som ska posta till databasen
             print("Anropa funktionen som ska lägga till ett projekt i databasen databasen")
-            name = self._parser.get_project_name(self._add_path)
-            print(name)
-            #self.parse()
+            print(self._add_path)
+            self.parse()
+            #Efter self.parse() kan du iterera igenom self._parser._paths (ett set) för att göra det mer generellt
             
+            
+            #self._parser.get_project_name(self._add_path,self._encoder)
+            #self._parser.get_fc_mc_hw()
