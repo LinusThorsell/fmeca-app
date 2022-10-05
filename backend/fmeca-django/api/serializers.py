@@ -2,16 +2,27 @@
 from dataclasses import field
 from .models import *
 from rest_framework import serializers
-
-class ProjectSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Project
-        fields = '__all__'
+from rest_flex_fields import FlexFieldsModelSerializer
 
 class NodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Node
         fields = '__all__'
+
+
+class ProjectSerializer(serializers.ModelSerializer):
+    node_set = NodeSerializer(many=True)
+
+    class Meta:
+        model = Project
+        fields = '__all__'
+
+    def create(self, validated_data):
+        node_set = validated_data.pop('node_set')
+        project_instance = Project.objects.create(**validated_data)
+        for node in node_set:
+            Node.objects.create(project=project_instance,**node)
+        return project_instance
 
 class NodeFailureSerializer(serializers.ModelSerializer):
     class Meta:

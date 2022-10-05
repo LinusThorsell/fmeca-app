@@ -18,6 +18,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permissions = permission
+    http_method_names = ['get','post','retrieve','put','patch']
 
 class NodeViewSet(viewsets.ModelViewSet):
     queryset = Node.objects.all()
@@ -26,7 +27,7 @@ class NodeViewSet(viewsets.ModelViewSet):
 
 class NodeFailureViewSet(viewsets.ModelViewSet):
     queryset = NodeFailure.objects.all()
-    serializer_class = NodeFailureSerializer
+    serializer_class = NodeFailureSerializer 
     permissions = permission
 
 class PartitionViewSet(viewsets.ModelViewSet):
@@ -39,7 +40,7 @@ class PartitionFailureViewSet(viewsets.ModelViewSet):
     serializer_class = NodeFailureSerializer
     permissions = permission
 
-class ApplicationViewSet(viewsets.ModelViewSet):
+class ApplicationViewSet(viewsets.ModelViewSet): 
     queryset = Application.objects.all()
     serializer_class = NodeFailureSerializer
     permissions = permission
