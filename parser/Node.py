@@ -1,23 +1,12 @@
 class Node_Data_Class:
-    def __init__(self,namn,project):
-        self.name = namn
-        self.project = project
+    def __init__(self,name,partitionset):
+        self.name = name
+        self.partition_set = partitionset
     def reprJSON(self):
-        return {"name":self.name,"project":self.project}
+        return {"name":self.name,"partition_set":self.partition_set}
 
 class Node_Set:
-    def __init__(self,nodeset):
-        self.nodes = nodeset
+    def __init__(self,node_list):
+        self.node_set = node_list
     def reprJSON(self):
-        return self.nodes
-    
-    
-    
-#class Node_Data_Class:
-#    def __init__(self,namn,partitioner):
-#        self.name = namn
-#        self.partition_set = partitioner
-#    def reprJSON(self):
-#        return {"name":self.name,"partition_set":self.partition_set}
-#        return {"name":self.name}
- 
+        return {"node_set":self.node_set}

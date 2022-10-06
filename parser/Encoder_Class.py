@@ -21,32 +21,39 @@ class Encoder:
         self._headers = {"Content-Type":"application/json"}
         self._url = 'http://127.0.0.1:8000/'
         self.Project = ""
-        self.nodes = ""
-        self.partitions = ""
+        #self.nodes = ""
+        #self.partitions = ""
         
-    def createProject(self,name):
-        self.Project = Project.Project_Data_Class(name) 
+    def createProject(self,name,list):
+        self.Project = Project.Project_Data_Class(name,list) 
     
+    #partitioner till noder
     def add_nodes(self,node_list):
         __node_list = []
         for nodes in node_list:
-            __node_list.append(Node.Node_Data_Class(nodes,self.Project.project_id))
-        self.nodes = Node.Node_Set(__node_list)
+            __node_list.append(Node.Node_Data_Class(nodes,""))
+        #self.nodes = __node_list
+        self.Project.node_set = __node_list
     
-    def add_partitions(self,partitions_list):
+    def add_partitions(self,partitions_list,dict):
         #_partitions_list = []
         #for partitions in partitions_list:
-        #    _partitions_list.append(Partitionset_Data_Class(partitions))
-        self.partitions = Partitions.Partitionset_Class(partitions_list)
+        #    _partitions_list.append(Partitions.Partitionset_Data_Class(partitions,dict[partitions]))
+        #for nodes in Project.node_set:
+        #    if nodes.name in dict:
+        #        nodes.partitionset.append()
+        #self.partitions = _partitions_list
+        
+        pass
     
     def send_to_database(self,object,folder):
         string = json.dumps(object,cls=ComplexEncoder,indent=4)
-        print(string)
+        #print(string)
         
         #print("Postar detta:",self._headers,string)
         print("Till foldern: ",self._url + folder)
         print(string)
-        requests.post(self._url+ folder,string,headers=self._headers)
+        #requests.post(self._url+ folder,string,headers=self._headers)
         #########
 
 #def main():

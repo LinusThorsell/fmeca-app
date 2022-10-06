@@ -33,11 +33,11 @@ class Parser:
         print(path)
         temp = path.split("/")
         name = temp[0]
-        Encoder.createProject(name)
+        Encoder.createProject(name,[])
         #print(Encoder.Project.project_id)
         #Encoder.send_to_database(Encoder.Project,"projects/")
 
-
+    #För noder
     def fc_hw_topology(self,path):
         path = 'Project_1/infrastructure/fc/hw_topology.xml'
         tree = ET.parse(path)
@@ -50,7 +50,7 @@ class Parser:
             #add to database?
         return data
         
-            
+    #För noder
     def mc_hw_topology(self,path):
         path = 'Project_1/infrastructure/mc/hw_topology.xml'
         tree = ET.parse(path)
@@ -63,11 +63,21 @@ class Parser:
             #add to database?
         return data
     
+    def get_fc_mc_hw(self,fc_hw_path,mc_hw_path,encoder):
+        list = []
+        list += self.fc_hw_topology(fc_hw_path)
+        list += self.mc_hw_topology(mc_hw_path)
+        encoder.add_nodes(list)
+        #encoder.send_to_database(encoder.nodes,"nodes/")
+        
+    
     def fc_sw_topology(self,path):
         path = 'Project_1/infrastructure/fc/sw_topology.xml'
         tree = ET.parse(path)
         root = tree.getroot()
         list = []
+        ##Dictionary innehåller nodenamn och partition
+        dict = {}
         for i in root.findall('APP'):
             referenced_node = i.get("ref")
             templist = referenced_node.split(".")
@@ -75,16 +85,9 @@ class Parser:
             referenced_node = templist[0]            
             for partitions in i.findall("Partition"):
                 name = partitions.get("name")
-
-            #name = partitions.get("name")
-                #print(name)
-                list.append(Partitions.Partition_Data_Class(name,referenced_node))
-            #print(i)
-            #name = i.get('ref')
-            #print(name)
-            #add to database?
-            #x = {""}
-        return list
+                list.append(Partitions.Partitionset_Data_Class(name,referenced_node))
+                dict[name] = referenced_node
+        return list,dict
 
 
     def mc_sw_topology(self,path):
@@ -99,18 +102,17 @@ class Parser:
             
     def get_fc_mc_sw(self,fc_sw_path,mc_sw_path,encoder):
         partitions = []
-        partitions += self.fc_sw_topology(fc_sw_path)
+        temp = self.fc_sw_topology(fc_sw_path)
+        #
+        # 
+        # partitions += self.fc_sw_topology(fc_sw_path)
+        partitions += temp[0]
+        
         #list += self.mc_sw_topology(mc_hw_path)
-        encoder.add_partitions(partitions)
+        encoder.add_partitions(partitions,temp[1])
         #encoder.send_to_database(encoder.partitions,"partitions/")
     
-    def get_fc_mc_hw(self,fc_hw_path,mc_hw_path,encoder):
-        list = []
-        list += self.fc_hw_topology(fc_hw_path)
-        list += self.mc_hw_topology(mc_hw_path)
-        encoder.add_nodes(list)
-        encoder.send_to_database(encoder.nodes,"nodes/")
-        
+
         
     def build_full_path(self,index):
         #print("The catalog")
