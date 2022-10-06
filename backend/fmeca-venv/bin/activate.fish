@@ -29,7 +29,7 @@ end
 # unset irrelevant variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/linus/TDDI17/fmeca-app/backend/fmeca-venv"
+set -gx VIRTUAL_ENV "/home/adam/saab-project/fmeca-app/backend/fmeca-venv"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

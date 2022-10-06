@@ -18,7 +18,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permissions = permission
-    http_method_names = ['get','post','retrieve','put','patch']
 
 class NodeViewSet(viewsets.ModelViewSet):
     queryset = Node.objects.all()
@@ -49,17 +48,3 @@ class MaterialGroupViewSet(viewsets.ModelViewSet):
     queryset = MaterialGroup.objects.all()
     serializer_class = MaterialGroupSerializer
     permissions = permission
-
-# @api_view(['GET'])
-# def PersonList(request):
-#     persons = Person.objects.all()
-#     serializers = PersonSerializer(persons, many=True)
-#     return Response(serializers.data)
-
-
-
-# @api_view(['GET', 'POST', 'DELETE'])
-# def FmecaProject(request):
-#     projects = Project.objects.all()
-#     serializers = ProjectSerializer(projects, many=True)
-#     return Response(serializers.data)

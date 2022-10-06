@@ -39,30 +39,37 @@ class Parser:
         string = json.dumps(x)
         # string = json.dumps(lista)
 
+
         # payload = {
-        #     'name': 'FMC-1',
-        #     'project': {
-        #         'project_id': 'nestled-test'
-        #     }
+        #         'project_id': 'dummy',
+        #         'node_set': [
+        #             {
+        #                 "name": "FMC-0"
+        #             },
+        #             {
+        #                 "name": "FMC-1"
+        #             },
+        #             {
+        #                 "name": "FMC-2"
+        #             }
+        #         ]
         # }
 
         payload = {
-                'project_id': 'projekt-15',
-                'node_set': [
-                    {
-                        "name": "FMC"
-                    },
-                    {
-                        "name": "FMC-1"
-                    },
-                    {
-                        "name": "FMC-2"
-                    }
-                ]
+            "name": "test",
+            "project": "dummy",
+            "partition_set": [
+                {
+                    "name": "LPM-FMC-0" 
+                },
+                {
+                    "name": "LPM-FMC-1" 
+                }
+           ]
         }
         
         print("Postar detta:",self._headers,string)
-        requests.post(self._url+ "projects/",json=payload,headers=self._headers)
+        requests.post(self._url+ "nodes/",json=payload,headers=self._headers)
 
     def fc_hw_topology(self,path):
         #path = 'Project_1/infrastructure/fc/hw_topology.xml'
