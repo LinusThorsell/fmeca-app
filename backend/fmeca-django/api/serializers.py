@@ -2,11 +2,14 @@
 from dataclasses import field
 from .models import *
 from rest_framework import serializers
+<<<<<<< HEAD
 
 class PartitionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Partition
         fields = '__all__'
+=======
+>>>>>>> master
 
 class NodeSerializer(serializers.ModelSerializer):
     partition_set = PartitionSerializer(many=True)
