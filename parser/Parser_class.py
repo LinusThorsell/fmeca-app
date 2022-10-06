@@ -5,6 +5,8 @@ import os
 import requests
 import Encoder_Class
 import Partitions
+import Project
+import Node
 class xml_file:
     def __init__(self, path):
         self.path = path
@@ -33,7 +35,7 @@ class Parser:
         print(path)
         temp = path.split("/")
         name = temp[0]
-        Encoder.createProject(name,[])
+        Project.Project_Data_Class(name,[]) 
         #print(Encoder.Project.project_id)
         #Encoder.send_to_database(Encoder.Project,"projects/")
 
@@ -42,31 +44,30 @@ class Parser:
         path = 'Project_1/infrastructure/fc/hw_topology.xml'
         tree = ET.parse(path)
         root = tree.getroot()
-        data = []
+        nodes = []
         for i in root.findall('DCM'):
             name = i.get('name')
             #print(name)
-            data.append(name)
-            #add to database?
-        return data
+            nodes.append(name)
+        return nodes
         
     #För noder
     def mc_hw_topology(self,path):
         path = 'Project_1/infrastructure/mc/hw_topology.xml'
         tree = ET.parse(path)
         root = tree.getroot()
-        data = []
+        nodes = []
         for i in root.findall('PDCM'):
             name = i.get('name')
             #print(name)
-            data.append(name)
-            #add to database?
-        return data
+            nodes.append(name)
+        return nodes
     
     def get_fc_mc_hw(self,fc_hw_path,mc_hw_path,encoder):
         list = []
         list += self.fc_hw_topology(fc_hw_path)
         list += self.mc_hw_topology(mc_hw_path)
+        
         encoder.add_nodes(list)
         #encoder.send_to_database(encoder.nodes,"nodes/")
         

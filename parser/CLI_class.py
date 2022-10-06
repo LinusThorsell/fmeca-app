@@ -4,6 +4,9 @@ from Parser_class import Parser
 import sys, string, os
 from os import path as OSPATH
 from Encoder_Class import *
+
+import Project
+
 #Command Line Interface
 class CLI:
     
@@ -186,6 +189,7 @@ class CLI:
             
             #Efter self.parse() kan du iterera igenom self._parser._paths (ett set) för att göra det mer generellt
             
+            Project = Project.Project_Data_Class("",[])
             
             self._parser.get_project_name(self._add_path,self._encoder)
             #self._parser.fc_hw_topology("")
