@@ -86,7 +86,7 @@ class Parser:
             referenced_node = templist[0]            
             for partitions in i.findall("Partition"):
                 name = partitions.get("name")
-                list.append(Partitions.Partitionset_Data_Class(name,referenced_node))
+                list.append(Partitions.Partition_Data_Class(name,referenced_node))
                 dict[name] = referenced_node
         return list,dict
 
@@ -97,7 +97,6 @@ class Parser:
         root = tree.getroot()
         for i in root.findall('APP'):
             name = i.get('ref')
-            print(name)
             #add to database?
             #x = {""}
             
@@ -110,7 +109,7 @@ class Parser:
         partitions += temp[0]
         
         #list += self.mc_sw_topology(mc_hw_path)
-        encoder.add_partitions(partitions,temp[1])
+        #encoder.add_partitions(partitions,temp[1])
         #encoder.send_to_database(encoder.partitions,"partitions/")
     
 
