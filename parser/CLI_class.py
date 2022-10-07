@@ -184,18 +184,19 @@ class CLI:
             #ording = []
             
             #for  in ording:
-            #    if path in self._parser._path:
-                    
+            #    if path in self._parser._path:     
             
-            #Efter self.parse() kan du iterera igenom self._parser._paths (ett set) för att göra det mer generellt
+            #Efter self.get_paths() kan du iterera igenom self._parser._paths (ett set) för att göra det mer generellt
             
             Project = Project.Project_Data_Class("",[])
             
             self._parser.get_project_name(self._add_path,self._encoder)
             #self._parser.fc_hw_topology("")
             #self._parser.mc_hw_topology("")
-            self._parser.get_fc_mc_hw("","",self._encoder)
-            self._parser.get_fc_mc_sw("","",self._encoder)
+            self._parser.get_fc_mc_hw("","", Project)
+            for node in Project.node_set:
+                print(node)
+            self._parser.get_fc_mc_sw("","",Project)
             #print(self._encoder.Project)
             #Skickar jsut nu i alla getfunktioner
             self._encoder.send_to_database(self._encoder.Project,"projects/")

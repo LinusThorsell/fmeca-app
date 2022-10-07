@@ -63,12 +63,12 @@ class Parser:
             nodes.append(name)
         return nodes
     
-    def get_fc_mc_hw(self,fc_hw_path,mc_hw_path,encoder):
-        list = []
-        list += self.fc_hw_topology(fc_hw_path)
-        list += self.mc_hw_topology(mc_hw_path)
+    def get_fc_mc_hw(self,fc_hw_path,mc_hw_path,project):
+        node_set = []
+        node_set += self.fc_hw_topology(fc_hw_path)
+        node_set += self.mc_hw_topology(mc_hw_path)
         
-        encoder.add_nodes(list)
+        project.node_set = node_set
         #encoder.send_to_database(encoder.nodes,"nodes/")
         
     
