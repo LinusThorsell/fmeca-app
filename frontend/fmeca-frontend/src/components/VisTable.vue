@@ -1,27 +1,75 @@
 <script>
+import { vis_table_store } from './vis-table-store.js'
 
+    export default {
+        mounted() {
+            generateCustomStylesheet()
+
+            setTimeout(() => {
+                /*
+                    Function to fix bug on most chromium based browsers.
+                    Required for resizing to work on a majority of browsers
+                    that do not support native custom stylesheets.
+
+                    Firefox will gain a performance advantage for supporting this,
+                    while for example Google Chrome has to be forced to reload the
+                    styles by nudging the elements downwards slightly.
+                */
+
+                // Get all the 'Loading...' text elements, and nudge the rest down slightly.
+                document.getElementsByClassName("chrome_is_messy_fix")[0].style.height="100px";
+                // Wait until the stylesheet is triggered to reload, then hide elements.
+                setTimeout(() => {
+                    Array.from(document.getElementsByClassName("chrome_is_messy_fix")).forEach(div => {
+                        div.style.display="none";
+                    });
+                }, 500);
+            }, 1500);
+        },
+        
+
+        data() {
+            return {
+                setupTable,
+                getRow,
+                getColumn,
+                addRow,
+                addColumn,
+
+                getClass,
+                handleResize,
+                getTableFromBackend,
+                vis_table_store,
+            }
+        },
+        //methods: {
+           /* setTable(table) {
+                this.table_array = table
+            },*/
+        //},
+    }
+    
     var selector, rule, i, /*rowStyles=[],*/ colStyles=[];
 
-    const table_array = [];
-
-    const array_columns = 10;
-    const array_rows = 10;
+    const array_columns = 4;
+    const array_rows = 4;
     const default_column_width = 100;
 
     // Gets entire table ( TODO : interface with backend here )
-    function getTable() {    
-    
-        if (table_array.length === 0) {
+    function setupTable() {    
+
+        if (vis_table_store.getRowCount() === 0) {
+            const temp_array = []
             console.log("Array empty, creating example")
-            for (var column = 0; column < array_columns; column++) {
-                table_array[column] = [];
-                for (var row = 0; row < array_rows; row++) {
-                    table_array[column][row] = "Column: " + column + " Row: " + row;
+            for (var column = 0; column < array_columns+1; column++) {
+                temp_array[column] = [];
+                for (var row = 0; row < array_rows+1; row++) {
+                    temp_array[column][row] = "";
                 }
             }
+            vis_table_store.setArray(temp_array)
         }
-        
-        return table_array;
+        // return table_array;
     }
    
     // Gets a specific row ( index ) as an array from the input array ( table_array ).
@@ -119,46 +167,28 @@
         // console.log(document.styleSheets)
     }
     
-    export default {
-        mounted() {
-            generateCustomStylesheet()
+    var have_fetched = false;
+    function getTableFromBackend() {
+        // Simple GET request using fetch
+        
+        if (!have_fetched) {
 
-            setTimeout(() => {
-                /*
-                    Function to fix bug on most chromium based browsers.
-                    Required for resizing to work on a majority of browsers
-                    that do not support native custom stylesheets.
-
-                    Firefox will gain a performance advantage for supporting this,
-                    while for example Google Chrome has to be forced to reload the
-                    styles by nudging the elements downwards slightly.
-                */
-
-                // Get all the 'Loading...' text elements, and nudge the rest down slightly.
-                document.getElementsByClassName("chrome_is_messy_fix")[0].style.height="100px";
-                // Wait until the stylesheet is triggered to reload, then hide elements.
-                setTimeout(() => {
-                    Array.from(document.getElementsByClassName("chrome_is_messy_fix")).forEach(div => {
-                        div.style.display="none";
+            fetch("http://localhost:8000/projects/")
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    /*data.forEach((element, index) => {
+                        vis_table_store.set(0, index, element.project_id)
+                    }); */
+                    vis_table_store.set(1, 1, data[0].project_id)
+                    data[0].node_set.forEach((node, index) => {
+                        vis_table_store.set(index+1, 1, node.name)
                     });
-                }, 500);
-            }, 1500);
-        },
-
-        data() {
-            return {
-                getTable,
-                getRow,
-                getColumn,
-                addRow,
-                addColumn,
-
-                getClass,
-                handleResize,
-            }
+                    //vis_table_store.set(0, 1, data) 
+            });
+            have_fetched = true
         }
     }
-
     </script>
     
 <style>
@@ -167,8 +197,10 @@
 
 <template>
     {{ $log("Rerender") }}
+    {{ setupTable() }}
+    {{ getTableFromBackend() }}
     <div id="vis-table">
-        <div v-for="row in getTable()[0].length" class="vis-row">
+        <div v-for="row in vis_table_store.getRowCount()" class="vis-row">
             <div v-if="row-1 !== 0">
                 <div class="vis-columnbox vis-resizable-row"> Resizable Row </div>
             </div>
@@ -193,7 +225,7 @@
                     </p>
             </div>
             
-            <div v-if="row-1 === 0" v-for="column in getTable().length" 
+            <div v-if="row-1 === 0" v-for="column in vis_table_store.getColumnCount()" 
                 class="vis-columnbox vis-resizable-column" 
                 :class="getClass(column-1, row-2)"
                 v-resize="handleResize"
@@ -202,12 +234,12 @@
                 <div class="chrome_is_messy_fix">Loading...</div>
             </div>
             
-            <div v-if="row-1 !== 0" v-for="column in getTable().length" 
+            <div v-if="row-1 !== 0" v-for="column in vis_table_store.getColumnCount()" 
                 class="vis-columnbox" 
                 :class="getClass(column-1, row-1)"
             >
                 
-                <textarea class="vis-textarea">row: {{ row-2 }} and col: {{ column-1 }}</textarea>
+                <textarea class="vis-textarea">{{ vis_table_store.get((row), (column)) }}</textarea>
             </div>
         </div>
     </div>
