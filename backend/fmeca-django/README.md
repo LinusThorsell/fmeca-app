@@ -4,6 +4,9 @@ of the database and the api.
 
 ## How to run
 
+- **change venv path**\
+do so in fmeca-venv/bin/activate.*
+
 - **sudo /etc/init.d/mysql start**\
 *to start the local database.*
 

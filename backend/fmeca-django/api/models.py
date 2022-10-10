@@ -23,7 +23,7 @@ class NodeFailure(models.Model):
     comments = models.TextField(max_length=500, default="")
 
 class Partition(models.Model):
-    id = models.BigAutoField(primary_key=True, default=0)
+    # id = models.BigAutoField(primary_key=True, default=0)
     name = models.CharField(max_length=20, default="")
     node = models.ForeignKey(Node, on_delete=models.CASCADE, default="")
 
