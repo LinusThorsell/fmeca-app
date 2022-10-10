@@ -29,11 +29,12 @@ class Encoder:
     
     #partitioner till noder
     def add_nodes(self,node_list):
-        __node_list = []
-        for nodes in node_list:
-            __node_list.append(Node.Node_Data_Class(nodes,""))
+        #__node_list = []
+        #for nodes in node_list:
+        #    __node_list.append(Node.Node_Data_Class(nodes,""))
         #self.nodes = __node_list
-        self.Project.node_set = __node_list
+        #self.Project.node_set = __node_list
+        pass
     
     def add_partitions(self,partitions_list,dict):
         #_partitions_list = []
@@ -47,11 +48,11 @@ class Encoder:
         pass
     
     def send_to_database(self,object,folder):
+        print("Är i send to database")
         string = json.dumps(object,cls=ComplexEncoder,indent=4)
-        #print(string)
         
         #print("Postar detta:",self._headers,string)
-        print("Till foldern: ",self._url + folder)
+        #print("Till foldern: ",self._url + folder)
         print(string)
         #requests.post(self._url+ folder,string,headers=self._headers)
         #########
@@ -75,14 +76,3 @@ class Encoder:
 
     #string = json.dumps(Data,cls=ProjectEncoder,indent=4)
     #print(string)
-    
-    
-    
-    
-    
-    
-    
-    
-
-
-

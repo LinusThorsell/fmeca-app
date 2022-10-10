@@ -4,7 +4,7 @@ from Parser_class import Parser
 import sys, string, os
 from os import path as OSPATH
 from Encoder_Class import *
-
+import ctypes
 import Project
 
 #Command Line Interface
@@ -190,13 +190,32 @@ class CLI:
             
             Project_type = Project.Project_Data_Class("",[])
             
-            self._parser.get_project_name(self._add_path,self._encoder)
+            #Create partitions
+            partitions = self._parser.get_fc_mc_sw("","",Project_type)# node -> partitons
+            for key in partitions.keys():
+                print(key)
+                for obj in partitions[key]:
+                    print(obj.name, end =" ")
+            # Create nodes
+            nodes = self._parser.get_fc_mc_hw("","",partitions)
+            #create project
+            print()
+            print("Nodes:")
+            for node in nodes:
+                print(node.name)
+            #self._parser.get_project_name(self._add_path,self._encoder)
+            
+            Project_type = Project.Project_Data_Class(self._parser.get_project_name(self._add_path),nodes)
+            
+            
             #self._parser.fc_hw_topology("")
             #self._parser.mc_hw_topology("")
-            self._parser.get_fc_mc_hw("","", Project_type)
-            for node in Project_type.node_set:
-                print(node)
-            self._parser.get_fc_mc_sw("","",Project_type)
+            
+            #self._parser.get_fc_mc_hw("","", Project_type)
+            #for node in Project_type.node_set:
+            #    print(node)
+            
+            #self._parser.get_fc_mc_sw("","",Project_type)
             #print(self._encoder.Project)
             #Skickar jsut nu i alla getfunktioner
-            self._encoder.send_to_database(self._encoder.Project_type,"projects/")
+            self._encoder.send_to_database(Project_type,"projects/")
