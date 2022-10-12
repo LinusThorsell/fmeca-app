@@ -23,6 +23,7 @@ class CLI:
         self._encoder = Encoder()
         self._Paths = Paths.Paths()
         self._parser = Parser()
+        #self._parser.initialisation()
     
     def delete(self,project):
         ##Tell the database to delete the project
