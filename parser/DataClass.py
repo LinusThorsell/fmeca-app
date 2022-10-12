@@ -15,7 +15,8 @@ class Partition_Data_Class:
         return {"name":self.name}
 
 class NodeFC:
-    def __init__(self,name,loadsetTypeRef, redundant, platformRef, syncLostBehavior):
+    def __init__(self,type,name,loadsetTypeRef, redundant, platformRef, syncLostBehavior):
+        self.type = type
         self.name = name
         self.loadsetTypeRef = loadsetTypeRef
         self.redundant = redundant
@@ -30,7 +31,12 @@ class NodeMC:
         self.name = name
         self.loadsetTypeRef = loadsetTypeRef
         self.platformRef = platformRef
-        
+    def reprJSON(self):
+        return {"name":self.name,"loadsetTypeRef":self.loadsetTypeRef,"platformRef":self.platformRef}
+
+class Application:
+    def __init__(self):
+        pass
 
 #The lists should contain Objects of the Objects
 class Project:

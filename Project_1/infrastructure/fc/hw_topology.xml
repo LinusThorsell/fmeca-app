@@ -20,9 +20,8 @@
       <RTHINetwork phyChA="0" phyChB="1" id="FMC-L1.IOP">
         <RedundantModuleConfig id="FMC-L2.IOP"/>
       </RTHINetwork>
-	  
-     </IOP>
-	 
+    </IOP>
+	
   </DCM>
 
   

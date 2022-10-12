@@ -4,41 +4,83 @@ import Encoder_Class
 import DataClass
 class Parser:
     def __init__(self):
-        pass
+        self.functions = {}
 
-        
+    
     def get_project_name(self,path):
         print(path)
         temp = path.split("/")
         name = temp[0]
         return name
+
+    def cpu(self,node):
+        pass
     
+    def dcm(self,node):
+            returnlist = []
+            type = "DCM"
+            name = node.get('name')
+            loadsetTypeRef =node.get("loadsetTypeRef")
+            platformRef = node.get("platformRef")
+            synclostBehavior =node.get("syncLostBehavior")
+            redundant =node.get("redundant")
+            returnlist.append(DataClass.NodeFC(type,name,loadsetTypeRef,redundant,platformRef,synclostBehavior))    
+            print("Children")
+            for children in node:
+                print(children.tag)
+                if children.tag in self.functions:
+                    returnlist += self.functions[children.tag](childen)
+            print("\n\n")
+            return returnlist
+    
+    def get_fc_nodes(self,path):
+        tree = ET.parse(path)
+        root = tree.getroot()
+        returnlist = []
+        for node in root:
+            print(node.tag)
+            if node.tag in self.functions:
+                returnlist += self.functions[node.tag](node)
+        return returnlist        
+
+    #return a list of nodes
+    def get_mc_nodes(self,path):
+        tree = ET.parse(path)
+        root = tree.getroot()
+        nodes = []
+        for i in root.findall('PDCM'):
+            name = i.get('name')
+            loadsetTypeRef = i.get("loadsetTypeRef")
+            platformRef = i.get("platformRef")
+                   
+            nodes.append(DataClass.NodeMC(name,loadsetTypeRef,platformRef))
+        return nodes
+    
+    def get_partitions(self,path):
+        return []
+    
+    def initialisation(self):
+        self.functions = {"DCM":self.dcm,"APP":self.cpu,"IOP":self.cpu}
+    
+'''    
     #return a list of nodes
     def get_fc_nodes(self,path):
         tree = ET.parse(path)
         root = tree.getroot()
-        nodes = []
-        for i in root.findall('DCM'):
-            print(i)
-            name = i.get('name')
-            loadsetTypeRef =i.get("loadsetTypeRef")
-            platformRef = i.get("platformRef")
-            synclostBehavior =i.get("syncLostBehavior")
-            redundant =i.get("redundant")
-
-            nodes.append(DataClass.NodeFC(name,loadsetTypeRef,redundant,platformRef,synclostBehavior))    
-            #name = i.get('name')
-            #if name in partitions_dict:
+        returnlist = []
+        for node in root.findall('DCM'):
+            print(node)
+            name = node.get('name')
+            loadsetTypeRef =node.get("loadsetTypeRef")
+            platformRef = node.get("platformRef")
+            synclostBehavior =node.get("syncLostBehavior")
+            redundant =node.get("redundant")
+            returnlist.append(DataClass.NodeFC(name,loadsetTypeRef,redundant,platformRef,synclostBehavior))    
+            for children in node:
                 
-            #    nodes.append(DataClass.NodeFC(name,))
-        return nodes
-        
-    #return a list of nodes
-    def get_mc_nodes(self,path):
-        return []
-    
-    def get_partitions(self,path):
-        return []
+                
+        return returnlist
+    '''    
 '''
     #För noder
     def fc_hw_topology(self,path,partitions_dict):
