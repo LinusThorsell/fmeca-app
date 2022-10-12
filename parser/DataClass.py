@@ -21,7 +21,8 @@ class NodeFC:
         self.redundant = redundant
         self.platformRef = platformRef
         self.syncLostBehavior =  syncLostBehavior
-        self.Partitions = []
+    def reprJSON(self):
+        return {"name":self.name,"loadsetTypeRef":self.loadsetTypeRef,"redundant":self.redundant,"platformRef":self.platformRef,"syncLostBehavior":self.syncLostBehavior}
 
 
 class NodeMC:

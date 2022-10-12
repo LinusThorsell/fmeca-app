@@ -15,7 +15,23 @@ class Parser:
     
     #return a list of nodes
     def get_fc_nodes(self,path):
-        return []
+        tree = ET.parse(path)
+        root = tree.getroot()
+        nodes = []
+        for i in root.findall('DCM'):
+            print(i)
+            name = i.get('name')
+            loadsetTypeRef =i.get("loadsetTypeRef")
+            platformRef = i.get("platformRef")
+            synclostBehavior =i.get("syncLostBehavior")
+            redundant =i.get("redundant")
+
+            nodes.append(DataClass.NodeFC(name,loadsetTypeRef,redundant,platformRef,synclostBehavior))    
+            #name = i.get('name')
+            #if name in partitions_dict:
+                
+            #    nodes.append(DataClass.NodeFC(name,))
+        return nodes
         
     #return a list of nodes
     def get_mc_nodes(self,path):
