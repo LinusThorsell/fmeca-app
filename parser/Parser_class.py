@@ -14,7 +14,7 @@ class Parser:
         return name
 
     def cpu(self,node):
-        pass
+        return []
     
     def dcm(self,node):
             returnlist = []
@@ -25,12 +25,10 @@ class Parser:
             synclostBehavior =node.get("syncLostBehavior")
             redundant =node.get("redundant")
             returnlist.append(DataClass.NodeFC(type,name,loadsetTypeRef,redundant,platformRef,synclostBehavior))    
-            print("Children")
             for children in node:
-                print(children.tag)
+                print("\t" + children.tag)
                 if children.tag in self.functions:
-                    returnlist += self.functions[children.tag](childen)
-            print("\n\n")
+                    returnlist += self.functions[children.tag](children)
             return returnlist
     
     def get_fc_nodes(self,path):
@@ -40,6 +38,7 @@ class Parser:
         for node in root:
             print(node.tag)
             if node.tag in self.functions:
+                print("Node tag is in functions")
                 returnlist += self.functions[node.tag](node)
         return returnlist        
 
