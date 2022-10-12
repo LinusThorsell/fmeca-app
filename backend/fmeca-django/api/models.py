@@ -11,9 +11,12 @@ class Project(models.Model):
     project_id = models.CharField(max_length=50, primary_key=True)
 
 class Node(models.Model):
-    # id = models.BigAutoField(primary_key=True, default=0)
     name = models.CharField(max_length=50, default="")
     project = models.ForeignKey(Project, on_delete=models.CASCADE, default="")
+
+class Partition(models.Model):
+    name = models.CharField(max_length=20, default="")
+    node = models.ForeignKey(Node, on_delete=models.CASCADE, default="")
 
 class NodeFailure(models.Model):
     id = models.BigAutoField(primary_key=True, default=0)
@@ -21,11 +24,6 @@ class NodeFailure(models.Model):
     event = models.CharField(max_length=200)
     flight_phase = models.CharField(max_length=50)    
     comments = models.TextField(max_length=500, default="")
-
-class Partition(models.Model):
-    # id = models.BigAutoField(primary_key=True, default=0)
-    name = models.CharField(max_length=20, default="")
-    node = models.ForeignKey(Node, on_delete=models.CASCADE, default="")
 
 class PartitionFailure(models.Model):
     id = models.BigAutoField(primary_key=True, default=0)

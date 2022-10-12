@@ -30,10 +30,13 @@ class ProjectSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
-        node_set = validated_data.pop('node_set')
+        node_set = validated_data.pop('node_set')   
         project_instance = Project.objects.create(**validated_data)
         for node in node_set:
-            Node.objects.create(project=project_instance,**node)
+            node_id = node.get('id')
+            print(node_id)
+            Node.objects.get('node_id').update(project=project_instance)
+            # Node.objects.create(project=project_instance,**node)
         return project_instance
 
 class NodeFailureSerializer(serializers.ModelSerializer):

@@ -41,7 +41,7 @@ class Parser:
 
 
         payload = {
-                'project_id': 'dummy2',
+                'project_id': 'Test20',
                 'node_set': [
                     {
                         "name": "FMC-0",
@@ -63,14 +63,13 @@ class Parser:
         }
 
         # payload = {
-        #     "name": "test",
-        #     "project": "dummy",
-        #     "partition_set": [
+        #     "project_id": "dummy22",
+        #     "node_set": [
         #         {
-        #             "name": "LPM-FMC-0" 
+        #             "name": "node12" 
         #         },
         #         {
-        #             "name": "LPM-FMC-1" 
+        #             "name": "dfsdfsdfsd" 
         #         }
         #    ]
         # }
