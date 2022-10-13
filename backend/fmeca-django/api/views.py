@@ -24,9 +24,19 @@ class NodeViewSet(viewsets.ModelViewSet):
     serializer_class = NodeSerializer
     permissions = permission
 
-class NodeFailureViewSet(viewsets.ModelViewSet):
-    queryset = NodeFailure.objects.all()
-    serializer_class = NodeFailureSerializer 
+class NodeFCViewSet(viewsets.ModelViewSet):
+    queryset = NodeFC.objects.all()
+    serializer_class = NodeFCSerializer
+    permissions = permission
+
+class NodeMCViewSet(viewsets.ModelViewSet):
+    queryset = NodeMC.objects.all()
+    serializer_class = NodeMCSerializer
+    permissions = permission
+
+class CPUViewSet(viewsets.ModelViewSet):
+    queryset = CPU.objects.all()
+    serializer_class = CPUSerializer
     permissions = permission
 
 class PartitionViewSet(viewsets.ModelViewSet):
@@ -34,17 +44,25 @@ class PartitionViewSet(viewsets.ModelViewSet):
     serializer_class = PartitionSerializer
     permissions = permission
 
-class PartitionFailureViewSet(viewsets.ModelViewSet):
-    queryset = PartitionFailure.objects.all()
-    serializer_class = PartitionFailureSerializer
-    permissions = permission
-
 class ApplicationViewSet(viewsets.ModelViewSet): 
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
     permissions = permission
 
-class MaterialGroupViewSet(viewsets.ModelViewSet):
-    queryset = MaterialGroup.objects.all()
-    serializer_class = MaterialGroupSerializer
-    permissions = permission
+# --------------------------------------------------
+
+
+# class NodeFailureViewSet(viewsets.ModelViewSet):
+#     queryset = NodeFailure.objects.all()
+#     serializer_class = NodeFailureSerializer 
+#     permissions = permission
+
+# class PartitionFailureViewSet(viewsets.ModelViewSet):
+#     queryset = PartitionFailure.objects.all()
+#     serializer_class = PartitionFailureSerializer
+#     permissions = permission
+
+# class MaterialGroupViewSet(viewsets.ModelViewSet):
+#     queryset = MaterialGroup.objects.all()
+#     serializer_class = MaterialGroupSerializer
+#     permissions = permission
