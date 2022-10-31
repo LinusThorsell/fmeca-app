@@ -13,8 +13,27 @@ class Parser:
         name = temp[0]
         return name
 
-    def cpu(self,node):
-        return []
+    def cpu(self,node,parentname):
+        type = ""
+        returnlist = []
+        name = node.get("name")
+        unitid = node.get("unitId")
+        IOPRef = ""
+        ACCSSyncMaster = ""
+        if node.tag == "APP":
+            type = "APP"
+            IOPRef = node.get("IOPRef")
+        elif node.tag == "IOP":
+            type = "IOP"
+            ACCSSyncMaster = node.get("ACCSSyncMaster")
+        returnlist.append(DataClass.Cpu(name,parentname,type,unitid,IOPRef,ACCSSyncMaster))
+        
+        for children in node:
+            print("\t\t" + children.tag)
+            if children.tag in self.functions:
+                returnlist += self.functions[children.tag](children)
+                
+        return returnlist
     
     def dcm(self,node):
             returnlist = []
@@ -28,7 +47,10 @@ class Parser:
             for children in node:
                 print("\t" + children.tag)
                 if children.tag in self.functions:
-                    returnlist += self.functions[children.tag](children)
+                    if children.tag == "APP" or children.tag == "IOP":
+                        returnlist += self.functions[children.tag](children,name)
+                    else:
+                        returnlist += self.functions[children.tag](children)
             return returnlist
     
     def get_fc_nodes(self,path):
@@ -51,7 +73,6 @@ class Parser:
             name = i.get('name')
             loadsetTypeRef = i.get("loadsetTypeRef")
             platformRef = i.get("platformRef")
-                   
             nodes.append(DataClass.NodeMC(name,loadsetTypeRef,platformRef))
         return nodes
     
