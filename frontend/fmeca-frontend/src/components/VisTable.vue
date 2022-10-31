@@ -30,6 +30,8 @@ import { vis_table_store } from './vis-table-store.js'
 
         data() {
             return {
+                removeColumn,
+                restoreColumns,
                 setupTable,
                 getRow,
                 getColumn,
@@ -85,6 +87,18 @@ import { vis_table_store } from './vis-table-store.js'
     // Gets a specific column ( index ) as an array from the input array ( table_array )
     function getColumn(index, table_array) {
         return table_array[index]
+    }
+
+    function removeColumn(column) {
+        colStyles[column-1].display="none";
+    }
+
+    function restoreColumns() {
+        console.log(vis_table_store.getColumnCount())
+        for(i = 0; i < vis_table_store.getColumnCount(); i++)
+        {
+            colStyles[i].display = "block";
+        }
     }
     
     // TODO : Fix, Is currently not working with rest of program structure.
@@ -221,7 +235,8 @@ import { vis_table_store } from './vis-table-store.js'
                         color: gray;
                         "
                     >
-                        FMECA<br>Analys
+                        FMECA<br>Analys<br>
+                        <button @click="restoreColumns()">Restore Table</button>
                     </p>
             </div>
             
@@ -231,7 +246,12 @@ import { vis_table_store } from './vis-table-store.js'
                 v-resize="handleResize"
             >
                 Resizable Column
+                <button @click="removeColumn(column)">
+                    Hide {{column-1}}
+                </button>
+                
                 <div class="chrome_is_messy_fix">Loading...</div>
+            
             </div>
             
             <div v-if="row-1 !== 0" v-for="column in vis_table_store.getColumnCount()" 
