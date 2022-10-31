@@ -121,14 +121,13 @@ class CLI:
             Project_type = DataClass.Project(self._parser.get_project_name(self._add_path))
             
             #Assumes right path to fc/hw_topology
-            Project_type.add_NodeFC(self._parser.get_fc_nodes('Project_1/infrastructure/fc/hw_topology.xml'))
-            
-            #Assumes right path to mc/hw_topology
-            Project_type.add_NodeMC(self._parser.get_mc_nodes('Project_1/infrastructure/mc/hw_topology.xml'))
-            
-            #Assumes right path to fc/sw_topology
-            Project_type.add_Partitions(self._parser.get_partitions('Project_1/infrastructure/fc/sw_topology.xml'))
+            Project_type.filter(self._parser.get_fc_nodes('Project_1/infrastructure/fc/hw_topology.xml'))
 
+            #Assumes right path to mc/hw_topology
+            Project_type.filter(self._parser.get_mc_nodes('Project_1/infrastructure/mc/hw_topology.xml'))
+
+            #Assumes right path to fc/sw_topology
+            Project_type.filter(self._parser.get_partitions('Project_1/infrastructure/fc/sw_topology.xml'))
 
 
             self._encoder.send_to_database(Project_type.ProjectDataClass,"projects/")
@@ -139,3 +138,5 @@ class CLI:
                 self._encoder.send_to_database(nodes,"node-mc/")
             for partitions in Project_type.Partitions:
                 self._encoder.send_to_database(partitions,"partitions/")
+            for cpus in Project_type.Cpu:
+                self._encoder.send_to_database(cpus,"cpu/")
