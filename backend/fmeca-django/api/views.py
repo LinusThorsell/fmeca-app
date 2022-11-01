@@ -18,48 +18,46 @@ class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permissions = permission
-    http_method_names = ['get','post','retrieve','put','patch']
 
 class NodeViewSet(viewsets.ModelViewSet):
     queryset = Node.objects.all()
     serializer_class = NodeSerializer
     permissions = permission
 
-class NodeFailureViewSet(viewsets.ModelViewSet):
-    queryset = NodeFailure.objects.all()
-    serializer_class = NodeFailureSerializer 
+class CPUViewSet(viewsets.ModelViewSet):
+    queryset = CPU.objects.all()
+    serializer_class = CPUSerializer
     permissions = permission
 
 class PartitionViewSet(viewsets.ModelViewSet):
     queryset = Partition.objects.all()
-    serializer_class = NodeFailureSerializer
-    permissions = permission
-
-class PartitionFailureViewSet(viewsets.ModelViewSet):
-    queryset = PartitionFailure.objects.all()
-    serializer_class = NodeFailureSerializer
+    serializer_class = PartitionSerializer
     permissions = permission
 
 class ApplicationViewSet(viewsets.ModelViewSet): 
     queryset = Application.objects.all()
-    serializer_class = NodeFailureSerializer
+    serializer_class = ApplicationSerializer
     permissions = permission
 
-class MaterialGroupViewSet(viewsets.ModelViewSet):
-    queryset = MaterialGroup.objects.all()
-    serializer_class = MaterialGroupSerializer
+class ConnectionViewSet(viewsets.ModelViewSet):
+    queryset = Connection.objects.all()
+    serializer_class = ConnectionSerializer
     permissions = permission
 
-# @api_view(['GET'])
-# def PersonList(request):
-#     persons = Person.objects.all()
-#     serializers = PersonSerializer(persons, many=True)
-#     return Response(serializers.data)
+# --------------------------------------------------
 
 
+# class NodeFailureViewSet(viewsets.ModelViewSet):
+#     queryset = NodeFailure.objects.all()
+#     serializer_class = NodeFailureSerializer 
+#     permissions = permission
 
-# @api_view(['GET', 'POST', 'DELETE'])
-# def FmecaProject(request):
-#     projects = Project.objects.all()
-#     serializers = ProjectSerializer(projects, many=True)
-#     return Response(serializers.data)
+# class PartitionFailureViewSet(viewsets.ModelViewSet):
+#     queryset = PartitionFailure.objects.all()
+#     serializer_class = PartitionFailureSerializer
+#     permissions = permission
+
+# class MaterialGroupViewSet(viewsets.ModelViewSet):
+#     queryset = MaterialGroup.objects.all()
+#     serializer_class = MaterialGroupSerializer
+#     permissions = permission
