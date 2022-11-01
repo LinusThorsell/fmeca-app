@@ -1,51 +1,70 @@
 from audioop import maxpp
 from email.mime import application
+from email.policy import default
 from functools import partial
 from logging import critical
 from unicodedata import category
+from unittest.util import _MAX_LENGTH
 from django.db import models
 
 # Create your models here.
 
 class Project(models.Model):
-    project_id = models.CharField(max_length=50, primary_key=True)
+    name = models.CharField(max_length=50, primary_key=True)
 
 class Node(models.Model):
-    # id = models.BigAutoField(primary_key=True, default=0)
     name = models.CharField(max_length=50, default="")
+    platform = models.CharField(max_length=50, default="")
+    load_set_type = models.CharField(max_length=50, default="")
     project = models.ForeignKey(Project, on_delete=models.CASCADE, default="")
+    redundant = models.CharField(max_length=20, default="")
+    sync_loss = models.CharField(max_length=10, default="")
 
-class NodeFailure(models.Model):
-    id = models.BigAutoField(primary_key=True, default=0)
-    node = models.ForeignKey(Node, on_delete=models.CASCADE)
-    event = models.CharField(max_length=200)
-    flight_phase = models.CharField(max_length=50)    
-    comments = models.TextField(max_length=500, default="")
+class CPU(models.Model):
+    type = models.CharField(max_length=10, default="")
+    node = models.ForeignKey(Node, on_delete=models.CASCADE, default="")
+    unit_id = models.CharField(max_length=10, default="")
+    iop_ref = models.CharField(max_length=10, default="")
+    name = models.CharField(max_length=10, default="")
+    accs_sync_master = models.CharField(max_length=10, default="")
+    domain_border = models.CharField(max_length=20, default="")
 
 class Partition(models.Model):
-    # id = models.BigAutoField(primary_key=True, default=0)
     name = models.CharField(max_length=20, default="")
-    node = models.ForeignKey(Node, on_delete=models.CASCADE, default="")
+    is_ltm = models.CharField(max_length=20, default="")
+    fixed_start = models.BigIntegerField(default=None)
+    partition_id = models.IntegerField(default=None)
+    cpu = models.ForeignKey(CPU, on_delete=models.CASCADE, default="")
 
-class PartitionFailure(models.Model):
-    id = models.BigAutoField(primary_key=True, default=0)
-    partition = models.ForeignKey(Partition, on_delete=models.CASCADE)
-    failure_mode_effect = models.TextField(max_length=100, default="")
-    subsystem_effect = models.TextField(max_length=100, default="")
-    aircraft_level_effect = models.TextField(max_length=100, default="")
-    event = models.CharField(max_length=50, default="")
-    mission = models.CharField(max_length=50, default="")
-    category = models.CharField(max_length=50, default="")
-    criticality = models.CharField(max_length=50, default="")
-    comments = models.TextField(max_length=500, default="")
-    
 class Application(models.Model):
-    id = models.BigAutoField(primary_key=True, default=0)
     name = models.CharField(max_length=50, default="")
-    partition_failure = models.ManyToManyField(PartitionFailure, default="")
+    cpu = models.ForeignKey(CPU, on_delete=models.CASCADE, default="")
 
-class MaterialGroup(models.Model):
-    materal_group = models.CharField(max_length=50)
-    application = models.ForeignKey(Application, on_delete=models.CASCADE, default="")
-    partition = models.ForeignKey(Partition, on_delete=models.CASCADE, default="")
+class Connection(models.Model):
+    requirer = models.ForeignKey(Application, related_name="connection_requirer_set", on_delete=models.CASCADE, default="")
+    provider = models.ForeignKey(Application, related_name="connection_provider_set", on_delete=models.CASCADE, default="")
+
+# class NodeFailure(models.Model):
+#     id = models.BigAutoField(primary_key=True, default=0)
+#     node = models.ForeignKey(Node, on_delete=models.CASCADE)
+#     event = models.CharField(max_length=200)
+#     flight_phase = models.CharField(max_length=50)    
+#     comments = models.TextField(max_length=500, default="")
+
+# class PartitionFailure(models.Model):
+#     id = models.BigAutoField(primary_key=True, default=0)
+#     partition = models.ForeignKey(Partition, on_delete=models.CASCADE)
+#     failure_mode_effect = models.TextField(max_length=100, default="")
+#     subsystem_effect = models.TextField(max_length=100, default="")
+#     aircraft_level_effect = models.TextField(max_length=100, default="")
+#     event = models.CharField(max_length=50, default="")
+#     mission = models.CharField(max_length=50, default="")
+#     category = models.CharField(max_length=50, default="")
+#     criticality = models.CharField(max_length=50, default="")
+#     comments = models.TextField(max_length=500, default="")
+    
+# class MaterialGroup(models.Model):
+#     materal_group = models.CharField(max_length=50)
+#     application = models.ForeignKey(Application, on_delete=models.CASCADE, default="")
+#     partition = models.ForeignKey(Partition, on_delete=models.CASCADE, default="")
  
