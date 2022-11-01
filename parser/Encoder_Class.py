@@ -1,5 +1,7 @@
 import json
 import DataClass
+
+import requests
 class ComplexEncoder(json.JSONEncoder):
     def default(self, obj):
         if hasattr(obj,'reprJSON'):
@@ -20,5 +22,6 @@ class Encoder:
         #print("Postar detta:",self._headers,string)
         #print("Till foldern: ",self._url + folder)
         print(string)
-        #requests.post(self._url+ folder,string,headers=self._headers)
+        print("Sending to: " ,self._url+ folder)
+        requests.post(self._url+ folder,string,headers=self._headers)
         #########

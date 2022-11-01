@@ -10,37 +10,37 @@ class ConnectionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ApplicationSerializer(serializers.ModelSerializer):
-    connection_reciver_set = ConnectionSerializer(many=True)
-    connection_provider_set = ConnectionSerializer(many=True)
+    #connection_reciver_set = ConnectionSerializer(many=True)
+    #connection_provider_set = ConnectionSerializer(many=True)
 
     class Meta:
         model = Application
         fields = '__all__'
 
 class PartitionSerializer(serializers.ModelSerializer):
-    application_set = ApplicationSerializer(many=True)
+    #application_set = ApplicationSerializer(many=True)
 
     class Meta:
         model = Partition
         fields = '__all__'
 
 class CPUSerializer(serializers.ModelSerializer):
-    partition_set = PartitionSerializer(many=True)
-    application_set = ApplicationSerializer(many=True)
+    #partition_set = PartitionSerializer(many=True)
+    #application_set = ApplicationSerializer(many=True)
 
     class Meta:
         model = CPU
         fields = '__all__'
 
 class NodeSerializer(serializers.ModelSerializer):
-    cpu_set = CPUSerializer(many=True)
+    #cpu_set = CPUSerializer(many=True)
 
     class Meta:
         model = Node
         fields = '__all__'
 
 class ProjectSerializer(serializers.ModelSerializer):
-    node_set = NodeSerializer(many=True)
+    #node_set = NodeSerializer(many=True)
 
     class Meta:
         model = Project

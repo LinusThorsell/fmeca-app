@@ -141,13 +141,14 @@ class CLI:
             
             for nodes in Project_type.NodeFC:
                 print("FC Nodes")
-                self._encoder.send_to_database(nodes,"node-fc/")
+                self._encoder.send_to_database(nodes,"nodes/")
             for nodes in Project_type.NodeMC:
                 print("MC Nodes")
-                self._encoder.send_to_database(nodes,"node-mc/")
+                self._encoder.send_to_database(nodes,"nodes/")
+            for cpus in Project_type.Cpu:
+                print("CPU")
+                self._encoder.send_to_database(cpus,"proccessors/")
             for partitions in Project_type.Partitions:
                 print("Partitions")
                 self._encoder.send_to_database(partitions,"partitions/")
-            for cpus in Project_type.Cpu:
-                print("CPU")
-                self._encoder.send_to_database(cpus,"cpu/")
+
