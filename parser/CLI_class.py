@@ -129,6 +129,7 @@ class CLI:
             #Assumes right path to fc/sw_topology
             Project_type.filter(self._parser.get_partitions('Project_1/infrastructure/fc/sw_topology.xml'))
 
+            #Project_type.filter(self._parser.get_applications('Project_1/infrastructure/mc/sw_topology.xml'))
 
             self._encoder.send_to_database(Project_type.ProjectDataClass,"projects/")
             

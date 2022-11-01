@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<idb:EventDomainBorderContract xmlns:idb=""
+			  name="P60_Standard"
+			  numberOfReceiveBuffers="2"
+			  isEdgeTransfer="false"
+			  maximumEventAge="1"
+			  backPressure="1">
+  <TransmissionSchedule period="1" offset="0"/>
+</idb:EventDomainBorderContract>

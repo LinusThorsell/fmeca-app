@@ -1,0 +1,55 @@
+<?xml version='1.0' ?>
+
+<SWTopology>
+
+   <AvailableIfs>
+    <Ifs name="my_ifs"/>
+  </AvailableIfs>
+
+  <AvailableIoManagers>
+    <IoManager name="fmc"/>
+    <IoManager name="tmc_dcm_iop1"/>
+    <IoManager name="tmc_dcm_iop2"/>
+  </AvailableIoManagers>
+
+  <APP ref="FMC.APP" partitionPbitType="fmc" partitionIdleId="0" partitionPbitId="1" userBspType="fgs_app">
+
+    <Partition isLTM="true" id="3" name="PART_LTM_FMC">´
+      <Application name="LTM_FMC"/>
+    </Partition>
+
+    <Partition name="PART_RESULTS">
+      <Application name="Results"/>
+    </Partition>
+
+  </APP>
+
+  <APP ref="TMC1.APP1" partitionPbitType="tmc_dcm" partitionIdleId="0" partitionPbitId="1" userBspType="tmc_app">
+
+    <Partition isLTM="true" id="3" name="PART_LTM_TMC1_APP1" >
+      <Application name="LTM_TMC1_APP1"/>
+    </Partition>
+
+    <Partition name="PART_T11_EVENT_B">
+      <Application name="Event_Dcm_D_NL_B"/>
+    </Partition>
+
+  </APP>
+
+  <APP ref="TMC1.APP2" partitionPbitType="tmc_dcm" partitionIdleId="0" partitionPbitId="1" userBspType="tmc_app">
+
+    <Partition isLTM="true" id="3" name="PART_LTM_TMC1_APP2" >
+      <Application name="LTM_TMC1_APP2"/>
+    </Partition>
+
+    <Partition name="PART_T12_EVENT_A">
+      <Application name="Event_Dcm_D_Std_A"/>
+    </Partition>
+
+  </APP>
+  
+  <IOP ref="TMC1.IOP1"  ioManagerName="IOM_TMC1_1" ioManagerType="tmc_dcm" ioManagerConfigType="tmc_dcm_iop1"  partitionPbitType="tmc_dcm" userBspType="tmc_iop"/>
+  <IOP ref="TMC1.IOP2"  ioManagerName="IOM_TMC1_2" ioManagerType="tmc_dcm" ioManagerConfigType="tmc_dcm_iop2"  partitionPbitType="tmc_dcm" userBspType="tmc_iop"/>
+  <IOP ref="FMC.IOP"    ioManagerName="IOM_FMC"    ioManagerType="fmc"     ioManagerConfigType="fmc"           partitionPbitType="fmc"     userBspType="fgs_iop"/>
+  
+</SWTopology>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<idb:Connections xmlns:idb="Can_Be_Here" domain="MissionCritical">
+
+  <Connection>
+    <ProviderPort name="PDCM22_Results.Results_60.Results"/>
+    <RequirerPort name="Sched_Result.Sched_Test_P60A.Test_Results" identity="Scheduler_Result_P60A"/>
+  </Connection>
+  <Connection>
+    <ProviderPort name="PDCM22_Results.Results_60.Results"/>
+    <RequirerPort name="Sched_Result.Sched_Test_P60B.Test_Results" identity="Scheduler_Result_P60B"/>
+  </Connection>
+  <Connection>
+    <ProviderPort name="PDCM22_Results.Results_60.Results"/>
+    <RequirerPort name="Sched_Result.Sched_Test_P15.Test_Results" identity="Scheduler_Result_P15"/>
+  </Connection>
+  <Connection>
+    <ProviderPort name="Sched_Result.Sched_Test_P60A.Test_Results_Input"/>
+    <RequirerPort name="Sched_Test.Sched_Test_P60A.Test_Results" identity="Scheduler_Test_P60A"/>
+  </Connection>
+  <Connection>
+    <ProviderPort name="Sched_Result.Sched_Test_P60B.Test_Results_Input"/>
+    <RequirerPort name="Sched_Test.Sched_Test_P60B.Test_Results" identity="Scheduler_Test_P60B"/>
+  </Connection>
+  <Connection>
+    <ProviderPort name="Sched_Result.Sched_Test_P15.Test_Results_Input"/>
+    <RequirerPort name="Sched_Test.Sched_Test_P15.Test_Results" identity="Scheduler_Test_P15"/>
+  </Connection>
+
+</idb:Connections>
