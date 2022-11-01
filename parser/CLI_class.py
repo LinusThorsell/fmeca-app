@@ -121,23 +121,33 @@ class CLI:
             Project_type = DataClass.Project(self._parser.get_project_name(self._add_path))
             
             #Assumes right path to fc/hw_topology
-            Project_type.filter(self._parser.get_fc_nodes('Project_1/infrastructure/fc/hw_topology.xml'))
-
+            for path in self._Paths._paths:
+                if "fc/hw_topology.xml" in path:
+                    Project_type.filter(self._parser.get_fc_nodes(path,Project_type.ProjectDataClass.project_id))
+                    #Project_type.filter(self._parser.get_fc_nodes('Project 2/infrastructure/fc/hw_topology.xml',Project_type.ProjectDataClass.project_id))
+                elif "mc/hw_topology.xml" in path:
+                    Project_type.filter(self._parser.get_mc_nodes(path,Project_type.ProjectDataClass.project_id))
             #Assumes right path to mc/hw_topology
-            Project_type.filter(self._parser.get_mc_nodes('Project_1/infrastructure/mc/hw_topology.xml'))
-
+                #Project_type.filter(self._parser.get_mc_nodes('Project 2/infrastructure/mc/hw_topology.xml',Project_type.ProjectDataClass.project_id))
+                
+                elif "fc/sw_topology.xml" in path:
             #Assumes right path to fc/sw_topology
-            Project_type.filter(self._parser.get_partitions('Project_1/infrastructure/fc/sw_topology.xml'))
+                #Project_type.filter(self._parser.get_partitions('Project 2/infrastructure/fc/sw_topology.xml'))
+                    Project_type.filter(self._parser.get_partitions(path))
 
             #Project_type.filter(self._parser.get_applications('Project_1/infrastructure/mc/sw_topology.xml'))
 
             self._encoder.send_to_database(Project_type.ProjectDataClass,"projects/")
             
             for nodes in Project_type.NodeFC:
+                print("FC Nodes")
                 self._encoder.send_to_database(nodes,"node-fc/")
             for nodes in Project_type.NodeMC:
+                print("MC Nodes")
                 self._encoder.send_to_database(nodes,"node-mc/")
             for partitions in Project_type.Partitions:
+                print("Partitions")
                 self._encoder.send_to_database(partitions,"partitions/")
             for cpus in Project_type.Cpu:
+                print("CPU")
                 self._encoder.send_to_database(cpus,"cpu/")

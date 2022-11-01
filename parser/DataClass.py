@@ -27,7 +27,8 @@ class Node:
     
 
 class NodeFC:
-    def __init__(self,type,name,loadsetTypeRef, redundant, platformRef, syncLostBehavior):
+    def __init__(self,project_id,type,name,loadsetTypeRef, redundant, platformRef, syncLostBehavior):
+        self.project_id = project_id
         self.type = type
         self.name = name
         self.loadsetTypeRef = loadsetTypeRef
@@ -35,16 +36,17 @@ class NodeFC:
         self.platformRef = platformRef
         self.syncLostBehavior =  syncLostBehavior
     def reprJSON(self):
-        return {"name":self.name,"loadsetTypeRef":self.loadsetTypeRef,"redundant":self.redundant,"platformRef":self.platformRef,"syncLostBehavior":self.syncLostBehavior}
+        return {"project_id":self.project_id,"name":self.name,"loadsetTypeRef":self.loadsetTypeRef,"redundant":self.redundant,"platformRef":self.platformRef,"syncLostBehavior":self.syncLostBehavior}
 
 
 class NodeMC:
-    def __init__(self,name,loadsetTypeRef,platformRef):
+    def __init__(self,project_id,name,loadsetTypeRef,platformRef):
+        self.project_id = project_id
         self.name = name
         self.loadsetTypeRef = loadsetTypeRef
         self.platformRef = platformRef
     def reprJSON(self):
-        return {"name":self.name,"loadsetTypeRef":self.loadsetTypeRef,"platformRef":self.platformRef}
+        return {"project_id":self.project_id,"name":self.name,"loadsetTypeRef":self.loadsetTypeRef,"platformRef":self.platformRef}
 
 class Application:
     def __init__(self,name, id, connectionProvider, connectionRequirer, connectionId):
@@ -55,15 +57,16 @@ class Application:
         self.connectionId = connectionId
         
 class Cpu:
-    def __init__(self,name,node,type, unitid, IOPRef, ACCSSyncMaster):
+    def __init__(self,name,node,type, unitid, IOPRef, ACCSSyncMaster,domainBorder):
         self.name = name
         self.node = node    #node of origin/parent node
         self.type = type    #"APP" or "IOP"
         self.unitid = unitid
         self.IOPRef = IOPRef
         self.ACCSSyncMaster = ACCSSyncMaster
+        self.domainBorder = domainBorder
     def reprJSON(self):
-        return {"name":self.name,"node":self.node,"type":self.type,"unitid":self.unitid,"IOPRef":self.IOPRef,"ACCSSyncMaster":self.ACCSSyncMaster}
+        return {"name":self.name,"node":self.node,"type":self.type,"unitid":self.unitid,"IOPRef":self.IOPRef,"ACCSSyncMaster":self.ACCSSyncMaster,"domainBorder":self.domainBorder}
 
 
 
