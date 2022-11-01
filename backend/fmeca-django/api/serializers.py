@@ -4,7 +4,15 @@ from ssl import ALERT_DESCRIPTION_BAD_CERTIFICATE_STATUS_RESPONSE
 from .models import *
 from rest_framework import serializers
 
+class ConnectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Connection
+        fields = '__all__'
+
 class ApplicationSerializer(serializers.ModelSerializer):
+    connection_reciver_set = ConnectionSerializer(many=True)
+    connection_provider_set = ConnectionSerializer(many=True)
+
     class Meta:
         model = Application
         fields = '__all__'
@@ -16,8 +24,16 @@ class PartitionSerializer(serializers.ModelSerializer):
         model = Partition
         fields = '__all__'
 
-class NodeSerializer(serializers.ModelSerializer):
+class CPUSerializer(serializers.ModelSerializer):
     partition_set = PartitionSerializer(many=True)
+    application_set = ApplicationSerializer(many=True)
+
+    class Meta:
+        model = CPU
+        fields = '__all__'
+
+class NodeSerializer(serializers.ModelSerializer):
+    cpu_set = CPUSerializer(many=True)
 
     class Meta:
         model = Node
@@ -30,20 +46,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         model = Project
         fields = '__all__'
 
-class NodeFCSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = NodeFC
-        fields = '__all__'
 
-class NodeMCSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = NodeMC
-        fields = '__all__'
-
-class CPUSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CPU
-        fields = '__all__'
 
 
 

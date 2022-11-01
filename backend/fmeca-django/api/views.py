@@ -24,16 +24,6 @@ class NodeViewSet(viewsets.ModelViewSet):
     serializer_class = NodeSerializer
     permissions = permission
 
-class NodeFCViewSet(viewsets.ModelViewSet):
-    queryset = NodeFC.objects.all()
-    serializer_class = NodeFCSerializer
-    permissions = permission
-
-class NodeMCViewSet(viewsets.ModelViewSet):
-    queryset = NodeMC.objects.all()
-    serializer_class = NodeMCSerializer
-    permissions = permission
-
 class CPUViewSet(viewsets.ModelViewSet):
     queryset = CPU.objects.all()
     serializer_class = CPUSerializer
@@ -47,6 +37,11 @@ class PartitionViewSet(viewsets.ModelViewSet):
 class ApplicationViewSet(viewsets.ModelViewSet): 
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
+    permissions = permission
+
+class ConnectionViewSet(viewsets.ModelViewSet):
+    queryset = Connection.objects.all()
+    serializer_class = ConnectionSerializer
     permissions = permission
 
 # --------------------------------------------------
