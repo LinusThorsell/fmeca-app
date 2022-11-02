@@ -1,5 +1,5 @@
 # Classes the we want to represent in database
-
+'''
 class Project_Data_Class:
     def __init__(self,name):
         self.project_id = name
@@ -92,3 +92,4 @@ class Project:
                 self.NodeMC.append(object)
             elif isinstance(object, Partitions):
                 self.Partitions.append(object)
+'''

@@ -14,7 +14,7 @@
 
   <APP ref="FMC.APP" partitionPbitType="fmc" partitionIdleId="0" partitionPbitId="1" userBspType="fgs_app">
 
-    <Partition isLTM="true" id="3" name="PART_LTM_FMC">´
+    <Partition isLTM="true" id="3" name="PART_LTM_FMC">
       <Application name="LTM_FMC"/>
     </Partition>
 
