@@ -15,17 +15,18 @@ class Partition_Data_Class:
         return {"name":self.name}
 
 class Node:
-    def __init__(self,type,name,load_set_type, redundant, platform, sync_loss):
+    def __init__(self,project_id,type,name,loadsetTypeRef, redundant, platformRef, syncLostBehavior):
+        self.project_id = project_id
         self.type = type
         self.name = name
-        self.load_set_type = load_set_type
+        self.loadsetTypeRef = loadsetTypeRef
         self.redundant = redundant
-        self.platform = platform
-        self.sync_loss =  sync_loss
-        self.type = type
-    
-    
+        self.platformRef = platformRef
+        self.syncLostBehavior =  syncLostBehavior
+    def reprJSON(self):
+        return {"project_id":self.project_id,"name":self.name,"loadsetTypeRef":self.loadsetTypeRef,"redundant":self.redundant,"platformRef":self.platformRef,"syncLostBehavior":self.syncLostBehavior}
 
+    
 class NodeFC:
     def __init__(self,project_id,type,name,loadsetTypeRef, redundant, platformRef, syncLostBehavior):
         self.project_id = project_id
