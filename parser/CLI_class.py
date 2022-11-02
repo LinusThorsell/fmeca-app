@@ -52,8 +52,6 @@ class CLI:
         self._Paths.get_paths(self._Paths.fc_path)
         self._Paths.get_paths(self._Paths.mc_path)
     
-    
-    
     def send_to_database(self):
         pass
 

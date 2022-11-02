@@ -30,6 +30,8 @@ class Parser:
                 returnlist += self.functions[children.tag](children)
                 
         return returnlist
+
+    
     
     #creates node of dcm type
     def dcm(self,node,project_id):
@@ -49,6 +51,8 @@ class Parser:
                     else:
                         returnlist += self.functions[children.tag](children)
             return returnlist
+        
+
     
     #retrieves all nodes(and cpus) from fc/hw_topology
     def get_fc_nodes(self,path,project_id):
