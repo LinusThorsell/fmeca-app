@@ -26,7 +26,7 @@ class Cpu:
         self.partitions = []
     def reprJSON(self):
         return {"name":self.name,"type":self.type,"unitid":self.unitid,"IOPRef":self.IOPRef,
-        "ACCSSyncMaster":self.ACCSSyncMaster,"domainBorder":self.domainBorder,"partition_set":self.partitions,"application_set":self.applications}
+        "ACCSSyncMaster":self.ACCSSyncMaster,"domainBorder":self.domainBorder,"partition_set":self.partitions,"cpu_app_set":self.applications}
 
 
 class Partition_Data_Class:
@@ -40,7 +40,7 @@ class Partition_Data_Class:
         self.cpuname = cpu
         self.applications = []
     def reprJSON(self):
-        return {"name":self.name,"isLTM":self.isLTM,"id":self.partiton_id,"application_set":self.applications}
+        return {"name":self.name,"isLTM":self.isLTM,"id":self.partiton_id,"partition_app_set":self.applications}
 
 class Application:
     #<DipsApplication name="Port_Gateway_1" rampool="0x10000" instanceOf="port_gateway" affinity="0"/>
@@ -63,10 +63,10 @@ class Application:
 
 class Project_Data_Class:
     def __init__(self,name):
-        self.project_id = name
+        self.name = name
         self.node_set = []
     def reprJSON(self):
-        return {"project_id":self.project_id,"node_set":self.node_set}
+        return {"name":self.name,"node_set":self.node_set}
          
     def insert_partitions(self,partitionlist):
         for partition in partitionlist:
@@ -79,15 +79,10 @@ class Project_Data_Class:
     def insert_applications(self,applicationlist):
         
         for application in applicationlist:
-            print(1)
             for node in self.node_set:
-                print(2)
-                print("application.nodename =" + application.nodename + "== node.name" + node.name)
                 if application.nodename == node.name:
                     for cpu in node.cpus:
-                        print(3)
                         if application.cpuname == cpu.name:
-                            print("Partitionsnamn == " ,application.partitionname)
                             if(application.partitionname == None):
                                 cpu.applications.append(application)
                             #cpu.partitions.append(partition)  

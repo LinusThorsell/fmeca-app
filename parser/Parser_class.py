@@ -5,7 +5,13 @@ import DataClassNest
 class Parser:
     def __init__(self):
         self.functions = {}
+        self.debug = False
 
+
+    def debug_print(self, string_to_print):
+        if(self.debug):
+            print(string_to_print)
+            
     #retrieves the project name from the path
     def get_project_name(self,path):
         print(path)
@@ -61,7 +67,6 @@ class Parser:
         node, cpu = ref.split('.')
         for child in raw_partition_data:
             if child.tag == "Partition":
-                print("Creating partition ")
                 partitions.append(self.create_partition(child, node, cpu))
         return partitions 
     
@@ -69,10 +74,8 @@ class Parser:
         applications = []
         ref = raw_partition_data.get("ref")
         node, cpu = ref.split('.')
-        print("node")
         for child in raw_partition_data:
             if child.tag == "Application":
-                print("Creating application ")
                 applications.append(self.create_application(child, node, cpu, None))
         return applications 
 
@@ -94,7 +97,6 @@ class Parser:
             node = DataClassNest.Node(type,name,loadsetTypeRef,redundant,platformRef,syncLostBehavior)
         
             for cpu in raw_node_data:
-                print("\t" + cpu.tag)
                 if cpu.tag in self.functions:
                     if cpu.tag == "APP" or cpu.tag == "IOP" or cpu.tag == "PP":
                         node.cpus.append(self.functions[cpu.tag](cpu)) 
@@ -107,12 +109,9 @@ class Parser:
         root = tree.getroot()
         returnlist = []
         for node in root:
-            print(node.tag)
             if node.tag in self.functions:
-                print("Node tag is in functions")
                 if(node.tag == "DCM" or node.tag == "PDCM"):
                     returnlist.append(self.functions[node.tag](node))
-        print(returnlist)
         return returnlist        
 
     #retrieve all partions and add to list
@@ -123,7 +122,6 @@ class Parser:
         for partitions in root:
             print(partitions.tag)
             if partitions.tag in self.functions:
-                print("Node tag is in functions")
                 if (partitions.tag == "APP" or partitions == "IOP"):
                     #returnlist.append(self.functions[node.tag](partitions))
                     returnlist += self.create_partitions_in_cpu(partitions)
@@ -134,9 +132,7 @@ class Parser:
         root = tree.getroot()
         returnlist = []
         for cpu in root:
-            print(cpu.tag)
             if cpu.tag in self.functions:
-                print("Node tag is in functions")
                 if (cpu.tag == "PP"):
                     #returnlist.append(self.functions[node.tag](partitions))
                     returnlist += self.create_applications_in_cpu(cpu)
@@ -144,4 +140,5 @@ class Parser:
     
     def initialisation(self):
         self.functions = {"PP":self.cpu,"PDCM":self.create_node,"DCM":self.create_node,"APP":self.cpu,"IOP":self.cpu,"Application":self.create_application}
+    
     

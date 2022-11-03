@@ -107,37 +107,64 @@ class CLI:
     def add_and_delete(self):
         
         if(self._delete):
-            print("Anropa funktionen som ska deletea ett projekt i databasen")
+            print("Call function: DELETE from database")
+            
             
         if (self._add):
-            ##anropa funktionen som ska posta till databasen
-            print("Anropa funktionen som ska lägga till ett projekt i databasen databasen")
+            #Call function that posts to database
+            print("Call function: ADD to database")
             print(self._add_path)
             self.get_paths()
             print("PATHS:")
             print(self._Paths._paths)
             Project_type = DataClassNest.Project_Data_Class(self._parser.get_project_name(self._add_path))
-            for path in self._Paths._paths:
-                if "fc/hw_topology.xml" in path:
-                    #self._parser.add_nodes()
-                    Project_type.filter(self._parser.get_nodes(path))
-                #Project_type.filter(self._parser.get_fc_nodes('Project 2/infrastructure/fc/hw_topology.xml',Project_type.ProjectDataClass.project_id))
-               
-                elif "mc/hw_topology.xml" in path:
-                    Project_type.filter(self._parser.get_nodes(path))
-            #Assumes right path to mc/hw_topology
-                #Project_type.filter(self._parser.get_mc_nodes('Project 2/infrastructure/mc/hw_topology.xml',Project_type.ProjectDataClass.project_id))
-                
-                elif "fc/sw_topology.xml" in path:
-            #Assumes right path to fc/sw_topology
-                #Project_type.filter(self._parser.get_partitions('Project 2/infrastructure/fc/sw_topology.xml'))
-                    #temppartitions = self._parser.get_partitions(path)
-                    Project_type.insert_partitions(self._parser.get_partitions(path))
-                    #print(temppartitions)
-                elif "mc/sw_topology.xml" in path:
-                    #tempapplications = self._parser.get_cpu_applications(path)
-                    #Ordningen??
-                    Project_type.insert_applications(self._parser.get_cpu_applications(path))
-                    #print(tempapplications)
-            #Project_type.filter(self._parser.get_applications('Project_1/infrastructure/mc/sw_topology.xml'))
+            
+            #Behöver göra om detta i framtiden, funkar for now
+            runorder = ["fc/hw_topology.xml", "mc/hw_topology.xml","fc/sw_topology.xml","mc/sw_topology.xml"]
+            
+            for temppath in runorder:
+                for path in self._Paths._paths:
+                    if temppath in path and "fc/hw_topology.xml" in temppath:
+                        Project_type.filter(self._parser.get_nodes(path))
+                    elif temppath in path and "mc/hw_topology.xml" in temppath:
+                        Project_type.filter(self._parser.get_nodes(path))
+                    elif temppath in path and "fc/sw_topology.xml" in temppath:
+                        Project_type.insert_partitions(self._parser.get_partitions(path))
+                    elif temppath in path and "mc/sw_topology.xml" in temppath:
+                        Project_type.insert_applications(self._parser.get_cpu_applications(path))
+                        
+            # for path in self._Paths._paths:
+            #     if "fc/hw_topology.xml" in path:
+            #         runorder[0] = path
+            #         #self._parser.add_nodes()
+            #         Project_type.filter(self._parser.get_nodes(path))
+            #     #Project_type.filter(self._parser.get_fc_nodes('Project 2/infrastructure/fc/hw_topology.xml',Project_type.ProjectDataClass.project_id))
+            # for path in self._Paths._paths:
+    
+            #     if "mc/hw_topology.xml" in path:
+            #         runorder[1] = path
+            #         Project_type.filter(self._parser.get_nodes(path))
+            # #Assumes right path to mc/hw_topology
+            #     #Project_type.filter(self._parser.get_mc_nodes('Project 2/infrastructure/mc/hw_topology.xml',Project_type.ProjectDataClass.project_id))
+            # for path in self._Paths._paths:
+    
+            #     if "fc/sw_topology.xml" in path:
+            #         runorder[2] = path
+            # #Assumes right path to fc/sw_topology
+            #     #Project_type.filter(self._parser.get_partitions('Project 2/infrastructure/fc/sw_topology.xml'))
+            #         #temppartitions = self._parser.get_partitions(path)
+            #         Project_type.insert_partitions(self._parser.get_partitions(path))
+            #         #print(temppartitions)
+            # for path in self._Paths._paths:
+    
+            #     if "mc/sw_topology.xml" in path:
+            #         runorder[3] = path
+            #         #tempapplications = self._parser.get_cpu_applications(path)
+            #         #Ordningen??
+            #         Project_type.insert_applications(self._parser.get_cpu_applications(path))
+            #         #print(tempapplications)
+            # #Project_type.filter(self._parser.get_applications('Project_1/infrastructure/mc/sw_topology.xml'))
+
+
+            
             self._encoder.send_to_database(Project_type,"projects/")
