@@ -24,10 +24,11 @@ class CLI:
         self._Paths = Paths.Paths()
         self._parser = Parser()
         self._parser.initialisation()
-    
+        self.delete_argument = ""
     def delete(self,project):
         ##Tell the database to delete the project
         print("Vi är i delete, project = " + str(project))
+        self.delete_argument = project
         self._delete = True
 
     def add(self,xml_file_path):
@@ -108,7 +109,7 @@ class CLI:
         
         if(self._delete):
             print("Call function: DELETE from database")
-            
+            self._encoder.delete_from_database(self.delete_argument, "projects/")
             
         if (self._add):
             #Call function that posts to database

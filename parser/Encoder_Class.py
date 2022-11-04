@@ -15,6 +15,13 @@ class Encoder:
         self._url = 'http://127.0.0.1:8000/'
         self.Project = ""
     
+    def delete_from_database(self,project,folder):
+        
+        print("Deleting project: ",self._url+folder+project)
+        
+        response = requests.delete(self._url+folder+project)
+        print("Response = ",response.text)
+    
     def send_to_database(self,object,folder):
         print("Är i send to database")
         string = json.dumps(object,cls=ComplexEncoder,indent=4)
@@ -23,5 +30,5 @@ class Encoder:
         #print("Till foldern: ",self._url + folder)
         print(string)
         print("Sending to: " ,self._url+ folder)
-        #requests.post(self._url+ folder,string,headers=self._headers)
+        requests.post(self._url+ folder,string,headers=self._headers)
         #########
