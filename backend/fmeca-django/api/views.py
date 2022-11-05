@@ -31,17 +31,17 @@ class NodeFailureViewSet(viewsets.ModelViewSet):
 
 class PartitionViewSet(viewsets.ModelViewSet):
     queryset = Partition.objects.all()
-    serializer_class = NodeFailureSerializer
+    serializer_class = PartitionSerializer
     permissions = permission
 
 class PartitionFailureViewSet(viewsets.ModelViewSet):
     queryset = PartitionFailure.objects.all()
-    serializer_class = NodeFailureSerializer
+    serializer_class = PartitionFailureSerializer
     permissions = permission
 
 class ApplicationViewSet(viewsets.ModelViewSet): 
     queryset = Application.objects.all()
-    serializer_class = NodeFailureSerializer
+    serializer_class = ApplicationSerializer
     permissions = permission
 
 class MaterialGroupViewSet(viewsets.ModelViewSet):
