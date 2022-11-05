@@ -3,8 +3,6 @@ from dataclasses import field
 from ssl import ALERT_DESCRIPTION_BAD_CERTIFICATE_STATUS_RESPONSE
 from .models import *
 from rest_framework import serializers
-<<<<<<< HEAD
-=======
 
 class ConnectionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -18,7 +16,6 @@ class ApplicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
         fields = '__all__'
->>>>>>> f124b00244b3d4205cfe25ec69d65901fb58bfbe
 
 class PartitionSerializer(serializers.ModelSerializer):
     application_set = ApplicationSerializer(many=True)

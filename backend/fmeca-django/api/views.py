@@ -32,27 +32,16 @@ class CPUViewSet(viewsets.ModelViewSet):
 class PartitionViewSet(viewsets.ModelViewSet):
     queryset = Partition.objects.all()
     serializer_class = PartitionSerializer
-<<<<<<< HEAD
-    permissions = permission
-
-class PartitionFailureViewSet(viewsets.ModelViewSet):
-    queryset = PartitionFailure.objects.all()
-    serializer_class = PartitionFailureSerializer
-=======
->>>>>>> f124b00244b3d4205cfe25ec69d65901fb58bfbe
     permissions = permission
 
 class ApplicationViewSet(viewsets.ModelViewSet): 
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
-<<<<<<< HEAD
-=======
     permissions = permission
 
 class ConnectionViewSet(viewsets.ModelViewSet):
     queryset = Connection.objects.all()
     serializer_class = ConnectionSerializer
->>>>>>> f124b00244b3d4205cfe25ec69d65901fb58bfbe
     permissions = permission
 
 # --------------------------------------------------
