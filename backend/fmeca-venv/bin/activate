@@ -38,11 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-<<<<<<< HEAD
 VIRTUAL_ENV="/home/adam/saab-project/fmeca-app/backend/fmeca-venv"
-=======
-VIRTUAL_ENV="/home/linus/Documents/liu/kurser/tddi17/fmeca-app/backend/fmeca-venv"
->>>>>>> master
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

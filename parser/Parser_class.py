@@ -42,6 +42,7 @@ class Parser:
         string = json.dumps(x)
         # string = json.dumps(lista)
 
+<<<<<<< HEAD
         payload = {
             'project_id': 'test-project8',
             'node_set': [
@@ -62,6 +63,36 @@ class Parser:
                     'partition_set': []
                 },
             ]
+=======
+
+        # payload = {
+        #         'project_id': 'Test20',
+        #         'node_set': [
+        #             {
+        #                 "name": "FMC-0",
+        #                 "partition_set": [
+        #                     {
+        #                         "name": "LTM-FMC"
+        #                     }
+        #                 ]
+        #             },
+        #             {
+        #                 "name": "FMC-1",
+        #                 "partition_set": []
+        #             },
+        #             {
+        #                 "name": "FMC-2",
+        #                 "partition_set": []
+        #             }
+        #         ]
+        # }
+
+        payload = {
+            'name': 'FMC',
+            'platform': 'test',
+            "load_set_type": 'test',
+            'project': 'dummy-proj',
+>>>>>>> f124b00244b3d4205cfe25ec69d65901fb58bfbe
         }
 
         # payload = {
