@@ -30,5 +30,6 @@ class Encoder:
         #print("Till foldern: ",self._url + folder)
         print(string)
         print("Sending to: " ,self._url+ folder)
-        requests.post(self._url+ folder,string,headers=self._headers)
+        response = requests.post(self._url+ folder,string,headers=self._headers)
+        print("response from send",response.text)
         #########

@@ -11,8 +11,8 @@ class Node:
         self.syncLostBehavior =  syncLostBehavior
         self.cpus = []
     def reprJSON(self):
-        return {"name":self.name,"loadsetTypeRef":self.loadsetTypeRef,"redundant":self.redundant,
-                "platformRef":self.platformRef,"syncLostBehavior":self.syncLostBehavior,"cpu_set":self.cpus}
+        return {"name":self.name,"load_set_type":self.loadsetTypeRef,"redundant":self.redundant,
+                "platform":self.platformRef,"sync_loss":self.syncLostBehavior,"cpu_set":self.cpus}
 
 class Cpu:
     def __init__(self,name,type, unitid, IOPRef, ACCSSyncMaster,domainBorder):
@@ -25,8 +25,8 @@ class Cpu:
         self.applications = []
         self.partitions = []
     def reprJSON(self):
-        return {"name":self.name,"type":self.type,"unitid":self.unitid,"IOPRef":self.IOPRef,
-        "ACCSSyncMaster":self.ACCSSyncMaster,"domainBorder":self.domainBorder,"partition_set":self.partitions,"cpu_app_set":self.applications}
+        return {"name":self.name,"type":self.type,"unit_id":self.unitid,"iop_ref":self.IOPRef,
+        "accs_sync_master":self.ACCSSyncMaster,"domain_border":self.domainBorder,"partition_set":self.partitions,"application_set":self.applications}
 
 
 class Partition_Data_Class:
@@ -34,13 +34,14 @@ class Partition_Data_Class:
         self.name = name
         self.isLTM = ltmbool
         #Denna va med i project 1... lol?
-        #self.fixedStartNs = start
+        self.fixedStartNs = None
         self.partiton_id = id
         self.nodename = node
         self.cpuname = cpu
         self.applications = []
     def reprJSON(self):
-        return {"name":self.name,"isLTM":self.isLTM,"id":self.partiton_id,"partition_app_set":self.applications}
+        return {"name":self.name,"is_ltm":self.isLTM,"partition_id":self.partiton_id,
+                "application_set":self.applications,"fixed_start":self.fixedStartNs}
 
 class Application:
     #<DipsApplication name="Port_Gateway_1" rampool="0x10000" instanceOf="port_gateway" affinity="0"/>
@@ -57,7 +58,7 @@ class Application:
         # self.connectionRequirer = connectionRequirer
         # self.connectionId = connectionId
     def reprJSON(self):
-        return {"name":self.name} #,"rampool":self.rampool,"instanceOf":self.instanceOf,"affinity":self.affinity}
+        return {"name":self.name,"cpu":None} #,"rampool":self.rampool,"instanceOf":self.instanceOf,"affinity":self.affinity}
 
 #The lists should contain Objects of the Objects
 
