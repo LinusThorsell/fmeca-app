@@ -1,5 +1,5 @@
-import xml.etree.ElementTree as ET
-import os.path
+#import xml.etree.ElementTree as ET
+#import os.path
 from Parser_class import Parser
 import sys, string, os
 from os import path as OSPATH
@@ -7,24 +7,25 @@ from Encoder_Class import *
 import DataClass
 import Paths
 #Command Line Interface
+
+from DebugFile import debug_print
+from DebugFile import debug
 class CLI:
     
     def __init__(self):
-        self._debug = False
         self._delete = False
         self._add = False
         self._arguments = []
         self._flags = {}
         self._functions = {}
         self._nr_arguments = 0
-        self._all_parser = 0
-        self._keep_alive = False
         self._parser = Parser()
         self._encoder = Encoder()
         self._Paths = Paths.Paths()
         self._parser = Parser()
         self._parser.initialisation()
         self.delete_argument = ""
+        
     def delete(self,project):
         ##Tell the database to delete the project
         print("Vi är i delete, project = " + str(project))
@@ -36,18 +37,12 @@ class CLI:
         print("Vi är i add, path = " + str(xml_file_path))
         self._add = True
         self._add_path = xml_file_path
-        
-    
+
     def debug(self):
-        print("Vi är i print")
-        self._debug = True
+        print("DEBUG active")
+        global debug
+        debug = True
     
-
-    def parse_all(self, path):
-        self._all_parser = Parser()
-        self._all_parser.parse_all(path)
-    
-
     def get_paths(self):
         self._Paths.initial_path(self._add_path)
         self._Paths.get_paths(self._Paths.fc_path)
@@ -60,7 +55,7 @@ class CLI:
         #previous_was_two_part_argument = False
         #for i in range(self._nr_arguments):
         i = 0
-        while i < self._nr_arguments or self._keep_alive:
+        while i < self._nr_arguments: #or self._keep_alive:
             #argument_list = []
             temp_argument = self._arguments[i].lower()
             if (temp_argument in self._flags):
@@ -73,12 +68,11 @@ class CLI:
                 else:
                     self._functions[temp_argument](*argument_list)
                 i+=nr_arguments + 1
-                if(not(i < self._nr_arguments) and self._keep_alive): 
+                """ if(not(i < self._nr_arguments) and self._keep_alive): 
                     self._arguments = input("parser: ")
                     self._arguments = self._arguments.split(" ")
                     self._nr_arguments = len(self._arguments)
-                    i = 0
-
+                    i = 0 """
             else:
                 print("The flag(s) you used is not valid!")
                 print("The valid flags are:")
@@ -133,3 +127,5 @@ class CLI:
 
             
             self._encoder.send_to_database(Project_type,"projects/")
+
+
