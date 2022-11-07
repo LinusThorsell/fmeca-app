@@ -1,7 +1,9 @@
 <script>
 import { vis_table_store } from './vis-table-store.js'
+import html2pdf from 'html2pdf.js';
 
     export default {
+        
         mounted() {
             generateCustomStylesheet()
 
@@ -44,17 +46,22 @@ import { vis_table_store } from './vis-table-store.js'
                 vis_table_store,
             }
         },
-        //methods: {
-           /* setTable(table) {
-                this.table_array = table
-            },*/
-        //},
+
+        /*components: {
+        },*/
+        methods: {
+            generatePdf() {
+                //html2pdf(document.getElementById('vis-table'));
+                //console.log(document.getElementById('vis-table').innerHTML)
+                print()
+            }
+        },
     }
     
     var selector, rule, i, /*rowStyles=[],*/ colStyles=[];
 
-    const array_columns = 4;
-    const array_rows = 4;
+    const array_columns = 15;
+    const array_rows = 15;
     const default_column_width = 100;
 
     // Gets entire table ( TODO : interface with backend here )
@@ -182,9 +189,10 @@ import { vis_table_store } from './vis-table-store.js'
     }
     
     var have_fetched = false;
+    var debug = false;
     function getTableFromBackend() {
         // Simple GET request using fetch
-        if (!have_fetched) {
+        if (!have_fetched && debug) {
             for (let r = 0; r < 5; r++) {
                 for (let c = 0; c < 5; c++) {
                     vis_table_store.set(r, c, "row: " + r + " column: " + c)
@@ -223,6 +231,9 @@ import { vis_table_store } from './vis-table-store.js'
     {{ $log("Rerender") }}
     {{ setupTable() }}
     {{ getTableFromBackend() }}
+    
+    <button @click="generatePdf">Generate PDF</button>
+
     <div id="vis-table">
         <div v-for="row in vis_table_store.getRowCount()" class="vis-row">
             <div v-if="row-1 !== 0">
