@@ -37,7 +37,7 @@ import { vis_table_store } from './vis-table-store.js'
                 getColumn,
                 addRow,
                 addColumn,
-
+                colStyles,
                 getClass,
                 handleResize,
                 getTableFromBackend,
@@ -51,10 +51,10 @@ import { vis_table_store } from './vis-table-store.js'
         //},
     }
     
-    var selector, rule, i, /*rowStyles=[],*/ colStyles=[];
+    var selector, rule, i, /*rowStyles=[],*/ colStyles=[], oldsearch;
 
-    const array_columns = 4;
-    const array_rows = 4;
+    const array_columns = 10;
+    const array_rows = 7;
     const default_column_width = 100;
 
     // Gets entire table ( TODO : interface with backend here )
@@ -88,17 +88,35 @@ import { vis_table_store } from './vis-table-store.js'
     function getColumn(index, table_array) {
         return table_array[index]
     }
-
     function removeColumn(column) {
         colStyles[column-1].display="none";
+    }
+
+    export function filterColumn(columnfilter) {
+        //columnfilter = localStorage.getItem("columnfilter");
+        colStyles[columnfilter].display="none";
+        console.log(columnfilter);
     }
 
     function restoreColumns() {
         console.log(vis_table_store.getColumnCount())
         for(i = 0; i < vis_table_store.getColumnCount(); i++)
-        {
+        {         
             colStyles[i].display = "block";
         }
+    }
+    export function filterSearch(columnfilter) {
+        
+
+        for(i = 0; i < vis_table_store.getColumnCount(); i++)
+        {
+            console.log("oldsearch är " + oldsearch);
+            //tar in en string i sökfältet som skriver ut filtrerad tabler            
+            if(i != oldsearch)
+            colStyles[i].display = "none";
+        }
+        oldsearch = columnfilter;
+        colStyles[columnfilter].display = "block";
     }
     
     // TODO : Fix, Is currently not working with rest of program structure.
@@ -175,6 +193,7 @@ import { vis_table_store } from './vis-table-store.js'
             if (sheet.insertRule)
                 sheet.insertRule(selector+rule, 0);
             colStyles[i]=(sheet.cssRules)[0].style;
+
         }
         
         // Debug print

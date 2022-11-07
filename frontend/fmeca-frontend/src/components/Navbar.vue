@@ -12,10 +12,15 @@
   
   <script>
   //Searchbarfunction
+  import {filterColumn, filterSearch} from './VisTable.vue'
+
   function filteredList(input) 
 {  
   //Input är det som skrivs in
+  filterSearch(input);
   console.log(input);
+  //localStorage.setItem("columnfilter", input);
+
 }
   //Dropdown code
   import Dropdown from './Dropdown.vue';
@@ -23,7 +28,7 @@
   export default {
     name: 'navbar',
     components: {
-      Dropdown
+      Dropdown   
     },
     data () {
       return {
@@ -60,8 +65,9 @@
         input: '',
         filteredList
       }
-    }    
+    }
   }
+  
   </script>
   
   <style>
