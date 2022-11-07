@@ -1,7 +1,7 @@
 import xml.etree.ElementTree as ET
 from os import path as OSPATH
 import Encoder_Class
-import DataClassNest
+import DataClass
 class Parser:
     def __init__(self):
         self.functions = {}
@@ -34,14 +34,14 @@ class Parser:
         #     if children.tag in self.functions:
         #         returnlist += self.functions[children.tag](children)
                 
-        return DataClassNest.Cpu(name,type,unitid,IOPRef,ACCSSyncMaster,domainBorder)
+        return DataClass.Cpu(name,type,unitid,IOPRef,ACCSSyncMaster,domainBorder)
 
     def create_partition(self,raw_partition_data,node,cpu):
         name = raw_partition_data.get("name")
         isLTM = raw_partition_data.get("isLTM")
         partition_id = raw_partition_data.get("id")
         
-        Partition = DataClassNest.Partition_Data_Class(name, isLTM, partition_id, node,cpu)
+        Partition = DataClass.Partition_Data_Class(name, isLTM, partition_id, node,cpu)
         
         for children in raw_partition_data:
             if children.tag in self.functions:
@@ -59,7 +59,7 @@ class Parser:
         instanceOf = raw_application_data.get("instanceOf")
         affinity = raw_application_data.get("affinity")
 
-        return DataClassNest.Application(name, rampool, instanceOf, affinity, node, cpu, partition)
+        return DataClass.Application(name, rampool, instanceOf, affinity, node, cpu, partition)
 
     def create_partitions_in_cpu(self,raw_partition_data):
         partitions = []
@@ -94,7 +94,7 @@ class Parser:
             else:
                 type = "mc"
 
-            node = DataClassNest.Node(type,name,loadsetTypeRef,redundant,platformRef,syncLostBehavior)
+            node = DataClass.Node(type,name,loadsetTypeRef,redundant,platformRef,syncLostBehavior)
         
             for cpu in raw_node_data:
                 if cpu.tag in self.functions:

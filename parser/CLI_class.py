@@ -4,7 +4,7 @@ from Parser_class import Parser
 import sys, string, os
 from os import path as OSPATH
 from Encoder_Class import *
-import DataClassNest
+import DataClass
 import Paths
 #Command Line Interface
 class CLI:
@@ -38,7 +38,7 @@ class CLI:
         self._add_path = xml_file_path
         
     
-    def print(self):
+    def debug(self):
         print("Vi är i print")
         self._debug = True
     
@@ -52,9 +52,6 @@ class CLI:
         self._Paths.initial_path(self._add_path)
         self._Paths.get_paths(self._Paths.fc_path)
         self._Paths.get_paths(self._Paths.mc_path)
-    
-    def send_to_database(self):
-        pass
 
     def config_database(self,path):
         print("Configuring database, path to file = " + str(path))
@@ -95,8 +92,8 @@ class CLI:
     ##in self._flags we should have the flag and how many arguments we should
     ## have after that
     def initialize(self):
-        self._flags = {"print":0,"add":1,"delete":1,"-c":1, "test":2, "-kp":0, "quit":0, "parse":1,"print_xml":1, "ls":0, "find":2, "get":3}
-        self._functions = {"print":self.print,"add":self.add,"delete":self.delete,"-c":self.config_database}
+        self._flags = {"debug":0,"add":1,"delete":1,"-c":1}
+        self._functions = {"debug":self.debug,"add":self.add,"delete":self.delete,"-c":self.config_database}
 
     def get_arguments(self):
         nrarguments = len(sys.argv)
@@ -118,7 +115,7 @@ class CLI:
             self.get_paths()
             print("PATHS:")
             print(self._Paths._paths)
-            Project_type = DataClassNest.Project_Data_Class(self._parser.get_project_name(self._add_path))
+            Project_type = DataClass.Project_Data_Class(self._parser.get_project_name(self._add_path))
             
             #Behöver göra om detta i framtiden, funkar for now
             runorder = ["fc/hw_topology.xml", "mc/hw_topology.xml","fc/sw_topology.xml","mc/sw_topology.xml"]
@@ -133,39 +130,6 @@ class CLI:
                         Project_type.insert_partitions(self._parser.get_partitions(path))
                     elif temppath in path and "mc/sw_topology.xml" in temppath:
                         Project_type.insert_applications(self._parser.get_cpu_applications(path))
-                        
-            # for path in self._Paths._paths:
-            #     if "fc/hw_topology.xml" in path:
-            #         runorder[0] = path
-            #         #self._parser.add_nodes()
-            #         Project_type.filter(self._parser.get_nodes(path))
-            #     #Project_type.filter(self._parser.get_fc_nodes('Project 2/infrastructure/fc/hw_topology.xml',Project_type.ProjectDataClass.project_id))
-            # for path in self._Paths._paths:
-    
-            #     if "mc/hw_topology.xml" in path:
-            #         runorder[1] = path
-            #         Project_type.filter(self._parser.get_nodes(path))
-            # #Assumes right path to mc/hw_topology
-            #     #Project_type.filter(self._parser.get_mc_nodes('Project 2/infrastructure/mc/hw_topology.xml',Project_type.ProjectDataClass.project_id))
-            # for path in self._Paths._paths:
-    
-            #     if "fc/sw_topology.xml" in path:
-            #         runorder[2] = path
-            # #Assumes right path to fc/sw_topology
-            #     #Project_type.filter(self._parser.get_partitions('Project 2/infrastructure/fc/sw_topology.xml'))
-            #         #temppartitions = self._parser.get_partitions(path)
-            #         Project_type.insert_partitions(self._parser.get_partitions(path))
-            #         #print(temppartitions)
-            # for path in self._Paths._paths:
-    
-            #     if "mc/sw_topology.xml" in path:
-            #         runorder[3] = path
-            #         #tempapplications = self._parser.get_cpu_applications(path)
-            #         #Ordningen??
-            #         Project_type.insert_applications(self._parser.get_cpu_applications(path))
-            #         #print(tempapplications)
-            # #Project_type.filter(self._parser.get_applications('Project_1/infrastructure/mc/sw_topology.xml'))
-
 
             
             self._encoder.send_to_database(Project_type,"projects/")
