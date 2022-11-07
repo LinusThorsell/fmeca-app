@@ -40,6 +40,7 @@ class Partition(models.Model):
 class Application(models.Model):
     name = models.CharField(max_length=50, blank=True, null=True)
     cpu = models.ForeignKey(CPU, on_delete=models.CASCADE, blank=True, null=True)
+    partition = models.ForeignKey(Partition, on_delete=models.CASCADE, blank=True, null=True)
     # node = models.ForeignKey(CPU, on_delete=models.CASCADE, blank=True)
 
 class Connection(models.Model):
