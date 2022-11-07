@@ -17,7 +17,7 @@ class Node(models.Model):
     platform = models.CharField(max_length=50, blank=True)
     load_set_type = models.CharField(max_length=50, blank=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, blank=True)
-    redundant = models.CharField(max_length=20, blank=True)
+    redundant = models.CharField(max_length=20, blank=True, null=True)
     sync_loss = models.CharField(max_length=10, blank=True)
 
 class CPU(models.Model):
@@ -70,3 +70,36 @@ class Connection(models.Model):
 #     application = models.ForeignKey(Application, on_delete=models.CASCADE, default="")
 #     partition = models.ForeignKey(Partition, on_delete=models.CASCADE, default="")
  
+# {
+#     "name": "dummy1",
+#     "node_set": [{ 
+#             "name":"test_node", 
+#             "cpu_set":[{
+#                 "name":"test_cpu",
+#                 "application_set":[{
+#                     "name":"test_application1"
+#                 }],
+#                 "partition_set":[{
+#                     "name": "test_partition",
+#                     "application_set":[{
+#                         "name":"test_application2"
+#                     }]      
+#                 }]
+#             }]
+#    }]
+# }
+
+# {
+#     "name": "dummy1",
+#     "node_set": [{ 
+#             "name":"test_node", 
+#             "cpu_app_set":[{
+#                 "name":"test_cpu",
+#                 "application_set":[],
+#                 "partition_set":[{
+#                     "name": "test_partition",
+#                     "partition_app_set":[]      
+#                 }]
+#             }]
+#    }]
+# }
