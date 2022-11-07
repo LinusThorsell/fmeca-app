@@ -89,6 +89,7 @@ import { vis_table_store } from './vis-table-store.js'
         return table_array[index]
     }
     function removeColumn(column) {
+        console.log(column)
         colStyles[column-1].display="none";
     }
 
@@ -101,8 +102,8 @@ import { vis_table_store } from './vis-table-store.js'
     function restoreColumns() {
         console.log(vis_table_store.getColumnCount())
         for(i = 0; i < vis_table_store.getColumnCount(); i++)
-        {         
-            colStyles[i].display = "block";
+        {
+            colStyles[i].display = "flex";
         }
     }
     export function filterSearch(columnfilter) {
@@ -183,13 +184,12 @@ import { vis_table_store } from './vis-table-store.js'
             if (sheet.insertRule)
                 sheet.insertRule(selector+rule, 0);//This puts the rule at index 0
             
-            rowStyles[i]=(sheet.cssRules)[0].style;
-        }*/
+            rowStyles[i]=(sheet.cssRules)[0].style; }*/
         
         // Creates classes for vis-columnbox width.
         for (i=0; i<array_columns; i++) {
             selector=".vis-column-"+i;
-            rule="{width: " + default_column_width + "px;}";
+            rule="{width: " + default_column_width + "px; display: flex; flex-direction: column;}";
             if (sheet.insertRule)
                 sheet.insertRule(selector+rule, 0);
             colStyles[i]=(sheet.cssRules)[0].style;
@@ -203,7 +203,17 @@ import { vis_table_store } from './vis-table-store.js'
     var have_fetched = false;
     function getTableFromBackend() {
         // Simple GET request using fetch
-        
+        if (!have_fetched) {
+            for (let r = 0; r < 5; r++) {
+                for (let c = 0; c < 5; c++) {
+                    vis_table_store.set(r, c, "row: " + r + " column: " + c)
+                }
+            }
+
+            have_fetched = true
+            vis_table_store.set(1,2, "yeay|hey|baeee")
+        }
+
         if (!have_fetched) {
 
             fetch("http://localhost:8000/projects/")
@@ -266,7 +276,7 @@ import { vis_table_store } from './vis-table-store.js'
             >
                 Resizable Column
                 <button @click="removeColumn(column)">
-                    Hide {{column-1}}
+                    Hide {{ column }}
                 </button>
                 
                 <div class="chrome_is_messy_fix">Loading...</div>
@@ -277,8 +287,14 @@ import { vis_table_store } from './vis-table-store.js'
                 class="vis-columnbox" 
                 :class="getClass(column-1, row-1)"
             >
-                
-                <textarea class="vis-textarea">{{ vis_table_store.get((row), (column)) }}</textarea>
+                <div 
+                    class="vis-textarea-container"
+                    v-for="item in vis_table_store.get((row), (column))"
+                >
+                    
+                    <textarea class="vis-textarea">{{ item }}</textarea>
+                </div>
+
             </div>
         </div>
     </div>

@@ -23,7 +23,14 @@ export const vis_table_store = reactive({
     },
     get(row, column) {
         try {
-            return this.array[row-1][column]
+            if (this.array[row-1][column].includes("|")) {
+                let temp = this.array[row-1][column].split("|")
+                return temp
+            }
+            else {
+                return [this.array[row-1][column]]
+            }
+
         }
         catch (error) {
             console.log("Err: " + error)

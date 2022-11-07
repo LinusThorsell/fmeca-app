@@ -40,43 +40,37 @@ class Parser:
         # string = json.dumps(lista)
 
 
-        payload = {
-                'project_id': 'dummy2',
-                'node_set': [
-                    {
-                        "name": "FMC-0",
-                        "partition_set": [
-                            {
-                                "name": "LTM-FMC"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "FMC-1",
-                        "partition_set": []
-                    },
-                    {
-                        "name": "FMC-2",
-                        "partition_set": []
-                    }
-                ]
-        }
-
         # payload = {
-        #     "name": "test",
-        #     "project": "dummy",
-        #     "partition_set": [
-        #         {
-        #             "name": "LPM-FMC-0" 
-        #         },
-        #         {
-        #             "name": "LPM-FMC-1" 
-        #         }
-        #    ]
+        #         'project_id': 'Test20',
+        #         'node_set': [
+        #             {
+        #                 "name": "FMC-0",
+        #                 "partition_set": [
+        #                     {
+        #                         "name": "LTM-FMC"
+        #                     }
+        #                 ]
+        #             },
+        #             {
+        #                 "name": "FMC-1",
+        #                 "partition_set": []
+        #             },
+        #             {
+        #                 "name": "FMC-2",
+        #                 "partition_set": []
+        #             }
+        #         ]
         # }
+
+        payload = {
+            'name': 'FMC',
+            'platform': 'test',
+            "load_set_type": 'test',
+            'project': 'dummy-proj',
+        }
         
         print("Postar detta:",self._headers,string)
-        requests.post(self._url+ "projects/",json=payload,headers=self._headers)
+        requests.post(self._url+ "nodes/",json=payload,headers=self._headers)
 
     def fc_hw_topology(self,path):
         #path = 'Project_1/infrastructure/fc/hw_topology.xml'
