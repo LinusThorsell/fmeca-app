@@ -1,20 +1,15 @@
 import xml.etree.ElementTree as ET
 from os import path as OSPATH
-import Encoder_Class
+#import Encoder_Class
 import DataClass
+
+import DebugFile
 class Parser:
     def __init__(self):
         self.functions = {}
-        self.debug = False
-
-
-    def debug_print(self, string_to_print):
-        if(self.debug):
-            print(string_to_print)
             
     #retrieves the project name from the path
     def get_project_name(self,path):
-        print(path)
         temp = path.split("/")
         name = temp[0]
         return name
@@ -120,7 +115,6 @@ class Parser:
         root = tree.getroot()
         returnlist = []
         for partitions in root:
-            print(partitions.tag)
             if partitions.tag in self.functions:
                 if (partitions.tag == "APP" or partitions == "IOP"):
                     #returnlist.append(self.functions[node.tag](partitions))

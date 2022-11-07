@@ -8,8 +8,7 @@ import DataClass
 import Paths
 #Command Line Interface
 
-from DebugFile import debug_print
-from DebugFile import debug
+import DebugFile
 class CLI:
     
     def __init__(self):
@@ -28,20 +27,18 @@ class CLI:
         
     def delete(self,project):
         ##Tell the database to delete the project
-        print("Vi är i delete, project = " + str(project))
         self.delete_argument = project
         self._delete = True
 
     def add(self,xml_file_path):
         ##Add this project given by the path to the database
-        print("Vi är i add, path = " + str(xml_file_path))
         self._add = True
         self._add_path = xml_file_path
 
     def debug(self):
-        print("DEBUG active")
-        global debug
-        debug = True
+        DebugFile.debug = True
+        DebugFile.debug_print("DEBUG active")
+
     
     def get_paths(self):
         self._Paths.initial_path(self._add_path)
@@ -60,9 +57,7 @@ class CLI:
             temp_argument = self._arguments[i].lower()
             if (temp_argument in self._flags):
                 nr_arguments = self._flags[temp_argument]
-                print("Nr argumets = " + str(nr_arguments))
                 argument_list = self._arguments[i+1:i+1+nr_arguments]
-                print(argument_list)
                 if (self._flags[temp_argument] != len(argument_list)):
                     print("The Flag \"" + temp_argument + "\" does not have enough arguments, it expects " + str(nr_arguments) + " but " + str(len(argument_list)) + " were given" )
                 else:
@@ -94,21 +89,21 @@ class CLI:
         if(nrarguments >= 2):
             self._arguments = sys.argv[1:nrarguments]
             self._nr_arguments = len(self._arguments)
-        print(self._arguments)
+        DebugFile.debug_print("ArgumentList",self._arguments)
         
     def add_and_delete(self):
         
         if(self._delete):
-            print("Call function: DELETE from database")
+            DebugFile.debug_print("Call function: DELETE from database")
             self._encoder.delete_from_database(self.delete_argument, "projects/")
             
         if (self._add):
             #Call function that posts to database
-            print("Call function: ADD to database")
-            print(self._add_path)
+            DebugFile.debug_print("Call function: ADD to database")
+            DebugFile.debug_print(self._add_path)
             self.get_paths()
-            print("PATHS:")
-            print(self._Paths._paths)
+            DebugFile.debug_print("PATHS:")
+            DebugFile.debug_print(self._Paths._paths)
             Project_type = DataClass.Project_Data_Class(self._parser.get_project_name(self._add_path))
             
             #Behöver göra om detta i framtiden, funkar for now
