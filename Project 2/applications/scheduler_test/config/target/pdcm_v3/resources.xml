@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<idb:ResourceRequirements xmlns:idb="Can_Be_Here"
+     application="pdcm_socket_test" initializeStackSize="0" rampoolSize="32768">
+  <PeriodicResourceRequirements thread="Sched_Test_P60A" executionStackSize="16384" executionTime="3000000"/>
+  <PeriodicResourceRequirements thread="Sched_Test_P60B" executionStackSize="16384" executionTime="2000000"/>
+  <PeriodicResourceRequirements thread="Sched_Test_P15" executionStackSize="16384" executionTime="30000000"/>
+</idb:ResourceRequirements>
