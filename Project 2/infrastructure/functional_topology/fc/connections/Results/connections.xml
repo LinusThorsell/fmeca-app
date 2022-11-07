@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<idb:Connections xmlns:idb="Can_Be_Here" domain="FlightCritical">
+
+  <Connection>
+    <ProviderPort name="Results.Results_60.Results"/>
+    <RequirerPort name="FMC_Results.Results_60.Summary" identity="FMC"/>
+  </Connection>
+
+</idb:Connections>
