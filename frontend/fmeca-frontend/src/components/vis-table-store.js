@@ -1,34 +1,38 @@
 import { reactive } from 'vue'
 
 export const vis_table_store = reactive({
-    array: [],
-    setArray(new_array) {
+    array: [[]],
+    setArray(num, new_array) {
         console.log("Setting array to")
         console.log(new_array)
         //console.log(this.array)
         //array = e
-        this.array = new_array
-        console.log(this.array)
+        this.array[num] = new_array
+        console.log(this.array[num])
     },
-    getColumnCount() {
-        return this.array.length-1
+    getColumnCount(num) {
+        return this.array[num].length-1
     },
-    getRowCount() {
-        if (typeof this.array[0] !== 'undefined') {
-            return this.array[0].length
+    getRowCount(num) {
+        if (typeof this.array[num] == 'undefined') {
+            return 0
+        }
+
+        if (typeof this.array[num][0] !== 'undefined') {
+            return this.array[num][0].length
         }
         else {
             return 0
         }
     },
-    get(row, column) {
+    get(num, row, column) {
         try {
-            if (this.array[row-1][column].includes("|")) {
-                let temp = this.array[row-1][column].split("|")
+            if (this.array[num][row-1][column].includes("|")) {
+                let temp = this.array[num][row-1][column].split("|")
                 return temp
             }
             else {
-                return [this.array[row-1][column]]
+                return [this.array[num][row-1][column]]
             }
 
         }
@@ -36,7 +40,7 @@ export const vis_table_store = reactive({
             console.log("Err: " + error)
         }
     },
-    set(row, column, data) {
-        this.array[row][column] = data
+    set(num, row, column, data) {
+        this.array[num][row][column] = data
     }
 })
