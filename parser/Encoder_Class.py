@@ -31,5 +31,5 @@ class Encoder:
         print(string)
         print("Sending to: " ,self._url+ folder)
         response = requests.post(self._url+ folder,string,headers=self._headers)
-        print("response from send",response.text)
+        #print("response from send",response.text)
         #########
