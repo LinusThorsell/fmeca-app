@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<idb:Namespace xmlns:idb="" name="ACCS_I">
+
+  <Description>
+    <P>This namespace contains interfaces for BIT etc.</P>
+  </Description>
+  <FilterBehaviour type="ACCS_Internal"/>
+</idb:Namespace>
+

@@ -1,0 +1,74 @@
+Jag har lite fråga om projektet.
+
+Fråga om readme.txt-filen:
+
+"Ni kan utgå från att vi kommer peka ut en path.
+I den pathen hittar ni: infrastructure"
+
+Betyder det att vi kommer få en path till mappen infratsructure?? så får vi sedan gå till fc/system.xml och mc/system.xml??
+
+Har lite frågor om system.xml filerna som ligger under infrastructure/mc/system.xml och infrastructure/fc/system.xml. 
+Säg till om jag har fel men så som jag förstår det är att första halvan isch är en massa variabler som med key som variabelnamn och value som
+en delmängd av en path som också håller placeholders (de variabler som följer mönstret [variabel]). Det som jag inte förstår är varför första halvan har 
+idb som tag medan andra halvan har t.ex functional_topology, domain_border osv.
+
+Om de som har idb som tag enbart var en variabel med variabelenamn och delpath som värde så förstår jag inte varför vi får pathen till configfilerna under samma tag.
+<idb key="hw_topology"               value="[fc_dir]/hw_topology.xml"/>
+<idb key="sw_topology"               value="[fc_dir]/sw_topology.xml"/>
+
+Jag förstår helt enkelt inte logiken bakom typ hela/halva system.xml filerna
+
+
+
+Frågor:
+    <DCM name="FMC" loadsetTypeRef="FMC" redundant="true" platformRef="fgs_v3" syncLostBehavior="EQ-SPECIFIC">
+    Är DCM nodtypen? kallas alla noder DCM?
+
+
+    <APP ref="FMC.APP" partitionPbitType="fmc" partitionIdleId="0" partitionPbitId="1" userBspType="raw_app">
+    Vad är APP ref?, partition? eller inte?
+
+
+    <APP ref="FMC.APP" partitionPbitType="fmc" partitionIdleId="0" partitionPbitId="1" userBspType="raw_app">
+
+    <Partition fixedStartNs="500000" isLTM="true" id="3" name="LTM_FMC">
+      <Attribute name="StartLogAuthorized" value="true"/>
+      <Application name="LTM"/>
+    </Partition>
+
+    <Partition fixedStartNs="500000" isLTM="true" id="3" name="FUN_FMC">
+      <Attribute name="StartLogAuthorized" value="true"/>
+      <Application name="FUN"/>
+    </Partition>
+
+  </APP>
+
+  </APP ref NOD.APP..... Är detta så som strukturern sw_topology ska se ut?
+  
+
+<RTHIPath networkSpecRef="RTHI1">
+    <Node ref="FMC.IOP"/>
+  </RTHIPath>
+
+  <MB1553Path name="Bus_T50">
+    <BusController ref="IOM_FMC" hwDeviceId="1"/>
+    <Equipment name="FCEA_A"/>
+  </MB1553Path>
+
+ <XTALKPath>
+    <Node ref="FMC.IOP"/>
+ </XTALKPath>
+
+Ska dessa vara med som noder(items) i tabellen? hur ska de parsas?
+
+Kan en partition köra flera applicationer?
+
+
+<PP ref="TMC1_PDCM1.PP" ioManagerName="IOM_PDCM1_1" ioManagerType="tmc_pdcm" ioManagerConfigType="tmc_pdcm_1" ioManagerAffinity="22">
+    <DipsApplication name="Port_Gateway_1" rampool="0x10000" instanceOf="port_gateway" affinity="0"/>
+    <Application name="Pdcm_Scheduler_Test" affinity="1"/>
+</PP>
+Har inte mc nodes några partitioner?
+
+
+  

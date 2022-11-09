@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<idb:ContinuousDomainBorderContract xmlns:idb=""
+			  name="P60_Standard"
+			  numberOfReceiveBuffers="2"
+			  isEdgeTransfer="false"
+			  maximumAge="1">
+  <TransmissionSchedule period="1" offset="0"/>
+</idb:ContinuousDomainBorderContract>

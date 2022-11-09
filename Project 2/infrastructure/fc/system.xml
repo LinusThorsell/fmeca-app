@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<system>
+
+  <idb key="config_name"               value="Project 2"/>
+  <idb key="config_rel"                value="FMECA_Project/[config_name]"/>
+  <idb key="config_dir"                value="[root]/configurations/[config_rel]"/>
+
+  <!-- Directories -->
+  <idb key="infrastructure_dir"        value="[config_dir]/infrastructure"/>
+  <idb key="fc_dir"                    value="[infrastructure_dir]/fc"/>
+
+  <!-- Locations and targets for Applications, IFSes and LSes -->
+  <idb key="applications_dir"          value="[config_dir]/applications"/>
+  <idb key="ifs_dir"                   value="[config_dir]/ifs"/>
+
+  <!-- Configuration files -->
+  <idb key="hw_topology"               value="[fc_dir]/hw_topology.xml"/>
+  <idb key="sw_topology"               value="[fc_dir]/sw_topology.xml"/>
+
+  <!-- Functional Topologies -->
+  <!-- Message Topologies shall be located under [config_dir] -->
+  <!-- Functional Topologies shall be located under [infrastructure_dir] -->
+  <functional_topology                 dir="[infrastructure_dir]/functional_topology/fc"/>
+
+  <!-- Critical Separations directory -->
+  <domain_border                       dir="[infrastructure_dir]/domain_border"/>
+
+  <!-- Equipment directories -->
+  <equipments                          dir="[fc_dir]/equipments"/>
+
+  <!-- IoManager Configs -->
+
+  <!-- Applications -->
+  <appl_config name="ltm"  src="[applications_dir]/ltm"  config="[applications_dir]/ltm/config" default_use="REAL"/>
+
+  <!-- IFS's -->
+  <ifs_config name="my_ifs"     src="[ifs_dir]/my_ifs" config="[ifs_dir]/my_ifs/config"/>
+
+  <!-- Interface Namespaces -->
+  <interface_ns name=""         dir="[config_dir]/interfaces"/>
+
+</system>
