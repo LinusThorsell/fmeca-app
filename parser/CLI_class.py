@@ -6,6 +6,7 @@ from os import path as OSPATH
 from Encoder_Class import *
 import DataClass
 import Paths
+
 #Command Line Interface
 
 import DebugFile
