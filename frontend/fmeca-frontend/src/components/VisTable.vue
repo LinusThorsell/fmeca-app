@@ -1,7 +1,7 @@
 <script>
 import { ref, watchEffect } from 'vue'
 import { vis_table_store } from './vis-table-store.js'
-import html2pdf from 'html2pdf.js';
+//import html2pdf from 'html2pdf.js';
 
     export default {
         
@@ -273,7 +273,7 @@ import html2pdf from 'html2pdf.js';
             have_fetched = true
         }
     }
-    function getProjects() {
+    export function getProjects() {
         let projects = []
 
         projects = vis_table_store.getProjectNames()

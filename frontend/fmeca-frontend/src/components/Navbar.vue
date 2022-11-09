@@ -17,7 +17,7 @@
   
   <script>
   //Searchbarfunction
-  import {filterColumn, filterSearch} from './VisTable.vue'
+  import {filterColumn, filterSearch, getProjects} from './VisTable.vue'
 
   function filteredList(input) 
 {  
@@ -69,7 +69,8 @@
           }
         ],
         input: '',
-        filteredList
+        filteredList,
+        getProjects
       }
     }
   }
