@@ -1,7 +1,10 @@
 <script>
+import { ref, watchEffect } from 'vue'
 import { vis_table_store } from './vis-table-store.js'
+import html2pdf from 'html2pdf.js';
 
     export default {
+        
         mounted() {
             generateCustomStylesheet()
 
@@ -24,7 +27,7 @@ import { vis_table_store } from './vis-table-store.js'
                         div.style.display="none";
                     });
                 }, 500);
-            }, 1500);
+            }, 10000);
         },
         
 
@@ -42,13 +45,22 @@ import { vis_table_store } from './vis-table-store.js'
                 handleResize,
                 getTableFromBackend,
                 vis_table_store,
+                getProjects,
+                selected_project,
+
+                loadProjectFromStore,
             }
         },
-        //methods: {
-           /* setTable(table) {
-                this.table_array = table
-            },*/
-        //},
+
+        /*components: {
+        },*/
+        methods: {
+            generatePdf() {
+                //html2pdf(document.getElementById('vis-table'));
+                //console.log(document.getElementById('vis-table').innerHTML)
+                print()
+            }
+        },
     }
     
     var selector, rule, i, /*rowStyles=[],*/ colStyles=[], oldsearch;
@@ -57,10 +69,18 @@ import { vis_table_store } from './vis-table-store.js'
     const array_rows = 5;
     const default_column_width = 100;
 
+    var selected_project = ref(0);
+
+/*
+    watchEffect(() => {
+    // tracks A0 and A1
+        A2.value = A0.value + A1.value
+    })*/
+
     // Gets entire table ( TODO : interface with backend here )
     function setupTable() {    
-
-        if (vis_table_store.getRowCount() === 0) {
+/*
+        if (vis_table_store.getRowCount(selected_project) === 0) {
             const temp_array = []
             console.log("Array empty, creating example")
             for (var column = 0; column < array_columns+1; column++) {
@@ -69,9 +89,11 @@ import { vis_table_store } from './vis-table-store.js'
                     temp_array[column][row] = "";
                 }
             }
-            vis_table_store.setArray(temp_array)
-        }
+            vis_table_store.setArray(selected_project, temp_array)
+        }*/
         // return table_array;
+        
+        //vis_table_store.generateEmpty()
     }
    
     // Gets a specific row ( index ) as an array from the input array ( table_array ).
@@ -100,8 +122,8 @@ import { vis_table_store } from './vis-table-store.js'
     }
 
     function restoreColumns() {
-        console.log(vis_table_store.getColumnCount())
-        for(i = 0; i < vis_table_store.getColumnCount(); i++)
+        console.log(vis_table_store.getColumnCount(selected_project))
+        for(i = 0; i < vis_table_store.getColumnCount(selected_project); i++)
         {
             colStyles[i].display = "flex";
         }
@@ -169,7 +191,7 @@ import { vis_table_store } from './vis-table-store.js'
         
         var column_array = __currentTarget__.classList[2]
         var column_id = column_array.slice(column_array.lastIndexOf('-')+1)
-        console.log(column_id)
+        //console.log(column_id)
         colStyles[parseInt(column_id)].width=width+"px"
 
         calculateWidthOfRows()
@@ -207,20 +229,21 @@ import { vis_table_store } from './vis-table-store.js'
     }
     
     var have_fetched = false;
+    var debug = false;
     function getTableFromBackend() {
         // Simple GET request using fetch
-        if (!have_fetched) {
+        if (!have_fetched && debug) {
             for (let r = 0; r < 5; r++) {
                 for (let c = 0; c < 5; c++) {
-                    vis_table_store.set(r, c, "row: " + r + " column: " + c)
+                    vis_table_store.set(selected_project, r, c, "row: " + r + " column: " + c)
                 }
             }
 
             have_fetched = true
-            vis_table_store.set(1,2, "yeay|hey|baeee")
+            vis_table_store.set(selected_project, 1,2, "yeay|hey|baeee")
         }
 
-        if (!have_fetched) {
+        if (!have_fetched && !debug) {
 
             fetch("http://localhost:8000/projects/")
                 .then(response => response.json())
@@ -229,15 +252,41 @@ import { vis_table_store } from './vis-table-store.js'
                     /*data.forEach((element, index) => {
                         vis_table_store.set(0, index, element.project_id)
                     }); */
-                    vis_table_store.set(1, 1, data[0].project_id)
-                    data[0].node_set.forEach((node, index) => {
-                        vis_table_store.set(index+1, 1, node.name)
+                    data.forEach((project, index) => {
+                        console.log(index)
+                        console.log(project.name)
+                        vis_table_store.generateEmpty(index, array_rows, array_columns)
+                        vis_table_store.set(index, 0, 0, project)
+                        //vis_table_store.set(index, 1, 1, project.name)
+                        
+                        project.node_set.forEach((node, n_index) => {
+                            vis_table_store.set(index, n_index+1, 1, node.name);
+                        })
+
+                        /*project.node_set.forEach((node, index) => {
+                            vis_table_store.set(index, index+1, 1, project.name)
+                        });*/
                     });
                     //vis_table_store.set(0, 1, data) 
             });
+
             have_fetched = true
         }
     }
+    function getProjects() {
+        let projects = []
+
+        projects = vis_table_store.getProjectNames()
+
+        return projects;
+    }
+
+    function loadProjectFromStore()
+    {
+        let selection = document.getElementById("project-select").value;
+        selected_project.value = vis_table_store.switchProject(selection);
+    }
+
     </script>
     
 <style>
@@ -248,8 +297,20 @@ import { vis_table_store } from './vis-table-store.js'
     {{ $log("Rerender") }}
     {{ setupTable() }}
     {{ getTableFromBackend() }}
+    
+    <button @click="generatePdf">Generate PDF</button>
+    <br> 
+    <label for="project-select">Choose a project:</label>
+    <select name="projects" id="project-select">
+        <option value="">Please choose a project</option>
+        <option v-for="project in getProjects()" :value="project">{{project}}</option>
+        <!--option value="proj1">Project 1</option>
+        <option value="proj2">Project 2</option-->
+    </select>
+    <button @click="loadProjectFromStore()">Load Selected Project</button>
+
     <div id="vis-table">
-        <div v-for="row in vis_table_store.getRowCount()" class="vis-row">
+        <div v-for="row in vis_table_store.getRowCount(selected_project)" class="vis-row">
             <div v-if="row-1 !== 0">
                 <div class="vis-columnbox vis-resizable-row"> Resizable Row </div>
             </div>
@@ -275,7 +336,7 @@ import { vis_table_store } from './vis-table-store.js'
                     </p>
             </div>
             
-            <div v-if="row-1 === 0" v-for="column in vis_table_store.getColumnCount()" 
+            <div v-if="row-1 === 0" v-for="column in vis_table_store.getColumnCount(selected_project)" 
                 class="vis-columnbox vis-resizable-column" 
                 :class="getClass(column-1, row-2)"
                 v-resize="handleResize"
@@ -289,13 +350,13 @@ import { vis_table_store } from './vis-table-store.js'
             
             </div>
             
-            <div v-if="row-1 !== 0" v-for="column in vis_table_store.getColumnCount()" 
+            <div v-if="row-1 !== 0" v-for="column in vis_table_store.getColumnCount(selected_project)" 
                 class="vis-columnbox" 
                 :class="getClass(column-1, row-1)"
             >
                 <div 
                     class="vis-textarea-container"
-                    v-for="item in vis_table_store.get((row), (column))"
+                    v-for="item in vis_table_store.get(selected_project, (row), (column))"
                 >
                     
                     <textarea class="vis-textarea">{{ item }}</textarea>
