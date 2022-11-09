@@ -53,8 +53,8 @@ import { vis_table_store } from './vis-table-store.js'
     
     var selector, rule, i, /*rowStyles=[],*/ colStyles=[], oldsearch;
 
-    const array_columns = 10;
-    const array_rows = 7;
+    const array_columns = 5;
+    const array_rows = 5;
     const default_column_width = 100;
 
     // Gets entire table ( TODO : interface with backend here )
@@ -109,15 +109,21 @@ import { vis_table_store } from './vis-table-store.js'
     export function filterSearch(columnfilter) {
         
 
+
+        for(item in vis_table_store.get((row), (column)))
+        {
+            if (columnfilter == item)
+            console.log(item);
+        }
         for(i = 0; i < vis_table_store.getColumnCount(); i++)
         {
             console.log("oldsearch är " + oldsearch);
             //tar in en string i sökfältet som skriver ut filtrerad tabler            
-            if(i != oldsearch)
+            if(i != (oldsearch-1))
             colStyles[i].display = "none";
         }
         oldsearch = columnfilter;
-        colStyles[columnfilter].display = "block";
+        colStyles[columnfilter-1].display = "flex";
     }
     
     // TODO : Fix, Is currently not working with rest of program structure.

@@ -1,8 +1,13 @@
 <template>
     <nav class="nav-background">
-      <div class="menu-item"><a href="#">Fortnite hacks</a></div>
+      <div class="menu-item"><a href="#">fortnite</a></div>
       <div class="menu-item"><a href="#">Gripen X(Unreleased)</a></div>
-      <Dropdown title="Top 4 företag" :items="services" />
+      <Dropdown title="Change view" :items="services" />
+      <label for="project-select">Choose a project</label>
+      <select name ="projects" id="project-select">
+        <option value =""> Please choose a project</option>
+        <option v-for="project in getProjects()" value ="project">{{project}}</option>
+      </select>
       <div class="menu-item"><a href="#">Adam fan page</a></div>
       <!-- sökbar som aktiveras genom enter -->
       <input type="text" @keydown.enter="filteredList(input)" v-model="input" placeholder="Filter..." />
@@ -34,14 +39,15 @@
       return {
         services: [
           {
-            title: 'S',
-            link: '#fortnite',
+            title: 'Sweden',
+            link: '#Sweden',
             filterFunc: function name() {
+              for(project in getProjects())
                 console.log("hey");
             }
           },
           {
-            title: 'A',
+            title: 'Brazil',
             link:'#',
             filterFunc: function name() {
                 console.log("din");
@@ -77,7 +83,7 @@ input {
   width: 350px;
   margin: 20px auto;
   padding: 10px 45px;
-  background: white url("assets/search-icon.svg") no-repeat 15px center;
+  
   background-size: 15px 15px;
   font-size: 16px;
   border: none;
@@ -86,24 +92,6 @@ input {
     rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 }
 
-.item {
-  width: 350px;
-  margin: 0 auto 10px auto;
-  padding: 10px 20px;
-  color: white;
-  border-radius: 5px;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
-    rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
-}
-
-.fruit {
-  background-color: rgb(97, 62, 252);
-  cursor: pointer;
-}
-
-.error {
-  background-color: tomato;
-}
   .nav-background {
     display: flex;
     align-items: center;
