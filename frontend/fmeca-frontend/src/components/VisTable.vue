@@ -117,8 +117,8 @@ import html2pdf from 'html2pdf.js';
     }
 
     function restoreColumns() {
-        console.log(vis_table_store.getColumnCount(selected_project))
-        for(i = 0; i < vis_table_store.getColumnCount(selected_project); i++)
+        console.log(vis_table_store.getColumnCount(selected_project.value))
+        for(i = 0; i < vis_table_store.getColumnCount(selected_project.value); i++)
         {
             colStyles[i].display = "flex";
         }
