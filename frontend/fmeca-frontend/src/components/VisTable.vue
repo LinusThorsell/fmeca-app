@@ -1,4 +1,5 @@
 <script>
+import { ref, watchEffect } from 'vue'
 import { vis_table_store } from './vis-table-store.js'
 import html2pdf from 'html2pdf.js';
 
@@ -26,7 +27,7 @@ import html2pdf from 'html2pdf.js';
                         div.style.display="none";
                     });
                 }, 500);
-            }, 1500);
+            }, 10000);
         },
         
 
@@ -45,6 +46,9 @@ import html2pdf from 'html2pdf.js';
                 getTableFromBackend,
                 vis_table_store,
                 getProjects,
+                selected_project,
+
+                loadProjectFromStore,
             }
         },
 
@@ -58,18 +62,24 @@ import html2pdf from 'html2pdf.js';
             }
         },
     }
-    
+
     var selector, rule, i, /*rowStyles=[],*/ colStyles=[];
 
     const array_columns = 15;
     const array_rows = 15;
     const default_column_width = 100;
 
-    var selected_project = 0;
+    var selected_project = ref(0);
+
+/*
+    watchEffect(() => {
+    // tracks A0 and A1
+        A2.value = A0.value + A1.value
+    })*/
 
     // Gets entire table ( TODO : interface with backend here )
     function setupTable() {    
-
+/*
         if (vis_table_store.getRowCount(selected_project) === 0) {
             const temp_array = []
             console.log("Array empty, creating example")
@@ -80,8 +90,10 @@ import html2pdf from 'html2pdf.js';
                 }
             }
             vis_table_store.setArray(selected_project, temp_array)
-        }
+        }*/
         // return table_array;
+        
+        //vis_table_store.generateEmpty()
     }
    
     // Gets a specific row ( index ) as an array from the input array ( table_array ).
@@ -192,7 +204,7 @@ import html2pdf from 'html2pdf.js';
     }
     
     var have_fetched = false;
-    var debug = true;
+    var debug = false;
     function getTableFromBackend() {
         // Simple GET request using fetch
         if (!have_fetched && debug) {
@@ -215,18 +227,41 @@ import html2pdf from 'html2pdf.js';
                     /*data.forEach((element, index) => {
                         vis_table_store.set(0, index, element.project_id)
                     }); */
-                    vis_table_store.set(selected_project, 1, 1, data[0].project_id)
-                    data[selected_project].node_set.forEach((node, index) => {
-                        vis_table_store.set(selected_project, index+1, 1, node.name)
+                    data.forEach((project, index) => {
+                        console.log(index)
+                        console.log(project.name)
+                        vis_table_store.generateEmpty(index, array_rows, array_columns)
+                        vis_table_store.set(index, 0, 0, project)
+                        //vis_table_store.set(index, 1, 1, project.name)
+                        
+                        project.node_set.forEach((node, n_index) => {
+                            vis_table_store.set(index, n_index+1, 1, node.name);
+                        })
+
+                        /*project.node_set.forEach((node, index) => {
+                            vis_table_store.set(index, index+1, 1, project.name)
+                        });*/
                     });
                     //vis_table_store.set(0, 1, data) 
             });
+
             have_fetched = true
         }
     }
     function getProjects() {
-        return ["Awesome Project", "Not so awesome project", "buggy project"]
+        let projects = []
+
+        projects = vis_table_store.getProjectNames()
+
+        return projects;
     }
+
+    function loadProjectFromStore()
+    {
+        let selection = document.getElementById("project-select").value;
+        selected_project.value = vis_table_store.switchProject(selection);
+    }
+
     </script>
     
 <style>
@@ -243,11 +278,11 @@ import html2pdf from 'html2pdf.js';
     <label for="project-select">Choose a project:</label>
     <select name="projects" id="project-select">
         <option value="">Please choose a project</option>
-        <option v-for="project in getProjects()" value="project">{{project}}</option>
+        <option v-for="project in getProjects()" :value="project">{{project}}</option>
         <!--option value="proj1">Project 1</option>
         <option value="proj2">Project 2</option-->
     </select>
-    <button onclick="console.log('clicked')">Load Selected Project</button>
+    <button @click="loadProjectFromStore()">Load Selected Project</button>
 
     <div id="vis-table">
         <div v-for="row in vis_table_store.getRowCount(selected_project)" class="vis-row">
