@@ -55,7 +55,7 @@
 
   <MB1553Path name="MB3">
     <BusController ref="IOM_FMC" hwDeviceId="1"/>
-    <Equipment         name="Pylon_1"/>
+    <Equipment name="Pylon_1"/>
   </MB1553Path>
 
   <XTALKPath>

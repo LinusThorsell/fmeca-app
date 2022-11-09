@@ -1,6 +1,4 @@
 # Classes the we want to represent in database
-
-
 class Node:
     def __init__(self,type,name,loadsetTypeRef, redundant, platformRef, syncLostBehavior):
         self.type = type
@@ -53,12 +51,44 @@ class Application:
         self.nodename = node
         self.cpuname = cpu
         self.partitionname = partition
-        # self.loadsetTypeRef = id
-        # self.connectionProvider = connectionProvider
-        # self.connectionRequirer = connectionRequirer
-        # self.connectionId = connectionId
+
     def reprJSON(self):
         return {"name":self.name,"cpu":None} #,"rampool":self.rampool,"instanceOf":self.instanceOf,"affinity":self.affinity}
+
+class Application_Instances:
+    def __init__(self,name, instanceOf):
+        self.name = name
+        self.instanceOf = instanceOf
+    
+    def reprJSON(self):
+        return {"name":self.name}
+    
+class ApplicationContainer:
+    def __init__(self,name):
+        self.name = name
+        self.applicationlist = []
+    
+    def reprJSON(self):
+        return {"name":self.name,"applicaitonlist":self.applicationlist}
+class Connection:
+    
+    def __init__(self, Provider_name, Provider_Application, Requirer_name, Requirer_Application):
+        self.Provider_name = Provider_name
+        self.Requirer_name = Requirer_name
+        self.Provider_Application = Provider_Application
+        self.Requirer_Application = Requirer_Application
+        
+    def reprJSON(self):
+        return {"Provider_name":self.Provider_name,"Provider_Application":self.Provider_Application,
+        "Requirer_name":self.Requirer_name, "Requirer_Application":self.Requirer_Application} 
+
+class ConnectionContainer:
+    def __init__(self,projectname):
+        self.project_name = projectname
+        self.connectionlist = []
+    
+    def reprJSON(self):
+        return {"project_name":self.project_name,"connectionlist":self.connectionlist}
 
 #The lists should contain Objects of the Objects
 

@@ -1,15 +1,14 @@
-#import xml.etree.ElementTree as ET
-#import os.path
 from Parser_class import Parser
 import sys, string, os
 from os import path as OSPATH
 from Encoder_Class import *
 import DataClass
 import Paths
+import DebugFile
 
 #Command Line Interface
 
-import DebugFile
+
 class CLI:
     
     def __init__(self):
@@ -107,8 +106,14 @@ class CLI:
             DebugFile.debug_print(self._Paths._paths)
             Project_type = DataClass.Project_Data_Class(self._parser.get_project_name(self._add_path))
             
+            Connections = DataClass.ConnectionContainer(self._parser.get_project_name(self._add_path))
+            Applications = DataClass.ApplicationContainer(self._parser.get_project_name(self._add_path))
             #Behöver göra om detta i framtiden, funkar for now
-            runorder = ["fc/hw_topology.xml", "mc/hw_topology.xml","fc/sw_topology.xml","mc/sw_topology.xml"]
+            #runorder = ["fc/hw_topology.xml", "mc/hw_topology.xml","fc/sw_topology.xml","mc/sw_topology.xml","functional_topology/fc","functional_topology/mc"]
+            runorder = ["functional_topology/fc","functional_topology/mc"]
+
+            connectionlist =  []
+            application_instances = []
             
             for temppath in runorder:
                 for path in self._Paths._paths:
@@ -120,8 +125,55 @@ class CLI:
                         Project_type.insert_partitions(self._parser.get_partitions(path))
                     elif temppath in path and "mc/sw_topology.xml" in temppath:
                         Project_type.insert_applications(self._parser.get_cpu_applications(path))
+                    #För connections: Kolla efter <Project>/infrastructure/functional_topology/ sedan fc eller mc
+                    elif temppath in path and "functional_topology/fc" in temppath:
+                        if os.path.exists(path+"/connections"):
 
+                            for subdir, dirs, files in os.walk(path+"/connections"):
+                                for file in files:
+                                    if(file == "connections.xml"):
+                                        print(subdir + "/"+file)
+                                        connectionlist += self._parser.get_connections(os.path.join(subdir,file))
+
+
+                            #for filename in os.scandir(path+"/connections"):
+                            #    if filename.is_file():
+                            #        print(filename.path)
+#                            Connections.connectionlist += connectionlist
+                        print("PATH ===== " ,path + "/application_instance.xml")
+                        if os.path.exists(path + "/application_instance.xml"):
+                            print("hejhej")
+                            if os.path.isfile( path + "/application_instance.xml"):
+                                print("tjabba")
+                                application_instances += self._parser.get_application_instances(path + "/application_instance.xml")
+
+                        #Leta efter connections
+                    elif temppath in path and "functional_topology/mc" in temppath:
+                        #Connection.connectionlist += conntionlist
+                        if os.path.exists(path+"/connections"):
+    
+                            for subdir, dirs, files in os.walk(path+"/connections"):
+                                for file in files:
+                                    if(file == "connections.xml"):
+                                        print(subdir + "/"+file)
+                                        connectionlist += self._parser.get_connections(os.path.join(subdir,file))
+                            
+                            
+ #                            Connections.connectionlist += connectionlist
+                           
+                        if os.path.exists(path + "/application_instance.xml"):
+                            if os.path.isfile( path + "/application_instance.xml"):
+                                print("tja")
+                                application_instances += self._parser.get_application_instances(path + "/application_instance.xml")
+                            
+ 
+                        #Leta efter connections
+            Connections.connectionlist += connectionlist
+            Applications.applicationlist += application_instances
             
-            self._encoder.send_to_database(Project_type,"projects/")
+            #self._encoder.send_to_database(Project_type,"projects/")
+            self._encoder.send_to_database(Connections,"connections/")
+            self._encoder.send_to_database(Applications,"applications/")
+
 
 
