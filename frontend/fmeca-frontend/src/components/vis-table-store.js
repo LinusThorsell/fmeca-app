@@ -10,7 +10,7 @@ export const vis_table_store = reactive({
         this.array[num] = new_array
         console.log(this.array[num])
     },
-    getColumnCount(num) {
+    getColumnCount(num) { // TODO MAKE GET LENGTH OF COLUMNS NOT ROWS
         return this.array[num][0].length-1
     },
     getRowCount(num) {

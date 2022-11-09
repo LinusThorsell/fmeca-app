@@ -65,8 +65,8 @@ import html2pdf from 'html2pdf.js';
 
     var selector, rule, i, /*rowStyles=[],*/ colStyles=[];
 
-    const array_columns = 15;
-    const array_rows = 15;
+    const array_columns = 6;
+    const array_rows = 6;
     const default_column_width = 100;
 
     var selected_project = ref(0);
@@ -202,6 +202,18 @@ import html2pdf from 'html2pdf.js';
         // Debug print
         // console.log(document.styleSheets)
     }
+
+    function stringifyPartitions(obj) {
+        console.log("To stringify into partitions")
+        console.log(obj)
+
+        let build_partition_string = ""
+        obj.forEach(partitions => {
+            build_partition_string += partitions.name + "\n"
+        });
+        console.log("returning: " + build_partition_string)
+        return build_partition_string;
+    }
     
     var have_fetched = false;
     var debug = false;
@@ -236,6 +248,21 @@ import html2pdf from 'html2pdf.js';
                         
                         project.node_set.forEach((node, n_index) => {
                             vis_table_store.set(index, n_index+1, 1, node.name);
+
+                            let cpu_string = "";
+                            let cpu_partition_string = "";
+
+                            node.cpu_set.forEach(cpu => {
+                                cpu_string += cpu.name + "|"
+                                
+                                cpu_partition_string += stringifyPartitions(cpu.partition_set) + "|"
+                            })
+                            cpu_string = cpu_string.slice(0, -1);
+                            cpu_partition_string = cpu_partition_string.slice(0, -1)
+                            
+                            vis_table_store.set(index, n_index+1, 2, cpu_string)
+                            vis_table_store.set(index, n_index+1, 3, cpu_partition_string)
+
                         })
 
                         /*project.node_set.forEach((node, index) => {
@@ -263,7 +290,7 @@ import html2pdf from 'html2pdf.js';
     }
 
     </script>
-    
+ 
 <style>
    @import './style/VisTable.css'
 </style>
