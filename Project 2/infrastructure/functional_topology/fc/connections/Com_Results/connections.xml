@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
-<idb:Connections xmlns:idb="" domain="FlightCritical">
+<idb:Connections xmlns:idb="Can_be_here" domain="FlightCritical">
   <Connection>
     <ProviderPort name="TMC21_Results.Results_60.Results"/>
     <RequirerPort name="Com_Results.Results_60.Summary" identity="Com_Results"/>

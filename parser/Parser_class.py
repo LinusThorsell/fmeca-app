@@ -1,20 +1,15 @@
 import xml.etree.ElementTree as ET
 from os import path as OSPATH
-import Encoder_Class
-import DataClassNest
+#import Encoder_Class
+import DataClass
+
+import DebugFile
 class Parser:
     def __init__(self):
         self.functions = {}
-        self.debug = False
-
-
-    def debug_print(self, string_to_print):
-        if(self.debug):
-            print(string_to_print)
             
     #retrieves the project name from the path
     def get_project_name(self,path):
-        print(path)
         temp = path.split("/")
         name = temp[0]
         return name
@@ -34,14 +29,14 @@ class Parser:
         #     if children.tag in self.functions:
         #         returnlist += self.functions[children.tag](children)
                 
-        return DataClassNest.Cpu(name,type,unitid,IOPRef,ACCSSyncMaster,domainBorder)
+        return DataClass.Cpu(name,type,unitid,IOPRef,ACCSSyncMaster,domainBorder)
 
     def create_partition(self,raw_partition_data,node,cpu):
         name = raw_partition_data.get("name")
         isLTM = raw_partition_data.get("isLTM")
         partition_id = raw_partition_data.get("id")
         
-        Partition = DataClassNest.Partition_Data_Class(name, isLTM, partition_id, node,cpu)
+        Partition = DataClass.Partition_Data_Class(name, isLTM, partition_id, node,cpu)
         
         for children in raw_partition_data:
             if children.tag in self.functions:
@@ -53,13 +48,13 @@ class Parser:
 
     def create_application(self, raw_application_data,node, cpu, partition):
         
-        #<DipsApplication name="Port_Gateway_1" rampool="0x10000" instanceOf="port_gateway" affinity="0"/>
+        #<DipsApplication name="PoProvider_Applicationrt_Gateway_1" rampool="0x10000" instanceOf="port_gateway" affinity="0"/>
         name = raw_application_data.get("name")
         rampool = raw_application_data.get("rampool")
         instanceOf = raw_application_data.get("instanceOf")
         affinity = raw_application_data.get("affinity")
 
-        return DataClassNest.Application(name, rampool, instanceOf, affinity, node, cpu, partition)
+        return DataClass.Application(name, rampool, instanceOf, affinity, node, cpu, partition)
 
     def create_partitions_in_cpu(self,raw_partition_data):
         partitions = []
@@ -94,13 +89,55 @@ class Parser:
             else:
                 type = "mc"
 
-            node = DataClassNest.Node(type,name,loadsetTypeRef,redundant,platformRef,syncLostBehavior)
+            node = DataClass.Node(type,name,loadsetTypeRef,redundant,platformRef,syncLostBehavior)
         
             for cpu in raw_node_data:
                 if cpu.tag in self.functions:
                     if cpu.tag == "APP" or cpu.tag == "IOP" or cpu.tag == "PP":
                         node.cpus.append(self.functions[cpu.tag](cpu)) 
             return node
+    
+
+    
+    def create_connection(self, raw_connection_data):
+        for child in raw_connection_data:
+            if(child.tag == "ProviderPort"):
+                Provider_name = child.get('name')
+                Provider_Application = Provider_name.split('.')[0]
+            elif(child.tag == "RequirerPort"):
+                Requirer_name = child.get('name')
+                Requirer_Application = Requirer_name.split('.')[0]
+
+        return DataClass.Connection(Provider_name, Provider_Application, Requirer_name, Requirer_Application)
+
+
+    def create_application_instance(self, raw_application_instance_data):
+        name = raw_application_instance_data.get('name')
+        instanceOf = raw_application_instance_data.get("instanceOf")
+        return DataClass.Application_Instances(name, instanceOf)
+
+
+    
+    def get_connections(self, path):
+        # Return all connections in path
+        tree = ET.parse(path)
+        root = tree.getroot()
+        returnlist = []
+        for child in root:
+            if(child.tag == "Connection"):
+                returnlist.append(self.create_connection(child))
+        return returnlist      
+
+    def get_application_instances(self,path):
+        tree = ET.parse(path)
+        root = tree.getroot()
+        returnlist = []
+        for child in root:
+            if(child.tag == "ApplicationInstance"):
+                returnlist.append(self.create_application_instance(child))
+        return returnlist  
+
+
             
             
     #retrieves all nodes(and cpus) from fc/hw_topology
@@ -120,7 +157,6 @@ class Parser:
         root = tree.getroot()
         returnlist = []
         for partitions in root:
-            print(partitions.tag)
             if partitions.tag in self.functions:
                 if (partitions.tag == "APP" or partitions == "IOP"):
                     #returnlist.append(self.functions[node.tag](partitions))
@@ -136,7 +172,7 @@ class Parser:
                 if (cpu.tag == "PP"):
                     #returnlist.append(self.functions[node.tag](partitions))
                     returnlist += self.create_applications_in_cpu(cpu)
-        return returnlist
+        return returnlist 
     
     def initialisation(self):
         self.functions = {"PP":self.cpu,"PDCM":self.create_node,"DCM":self.create_node,"APP":self.cpu,"IOP":self.cpu,"Application":self.create_application}

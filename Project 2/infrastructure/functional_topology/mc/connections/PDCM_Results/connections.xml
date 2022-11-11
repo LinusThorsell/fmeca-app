@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
-<idb:Connections xmlns:idb="">
+<idb:Connections xmlns:idb="Can_be_here">
 
   <Connection>
     <ProviderPort name="Separation_1.PDCM11_Results"/>
