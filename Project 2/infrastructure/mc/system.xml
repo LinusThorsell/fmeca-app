@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<system>
+
+  <idb key="config_name"               value="Project 2"/>
+  <idb key="config_rel"                value="FMECA_Project/[config_name]"/>
+  <idb key="config_dir"                value="[root]/configurations/[config_rel]"/>
+
+  <!-- Directories -->
+  <idb key="infrastructure_dir"        value="[config_dir]/infrastructure"/>
+
+  <!-- Directories -->
+  <idb key="mc_dir"                    value="[infrastructure_dir]/mc"/>
+
+  <!-- Configuration files -->
+  <idb key="hw_topology"               value="[mc_dir]/hw_topology.xml"/>
+  <idb key="sw_topology"               value="[mc_dir]/sw_topology.xml"/>
+
+  <!-- Network Topology configurations -->
+  <network_topology                    conf="[acs_src]/network_topologies/ceth/network_topology.xml"/>
+
+  <!-- Equipments -->
+  <equipments                          dir="[mc_dir]/equipments"/>
+
+  <!-- Functional topology -->
+  <!-- Message Topologies shall be located under [config_dir] -->
+  <!-- Functional Topologies shall be located under [infrastructure_dir] -->
+  <functional_topology                 dir="[infrastructure_dir]/functional_topology/mc"/> 
+  
+    <!-- Locations and targets for Applications, IFSes and LSes -->
+  <idb key="dips_dir"                  value="[acs_src]/dips"/>
+  <idb key="applications_dir"          value="[config_dir]/applications"/>
+  <idb key="ifs_dir"                   value="[config_dir]/ifs"/>  
+
+  <!-- Functional Topologies -->
+  <!-- Message Topologies shall be located under [config_dir] -->
+  <!-- Functional Topologies shall be located under [infrastructure_dir] -->
+  <functional_topology                 dir="[config_dir]/message_topology"/>
+
+  <!-- Critical Separations directory -->
+  <domain_border                       dir="[infrastructure_dir]/domain_border"/>
+
+  <!-- Applications -->
+ 
+  <appl_config name="pdcm_scheduler_test"  src="[applications_dir]/pdcm_scheduler_test"   config="[applications_dir]/pdcm_scheduler_test/config"   default_use="REAL"/>
+ 
+  <!-- IFS's -->
+
+  <ifs_config name="my_ifs"     src="[ifs_dir]/my_ifs"     config="[ifs_dir]/my_ifs/config"/>
+
+</system>

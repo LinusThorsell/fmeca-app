@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<idb:ResourceRequirements xmlns:idb=""
+     application="basic_com_event" initializeStackSize="0" rampoolSize="1000000">
+  <PeriodicResourceRequirements thread="Event_P60" executionStackSize="50000" executionTime="210000"/>
+  <PeriodicResourceRequirements thread="Event_P30" executionStackSize="50000" executionTime="210000"/>
+  <PeriodicResourceRequirements thread="Event_P15" executionStackSize="50000" executionTime="210000"/>
+  <PeriodicResourceRequirements thread="Event_P8" executionStackSize="50000" executionTime="210000"/>
+  <PeriodicResourceRequirements thread="Event_P4" executionStackSize="50000" executionTime="210000"/>
+  <PeriodicResourceRequirements thread="Event_P1" executionStackSize="50000" executionTime="210000"/>
+</idb:ResourceRequirements>

@@ -14,17 +14,15 @@ class Project(models.Model):
 
 class Node(models.Model):
     name = models.CharField(max_length=50, blank=True)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, blank=True, null=True)
-    
     platform = models.CharField(max_length=50, blank=True, null=True)
     load_set_type = models.CharField(max_length=50, blank=True, null=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, blank=True)
     redundant = models.CharField(max_length=20, blank=True, null=True)
-    sync_loss = models.CharField(max_length=10, blank=True, null=True)
+    sync_loss = models.CharField(max_length=20, blank=True, null=True)
 
 class CPU(models.Model):
     type = models.CharField(max_length=10, default="")
     node = models.ForeignKey(Node, on_delete=models.CASCADE, blank=True, null=True)
-    
     unit_id = models.CharField(max_length=10, blank=True, null=True)
     iop_ref = models.CharField(max_length=10, blank=True, null=True)
     name = models.CharField(max_length=10, blank=True, null=True)
@@ -33,16 +31,16 @@ class CPU(models.Model):
 
 class Partition(models.Model):
     name = models.CharField(max_length=20, blank=True)
-    cpu = models.ForeignKey(CPU, on_delete=models.CASCADE, blank=True, null=True)
-    
     is_ltm = models.CharField(max_length=20, blank=True, null=True)
     fixed_start = models.BigIntegerField(default=None, null=True)
     partition_id = models.IntegerField(default=None, null=True)
+    cpu = models.ForeignKey(CPU, on_delete=models.CASCADE, blank=True, null=True)
     # node = models.ForeignKey(CPU, on_delete=models.CASCADE, blank=True)
 
 class Application(models.Model):
-    name = models.CharField(max_length=50, blank=True)
+    name = models.CharField(max_length=50, blank=True, null=True)
     cpu = models.ForeignKey(CPU, on_delete=models.CASCADE, blank=True, null=True)
+    partition = models.ForeignKey(Partition, on_delete=models.CASCADE, blank=True, null=True)
     # node = models.ForeignKey(CPU, on_delete=models.CASCADE, blank=True)
 
 class Connection(models.Model):
@@ -73,3 +71,36 @@ class Connection(models.Model):
 #     application = models.ForeignKey(Application, on_delete=models.CASCADE, default="")
 #     partition = models.ForeignKey(Partition, on_delete=models.CASCADE, default="")
  
+# {
+#     "name": "dummy1",
+#     "node_set": [{ 
+#             "name":"test_node", 
+#             "cpu_set":[{
+#                 "name":"test_cpu",
+#                 "application_set":[{
+#                     "name":"test_application1"
+#                 }],
+#                 "partition_set":[{
+#                     "name": "test_partition",
+#                     "application_set":[{
+#                         "name":"test_application2"
+#                     }]      
+#                 }]
+#             }]
+#    }]
+# }
+
+# {
+#     "name": "dummy1",
+#     "node_set": [{ 
+#             "name":"test_node", 
+#             "cpu_app_set":[{
+#                 "name":"test_cpu",
+#                 "application_set":[],
+#                 "partition_set":[{
+#                     "name": "test_partition",
+#                     "partition_app_set":[]      
+#                 }]
+#             }]
+#    }]
+# }

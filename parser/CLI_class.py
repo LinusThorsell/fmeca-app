@@ -3,7 +3,9 @@ import os.path
 from Parser_class import Parser
 import sys, string, os
 from os import path as OSPATH
-
+from Encoder_Class import *
+import DataClassNest
+import Paths
 #Command Line Interface
 class CLI:
     
@@ -18,10 +20,15 @@ class CLI:
         self._all_parser = 0
         self._keep_alive = False
         self._parser = Parser()
-
+        self._encoder = Encoder()
+        self._Paths = Paths.Paths()
+        self._parser = Parser()
+        self._parser.initialisation()
+        self.delete_argument = ""
     def delete(self,project):
         ##Tell the database to delete the project
         print("Vi är i delete, project = " + str(project))
+        self.delete_argument = project
         self._delete = True
 
     def add(self,xml_file_path):
@@ -41,17 +48,10 @@ class CLI:
         self._all_parser.parse_all(path)
     
 
-    def parse(self):
-        self._parser = Parser()
-        self._parser.initial_path(self._add_path)
-        self._parser.parse(_parser.fc_path)
-        self._parser.parse(_parser.mc_path)
-        
-        _parser.sendall()
-
-
-    def test_func_with_two_args(self, arg1, arg2):
-        print("test_func_with_two_args")
+    def get_paths(self):
+        self._Paths.initial_path(self._add_path)
+        self._Paths.get_paths(self._Paths.fc_path)
+        self._Paths.get_paths(self._Paths.mc_path)
     
     def send_to_database(self):
         pass
@@ -59,61 +59,6 @@ class CLI:
     def config_database(self,path):
         print("Configuring database, path to file = " + str(path))
     
-    def keep_alive(self):
-        self._keep_alive = True
-
-    def quit(self):
-        self._keep_alive = False
-    
-    def show_all_parsed_files(self):
-        if(self._all_parser):
-            i = 0
-            for file_path in self._all_parser.all_file_paths:
-                print(str(i) + ": " + file_path)
-                i += 1
-        else:
-            print("Nothing to show")
-    
-    def get_xml_file(self, file_id):
-        file = 0 
-
-        try:
-            file_id = int(file_id)
-            file = self._all_parser.parsed_files[file_id]
-        except:
-            for parsed_file in self._all_parser.parsed_files:
-                if(parsed_file.path == file):
-                    file = parsed_file
-                    break
-        return file
-
-    def get_xml_id(self, path):
-        i = 0
-        for parsed_file in self._all_parser.parsed_files:
-            if(parsed_file.path == path):
-                return i
-            i += 1
-        return -1
-            
-    def print_xml_file(self, file_id):
-        
-        file = self.get_xml_file(file_id)
-        if (file):
-            print("Printing file: " + file.path)
-            print(ET.tostring(file.xml.getroot()).decode('UTF-8'))
-        else:
-            print("File not found")
-    
-    def find(self, arg, search_in):
-        if(search_in.lower() == "all"):
-            for file in self._all_parser.parsed_files:
-                root = file.xml.getroot()
-                result = root.findall(arg)
-                if (len(result) > 0):
-                    print("Found match in: ", self.get_xml_id(file.path),  file.path)
-                    for obj in result:
-                        print(obj.attrib)
-            
     def analyse_cli(self):
         #previous_was_two_part_argument = False
         #for i in range(self._nr_arguments):
@@ -150,9 +95,8 @@ class CLI:
     ##in self._flags we should have the flag and how many arguments we should
     ## have after that
     def initialize(self):
-        self._flags = {"print":0,"add":1,"delete":1,"-c":1, "test":2, "-kp":0, "quit":0, "parse":1,"print_xml":1, "ls":0, "find":2}
-        self._functions = {"print":self.print,"add":self.add,"delete":self.delete,"-c":self.config_database, "test":self.test_func_with_two_args,
-        "-kp":self.keep_alive,"quit":self.quit, "parse":self.parse_all, "ls":self.show_all_parsed_files, "print_xml":self.print_xml_file, "find":self.find}
+        self._flags = {"print":0,"add":1,"delete":1,"-c":1, "test":2, "-kp":0, "quit":0, "parse":1,"print_xml":1, "ls":0, "find":2, "get":3}
+        self._functions = {"print":self.print,"add":self.add,"delete":self.delete,"-c":self.config_database}
 
     def get_arguments(self):
         nrarguments = len(sys.argv)
@@ -164,11 +108,64 @@ class CLI:
     def add_and_delete(self):
         
         if(self._delete):
-            print("Anropa funktionen som ska deletea ett projekt i databasen")
+            print("Call function: DELETE from database")
+            self._encoder.delete_from_database(self.delete_argument, "projects/")
             
         if (self._add):
-            ##anropa funktionen som ska posta till databasen
-            print("Anropa funktionen som ska lägga till ett projekt i databasen databasen")
-            self._parser.send_project_name(self._add_path)
-            #self.parse()
+            #Call function that posts to database
+            print("Call function: ADD to database")
+            print(self._add_path)
+            self.get_paths()
+            print("PATHS:")
+            print(self._Paths._paths)
+            Project_type = DataClassNest.Project_Data_Class(self._parser.get_project_name(self._add_path))
             
+            #Behöver göra om detta i framtiden, funkar for now
+            runorder = ["fc/hw_topology.xml", "mc/hw_topology.xml","fc/sw_topology.xml","mc/sw_topology.xml"]
+            
+            for temppath in runorder:
+                for path in self._Paths._paths:
+                    if temppath in path and "fc/hw_topology.xml" in temppath:
+                        Project_type.filter(self._parser.get_nodes(path))
+                    elif temppath in path and "mc/hw_topology.xml" in temppath:
+                        Project_type.filter(self._parser.get_nodes(path))
+                    elif temppath in path and "fc/sw_topology.xml" in temppath:
+                        Project_type.insert_partitions(self._parser.get_partitions(path))
+                    elif temppath in path and "mc/sw_topology.xml" in temppath:
+                        Project_type.insert_applications(self._parser.get_cpu_applications(path))
+                        
+            # for path in self._Paths._paths:
+            #     if "fc/hw_topology.xml" in path:
+            #         runorder[0] = path
+            #         #self._parser.add_nodes()
+            #         Project_type.filter(self._parser.get_nodes(path))
+            #     #Project_type.filter(self._parser.get_fc_nodes('Project 2/infrastructure/fc/hw_topology.xml',Project_type.ProjectDataClass.project_id))
+            # for path in self._Paths._paths:
+    
+            #     if "mc/hw_topology.xml" in path:
+            #         runorder[1] = path
+            #         Project_type.filter(self._parser.get_nodes(path))
+            # #Assumes right path to mc/hw_topology
+            #     #Project_type.filter(self._parser.get_mc_nodes('Project 2/infrastructure/mc/hw_topology.xml',Project_type.ProjectDataClass.project_id))
+            # for path in self._Paths._paths:
+    
+            #     if "fc/sw_topology.xml" in path:
+            #         runorder[2] = path
+            # #Assumes right path to fc/sw_topology
+            #     #Project_type.filter(self._parser.get_partitions('Project 2/infrastructure/fc/sw_topology.xml'))
+            #         #temppartitions = self._parser.get_partitions(path)
+            #         Project_type.insert_partitions(self._parser.get_partitions(path))
+            #         #print(temppartitions)
+            # for path in self._Paths._paths:
+    
+            #     if "mc/sw_topology.xml" in path:
+            #         runorder[3] = path
+            #         #tempapplications = self._parser.get_cpu_applications(path)
+            #         #Ordningen??
+            #         Project_type.insert_applications(self._parser.get_cpu_applications(path))
+            #         #print(tempapplications)
+            # #Project_type.filter(self._parser.get_applications('Project_1/infrastructure/mc/sw_topology.xml'))
+
+
+            
+            self._encoder.send_to_database(Project_type,"projects/")
