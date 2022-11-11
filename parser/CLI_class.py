@@ -109,8 +109,8 @@ class CLI:
             Connections = DataClass.ConnectionContainer(self._parser.get_project_name(self._add_path))
             Applications = DataClass.ApplicationContainer(self._parser.get_project_name(self._add_path))
             #Behöver göra om detta i framtiden, funkar for now
-            #runorder = ["fc/hw_topology.xml", "mc/hw_topology.xml","fc/sw_topology.xml","mc/sw_topology.xml","functional_topology/fc","functional_topology/mc"]
-            runorder = ["functional_topology/fc","functional_topology/mc"]
+            runorder = ["fc/hw_topology.xml", "mc/hw_topology.xml","fc/sw_topology.xml","mc/sw_topology.xml","functional_topology/fc","functional_topology/mc"]
+            #runorder = ["functional_topology/fc","functional_topology/mc"]
 
             connectionlist =  []
             application_instances = []
@@ -125,6 +125,14 @@ class CLI:
                         Project_type.insert_partitions(self._parser.get_partitions(path))
                     elif temppath in path and "mc/sw_topology.xml" in temppath:
                         Project_type.insert_applications(self._parser.get_cpu_applications(path))
+
+            self._encoder.send_to_database(Project_type,"projects/")
+            #self._encoder.send_to_database(Connections,"connections/")
+            #self._encoder.send_to_database(Applications,"applications/")
+
+
+
+'''
                     #För connections: Kolla efter <Project>/infrastructure/functional_topology/ sedan fc eller mc
                     elif temppath in path and "functional_topology/fc" in temppath:
                         if os.path.exists(path+"/connections"):
@@ -170,10 +178,4 @@ class CLI:
                         #Leta efter connections
             Connections.connectionlist += connectionlist
             Applications.applicationlist += application_instances
-            
-            #self._encoder.send_to_database(Project_type,"projects/")
-            self._encoder.send_to_database(Connections,"connections/")
-            self._encoder.send_to_database(Applications,"applications/")
-
-
-
+            '''
