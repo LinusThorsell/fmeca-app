@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/home/mullgull/vue-crash-2022/fmeca-app/backend/fmeca-venv"
+VIRTUAL_ENV="/home/adam/saab-project/fmeca-app/backend/fmeca-venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

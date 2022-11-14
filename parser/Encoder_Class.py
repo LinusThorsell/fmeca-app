@@ -1,7 +1,10 @@
 import json
 import DataClass
-
+#from CLI_class import debug_print
+import DebugFile
 import requests
+
+#from CLI_class import debug_print
 class ComplexEncoder(json.JSONEncoder):
     def default(self, obj):
         if hasattr(obj,'reprJSON'):
@@ -20,16 +23,12 @@ class Encoder:
         print("Deleting project: ",self._url+folder+project)
         
         response = requests.delete(self._url+folder+project)
-        print("Response = ",response.text)
+        DebugFile.debug_print("Response from delete = ",response.text)
     
     def send_to_database(self,object,folder):
-        print("Är i send to database")
         string = json.dumps(object,cls=ComplexEncoder,indent=4)
-        
-        #print("Postar detta:",self._headers,string)
-        #print("Till foldern: ",self._url + folder)
-        print(string)
-        print("Sending to: " ,self._url+ folder)
+        DebugFile.debug_print(string)
+        DebugFile.debug_print("Sending to: \n\n", self._url+ folder)
+        #print("Skickar faktiskt inte just nu bara printar\n")
         response = requests.post(self._url+ folder,string,headers=self._headers)
-        #print("response from send",response.text)
-        #########
+        DebugFile.debug_print("Response from send = ",response.text)
