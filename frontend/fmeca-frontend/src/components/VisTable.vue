@@ -132,12 +132,12 @@ import { vis_table_store } from './vis-table-store.js'
         
 
 
-        for(item in vis_table_store.get((row), (column)))
+        /*for(item in vis_table_store.get((row), (column)))
         {
             if (columnfilter == item)
             console.log(item);
-        }
-        for(i = 0; i < vis_table_store.getColumnCount(); i++)
+        }*/
+        for(i = 0; i < vis_table_store.getColumnCount(selected_project.value); i++)
         {
             console.log("oldsearch är " + oldsearch);
             //tar in en string i sökfältet som skriver ut filtrerad tabler            
@@ -300,7 +300,7 @@ import { vis_table_store } from './vis-table-store.js'
             have_fetched = true
         }
     }
-    export function getProjects() {
+    function getProjects() {
         let projects = []
 
         projects = vis_table_store.getProjectNames()

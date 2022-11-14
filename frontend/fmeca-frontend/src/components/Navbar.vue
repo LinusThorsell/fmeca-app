@@ -6,7 +6,7 @@
       <label for="project-select">Choose a project</label>
       <select name ="projects" id="project-select">
         <option value =""> Please choose a project</option>
-        <option v-for="project in getProjects()" value ="project">{{project}}</option>
+        <!-- <option v-for="project in getProjects()" value ="project">{{project}}</option> -->
       </select>
       <div class="menu-item"><a href="#">Adam fan page</a></div>
       <!-- sökbar som aktiveras genom enter -->
@@ -17,7 +17,7 @@
   
   <script>
   //Searchbarfunction
-  import {filterColumn, filterSearch, getProjects} from './VisTable.vue'
+  import {filterColumn, filterSearch /*,getProjects*/} from './VisTable.vue'
 
   function filteredList(input) 
 {  
@@ -70,7 +70,7 @@
         ],
         input: '',
         filteredList,
-        getProjects
+        //getProjects
       }
     }
   }
