@@ -1,24 +1,20 @@
 <script>
 import { ref, watchEffect } from 'vue'
 import { vis_table_store } from './vis-table-store.js'
-//import html2pdf from 'html2pdf.js';
-
+import html2pdf from 'html2pdf.js';
     export default {
         
         mounted() {
             generateCustomStylesheet()
-
             setTimeout(() => {
                 /*
                     Function to fix bug on most chromium based browsers.
                     Required for resizing to work on a majority of browsers
                     that do not support native custom stylesheets.
-
                     Firefox will gain a performance advantage for supporting this,
                     while for example Google Chrome has to be forced to reload the
                     styles by nudging the elements downwards slightly.
                 */
-
                 // Get all the 'Loading...' text elements, and nudge the rest down slightly.
                 document.getElementsByClassName("chrome_is_messy_fix")[0].style.height="100px";
                 // Wait until the stylesheet is triggered to reload, then hide elements.
@@ -30,7 +26,6 @@ import { vis_table_store } from './vis-table-store.js'
             }, 10000);
         },
         
-
         data() {
             return {
                 removeColumn,
@@ -40,18 +35,15 @@ import { vis_table_store } from './vis-table-store.js'
                 getColumn,
                 addRow,
                 addColumn,
-                colStyles,
                 getClass,
                 handleResize,
                 getTableFromBackend,
                 vis_table_store,
                 getProjects,
                 selected_project,
-
                 loadProjectFromStore,
             }
         },
-
         /*components: {
         },*/
         methods: {
@@ -62,21 +54,16 @@ import { vis_table_store } from './vis-table-store.js'
             }
         },
     }
-    
-    var selector, rule, i, /*rowStyles=[],*/ colStyles=[], oldsearch;
-
-    const array_columns = 5;
-    const array_rows = 5;
+    var selector, rule, i, /*rowStyles=[],*/ colStyles=[];
+    const array_columns = 6;
+    const array_rows = 6;
     const default_column_width = 100;
-
     var selected_project = ref(0);
-
 /*
     watchEffect(() => {
     // tracks A0 and A1
         A2.value = A0.value + A1.value
     })*/
-
     // Gets entire table ( TODO : interface with backend here )
     function setupTable() {    
 /*
@@ -105,7 +92,6 @@ import { vis_table_store } from './vis-table-store.js'
     
         return Row;
     }
-
     // Gets a specific column ( index ) as an array from the input array ( table_array )
     function getColumn(index, table_array) {
         return table_array[index]
@@ -114,38 +100,12 @@ import { vis_table_store } from './vis-table-store.js'
         console.log(column)
         colStyles[column-1].display="none";
     }
-
-    export function filterColumn(columnfilter) {
-        //columnfilter = localStorage.getItem("columnfilter");
-        colStyles[columnfilter].display="none";
-        console.log(columnfilter);
-    }
-
     function restoreColumns() {
         console.log(vis_table_store.getColumnCount(selected_project.value))
         for(i = 0; i < vis_table_store.getColumnCount(selected_project.value); i++)
         {
             colStyles[i].display = "flex";
         }
-    }
-    export function filterSearch(columnfilter) {
-        
-
-
-        /*for(item in vis_table_store.get((row), (column)))
-        {
-            if (columnfilter == item)
-            console.log(item);
-        }*/
-        for(i = 0; i < vis_table_store.getColumnCount(selected_project.value); i++)
-        {
-            console.log("oldsearch är " + oldsearch);
-            //tar in en string i sökfältet som skriver ut filtrerad tabler            
-            if(i != (oldsearch-1))
-            colStyles[i].display = "none";
-        }
-        oldsearch = columnfilter;
-        colStyles[columnfilter-1].display = "flex";
     }
     
     // TODO : Fix, Is currently not working with rest of program structure.
@@ -164,7 +124,6 @@ import { vis_table_store } from './vis-table-store.js'
     function addColumn() {
     
     }
-
     // Gets the class for a specific vis-columnbox element.
     // These styles are used by the generated stylesheet to allow resizing.
     function getClass(column, row) {
@@ -174,17 +133,14 @@ import { vis_table_store } from './vis-table-store.js'
     // Calculates with of a row, to resize table container element to fit all content.
     function calculateWidthOfRows() {
         var max_width = 0;
-
         var rows = document.querySelector('.vis-row')
         Array.from(rows.childNodes).forEach(column => {
             if (column.offsetWidth > 0) {
                 max_width += column.offsetWidth;
             }
         });
-
         document.getElementById("vis-table").style.width = max_width + 100 + "px";
     }
-
     // Called by vue-resize-observer when a column is resized.
     // Changes stylesheet to resize elements
     function handleResize({ width }, { __currentTarget__ }) {
@@ -193,17 +149,14 @@ import { vis_table_store } from './vis-table-store.js'
         var column_id = column_array.slice(column_array.lastIndexOf('-')+1)
         //console.log(column_id)
         colStyles[parseInt(column_id)].width=width+"px"
-
         calculateWidthOfRows()
     }
-
     // Generates custom stylesheet.
     // Used to effectively resize big amounts of elements fast.
     function generateCustomStylesheet() {
         console.log("Generating stylesheet")
         document.getElementsByTagName('head')[0].appendChild(document.createElement('style'));
         var sheet=document.styleSheets[1];
-
         // Generate stylesheet for row height.
         // Not currently in use because native resizing is working.
         /*for (i=0; i<array_rows; i++) {
@@ -221,17 +174,14 @@ import { vis_table_store } from './vis-table-store.js'
             if (sheet.insertRule)
                 sheet.insertRule(selector+rule, 0);
             colStyles[i]=(sheet.cssRules)[0].style;
-
         }
         
         // Debug print
         // console.log(document.styleSheets)
     }
-
     function stringifyPartitions(obj) {
         console.log("To stringify into partitions")
         console.log(obj)
-
         let build_partition_string = ""
         obj.forEach(partitions => {
             build_partition_string += partitions.name + "\n"
@@ -250,13 +200,10 @@ import { vis_table_store } from './vis-table-store.js'
                     vis_table_store.set(selected_project, r, c, "row: " + r + " column: " + c)
                 }
             }
-
             have_fetched = true
             vis_table_store.set(selected_project, 1,2, "yeay|hey|baeee")
         }
-
         if (!have_fetched && !debug) {
-
             fetch("http://localhost:8000/projects/")
                 .then(response => response.json())
                 .then(data => {
@@ -273,10 +220,8 @@ import { vis_table_store } from './vis-table-store.js'
                         
                         project.node_set.forEach((node, n_index) => {
                             vis_table_store.set(index, n_index+1, 1, node.name);
-
                             let cpu_string = "";
                             let cpu_partition_string = "";
-
                             node.cpu_set.forEach(cpu => {
                                 cpu_string += cpu.name + "|"
                                 
@@ -287,55 +232,43 @@ import { vis_table_store } from './vis-table-store.js'
                             
                             vis_table_store.set(index, n_index+1, 2, cpu_string)
                             vis_table_store.set(index, n_index+1, 3, cpu_partition_string)
-
                         })
-
                         /*project.node_set.forEach((node, index) => {
                             vis_table_store.set(index, index+1, 1, project.name)
                         });*/
                     });
                     //vis_table_store.set(0, 1, data) 
             });
-
             have_fetched = true
         }
     }
-    function getProjects() {
+    export function getProjects() {
         let projects = []
-
         projects = vis_table_store.getProjectNames()
-
         return projects;
     }
-
-    function loadProjectFromStore()
+    export function loadProjectFromStore()
     {
         let selection = document.getElementById("project-select").value;
         selected_project.value = vis_table_store.switchProject(selection);
     }
-
     </script>
- 
-<style>
-   @import './style/VisTable.css'
-</style>
 
 <template>
     {{ $log("Rerender") }}
     {{ setupTable() }}
     {{ getTableFromBackend() }}
     
-    <button @click="generatePdf">Generate PDF</button>
+    <!-- <button @click="generatePdf">Generate PDF</button> 
     <br> 
     <label for="project-select">Choose a project:</label>
     <select name="projects" id="project-select">
         <option value="">Please choose a project</option>
         <option v-for="project in getProjects()" :value="project">{{project}}</option>
-        <!--option value="proj1">Project 1</option>
-        <option value="proj2">Project 2</option-->
+        option value="proj1">Project 1</option>
+        <option value="proj2">Project 2</option
     </select>
-    <button @click="loadProjectFromStore()">Load Selected Project</button>
-
+    <button @click="loadProjectFromStore()">Load Selected Project</button>-->
     <div id="vis-table">
         <div v-for="row in vis_table_store.getRowCount(selected_project)" class="vis-row">
             <div v-if="row-1 !== 0">
@@ -388,17 +321,10 @@ import { vis_table_store } from './vis-table-store.js'
                     
                     <textarea class="vis-textarea">{{ item }}</textarea>
                 </div>
-
             </div>
         </div>
     </div>
 </template>
-
-
-
-
-
-
-
-
-
+<style>
+   @import './style/VisTable.css'
+</style>
