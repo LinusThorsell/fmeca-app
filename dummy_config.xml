@@ -1,0 +1,21 @@
+<?xml version='1.0' ?>
+<!--
+I don't know how to do xml
+-->
+<dummy_config>
+    <ENGINE name="django.db.backends.mysql">
+    <NAME name="fmeca_database">
+    <USER name="user">
+    <PASSWORD name="password123">
+    <HOST name="000.00.000.000">
+    <PORT name="0000">
+</dummy_config>
+<!--
+DELETE THIS
+<'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'fmeca_db',
+        'USER': 'saab_user',
+        'PASSWORD': 'EKJNF"UIH"/"((/RSHFJK',
+        'HOST': '178.79.181.100', 
+        'PORT': '3306',
+-->

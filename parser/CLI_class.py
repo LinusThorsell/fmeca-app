@@ -6,6 +6,8 @@ import DataClass
 import Paths
 import DebugFile
 import platform
+import xml.etree.ElementTree as ET
+import fileinput
 
 #CLI - Command Line Interface
 #Handles the command line interface class and functions
@@ -50,8 +52,41 @@ class CLI:
         self._Paths.get_paths(self._Paths.fc_path)
         self._Paths.get_paths(self._Paths.mc_path)
 
-    def config_database(self,path):
-        print("Configuring database, path to file = " + str(path))
+    def config_database(self, path):
+        DebugFile.debug_print("Configuring database, path to file = " + str(path))
+        settings = open('backend/fmeca-django/backend/settings.py', 'r')
+
+        tree = ET.parse(path)
+        root = tree.getroot()
+        attributes = {}
+
+        for child in root:
+            attributes[child.tag.upper()] = child.get("name")
+
+        for line in fileinput.input("backend/fmeca-django/backend/settings.py", inplace=True):
+            for key,value in attributes:
+                if key in line:
+                    line = key + ":" + value
+                break
+            print('{}'.format(line), end='')
+
+        while True:
+    
+            # Get next line from file
+            line = settings.readline()
+
+            
+
+
+
+        
+            if not line:
+                break
+            print(line)
+
+        settings.close()
+
+
     
     def analyse_cli(self):
         #previous_was_two_part_argument = False
