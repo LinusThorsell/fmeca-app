@@ -1,6 +1,5 @@
 import xml.etree.ElementTree as ET
 from os import path as OSPATH
-#import Encoder_Class
 import DataClass
 
 import DebugFile
@@ -8,7 +7,7 @@ class Parser:
     def __init__(self):
         self.functions = {}
             
-    #retrieves the project name from the path
+    #Retrieves the project name from the path
     def get_project_name(self,path):
         temp = path.split("/")
         name = temp[0]

@@ -5,9 +5,11 @@ from Encoder_Class import *
 import DataClass
 import Paths
 import DebugFile
+import platform
 
-#Command Line Interface
-
+#CLI - Command Line Interface
+#Handles the command line interface class and functions
+#Finds the file paths where the data is located
 
 class CLI:
     
@@ -38,6 +40,9 @@ class CLI:
     def debug(self):
         DebugFile.debug = True
         DebugFile.debug_print("DEBUG active")
+
+    def send(self):
+        DebugFile.send = True
 
     
     def get_paths(self):
@@ -83,7 +88,11 @@ class CLI:
     def initialize(self):
         self._flags = {"debug":0,"add":1,"delete":1,"-c":1}
         self._functions = {"debug":self.debug,"add":self.add,"delete":self.delete,"-c":self.config_database}
-
+        
+        DebugFile.windows = False 
+        if platform.system() == "windows":
+            DebugFile.windows = True 
+   
     def get_arguments(self):
         nrarguments = len(sys.argv)
         if(nrarguments >= 2):
@@ -108,9 +117,8 @@ class CLI:
             
             Connections = DataClass.ConnectionContainer(self._parser.get_project_name(self._add_path))
             Applications = DataClass.ApplicationContainer(self._parser.get_project_name(self._add_path))
-            #Behöver göra om detta i framtiden, funkar for now
-            runorder = ["fc/hw_topology.xml", "mc/hw_topology.xml","fc/sw_topology.xml","mc/sw_topology.xml","functional_topology/fc","functional_topology/mc"]
-            #runorder = ["functional_topology/fc","functional_topology/mc"]
+            #runorder = ["fc/hw_topology.xml", "mc/hw_topology.xml","fc/sw_topology.xml","mc/sw_topology.xml","functional_topology/fc","functional_topology/mc"]
+            runorder = ["functional_topology/fc","functional_topology/mc"]
 
             connectionlist =  []
             application_instances = []
@@ -126,13 +134,6 @@ class CLI:
                     elif temppath in path and "mc/sw_topology.xml" in temppath:
                         Project_type.insert_applications(self._parser.get_cpu_applications(path))
 
-            self._encoder.send_to_database(Project_type,"projects/")
-            #self._encoder.send_to_database(Connections,"connections/")
-            #self._encoder.send_to_database(Applications,"applications/")
-
-
-
-'''
                     #För connections: Kolla efter <Project>/infrastructure/functional_topology/ sedan fc eller mc
                     elif temppath in path and "functional_topology/fc" in temppath:
                         if os.path.exists(path+"/connections"):
@@ -143,21 +144,15 @@ class CLI:
                                         print(subdir + "/"+file)
                                         connectionlist += self._parser.get_connections(os.path.join(subdir,file))
 
-
-                            #for filename in os.scandir(path+"/connections"):
-                            #    if filename.is_file():
-                            #        print(filename.path)
-#                            Connections.connectionlist += connectionlist
                         print("PATH ===== " ,path + "/application_instance.xml")
-                        if os.path.exists(path + "/application_instance.xml"):
-                            print("hejhej")
-                            if os.path.isfile( path + "/application_instance.xml"):
-                                print("tjabba")
-                                application_instances += self._parser.get_application_instances(path + "/application_instance.xml")
+                        if os.path.exists(path + "/application_instances.xml"):
+                            print("HEJ")
+                            if os.path.isfile( path + "/application_instances.xml"):
+                                print("HRJ IGEN")
+                                application_instances += self._parser.get_application_instances(path + "/application_instances.xml")
 
-                        #Leta efter connections
+                    #Search for connections directories
                     elif temppath in path and "functional_topology/mc" in temppath:
-                        #Connection.connectionlist += conntionlist
                         if os.path.exists(path+"/connections"):
     
                             for subdir, dirs, files in os.walk(path+"/connections"):
@@ -165,17 +160,16 @@ class CLI:
                                     if(file == "connections.xml"):
                                         print(subdir + "/"+file)
                                         connectionlist += self._parser.get_connections(os.path.join(subdir,file))
-                            
-                            
- #                            Connections.connectionlist += connectionlist
                            
-                        if os.path.exists(path + "/application_instance.xml"):
-                            if os.path.isfile( path + "/application_instance.xml"):
-                                print("tja")
-                                application_instances += self._parser.get_application_instances(path + "/application_instance.xml")
+                        if os.path.exists(path + "/application_instances.xml"):
+                            if os.path.isfile( path + "/application_instances.xml"):
+                                application_instances += self._parser.get_application_instances(path + "/application_instances.xml")
                             
  
-                        #Leta efter connections
+            #Send connections to database
+            #Maybe this should be done somewhere else?
             Connections.connectionlist += connectionlist
             Applications.applicationlist += application_instances
-            '''
+            self._encoder.send_to_database(Project_type,"projects/")
+            self._encoder.send_to_database(Connections,"connections/")
+            self._encoder.send_to_database(Applications,"applications/")
