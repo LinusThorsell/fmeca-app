@@ -35,7 +35,7 @@ import html2pdf from 'html2pdf.js';
             return {
                 removeColumn,
                 restoreColumns,
-                setupTable,
+                //setupTable,
                 getRow,
                 getColumn,
                 addRow,
@@ -71,31 +71,6 @@ import html2pdf from 'html2pdf.js';
 
     var selected_project = ref(0);
 
-/*
-    watchEffect(() => {
-    // tracks A0 and A1
-        A2.value = A0.value + A1.value
-    })*/
-
-    // Gets entire table ( TODO : interface with backend here )
-    function setupTable() {    
-/*
-        if (vis_table_store.getRowCount(selected_project) === 0) {
-            const temp_array = []
-            console.log("Array empty, creating example")
-            for (var column = 0; column < array_columns+1; column++) {
-                temp_array[column] = [];
-                for (var row = 0; row < array_rows+1; row++) {
-                    temp_array[column][row] = "";
-                }
-            }
-            vis_table_store.setArray(selected_project, temp_array)
-        }*/
-        // return table_array;
-        
-        //vis_table_store.generateEmpty()
-    }
-   
     // Gets a specific row ( index ) as an array from the input array ( table_array ).
     function getRow(index, table_array) {
         const Row = [];
@@ -111,6 +86,7 @@ import html2pdf from 'html2pdf.js';
         return table_array[index]
     }
 
+    // Adds a row to the input array ( table_array ).
     function removeColumn(column) {
         console.log(column)
         colStyles[column-1].display="none";
@@ -198,9 +174,6 @@ import html2pdf from 'html2pdf.js';
                 sheet.insertRule(selector+rule, 0);
             colStyles[i]=(sheet.cssRules)[0].style;
         }
-        
-        // Debug print
-        // console.log(document.styleSheets)
     }
 
     function stringifyPartitions(obj) {
@@ -236,9 +209,6 @@ import html2pdf from 'html2pdf.js';
                 .then(response => response.json())
                 .then(data => {
                     console.log(data)
-                    /*data.forEach((element, index) => {
-                        vis_table_store.set(0, index, element.project_id)
-                    }); */
                     data.forEach((project, index) => {
                         console.log(index)
                         console.log(project.name)
@@ -264,12 +234,7 @@ import html2pdf from 'html2pdf.js';
                             vis_table_store.set(index, n_index+1, 3, cpu_partition_string)
 
                         })
-
-                        /*project.node_set.forEach((node, index) => {
-                            vis_table_store.set(index, index+1, 1, project.name)
-                        });*/
                     });
-                    //vis_table_store.set(0, 1, data) 
             });
 
             have_fetched = true
@@ -297,7 +262,7 @@ import html2pdf from 'html2pdf.js';
 
 <template>
     {{ $log("Rerender") }}
-    {{ setupTable() }}
+    <!--{{ setupTable() }} -->
     {{ getTableFromBackend() }}
     
     <button @click="generatePdf">Generate PDF</button>
@@ -306,8 +271,6 @@ import html2pdf from 'html2pdf.js';
     <select name="projects" id="project-select">
         <option value="">Please choose a project</option>
         <option v-for="project in getProjects()" :value="project">{{project}}</option>
-        <!--option value="proj1">Project 1</option>
-        <option value="proj2">Project 2</option-->
     </select>
     <button @click="loadProjectFromStore()">Load Selected Project</button>
 
@@ -361,7 +324,16 @@ import html2pdf from 'html2pdf.js';
                     v-for="item in vis_table_store.get(selected_project, (row), (column))"
                 >
                     
-                    <textarea class="vis-textarea">{{ item }}</textarea>
+                    <textarea 
+                        class="vis-textarea"
+                        onfocus="this.parentElement.children[1].className = 'vis-textarea vis-textarea-comment'; this.className = 'vis-textarea'">
+                        {{ item }}
+                    </textarea>
+                    <textarea 
+                        class="vis-textarea vis-textarea-comment"
+                        onfocus="this.parentElement.children[0].className = 'vis-textarea vis-textarea-comment'; this.className = 'vis-textarea'"
+                        >
+                    </textarea>
                 </div>
 
             </div>
