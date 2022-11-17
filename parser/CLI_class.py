@@ -28,6 +28,9 @@ class CLI:
         self._parser = Parser()
         self._parser.initialisation()
         self.delete_argument = ""
+        self._meta_path = None
+        self._meta_path = None
+        self._project_name = ""
         
     def delete(self,project):
         ##Tell the database to delete the project
@@ -39,6 +42,16 @@ class CLI:
         self._add = True
         self._add_path = xml_file_path
 
+    def meta(self, meta_path):
+        self._meta_path = meta_path
+    
+    def path(self, path_to_infrastructure):
+        self._infrastructure_path = path_to_infrastructure
+    
+    def tag(self, project_name):
+        self._project_name = project_name
+
+
     def debug(self):
         DebugFile.debug = True
         DebugFile.debug_print("DEBUG active")
@@ -46,7 +59,6 @@ class CLI:
     def send(self):
         DebugFile.send = True
 
-    
     def get_paths(self):
         self._Paths.initial_path(self._add_path)
         self._Paths.get_paths(self._Paths.fc_path)
@@ -54,40 +66,30 @@ class CLI:
 
     def config_database(self, path):
         DebugFile.debug_print("Configuring database, path to file = " + str(path))
-        settings = open('backend/fmeca-django/backend/settings.py', 'r')
-
         tree = ET.parse(path)
         root = tree.getroot()
         attributes = {}
 
         for child in root:
+            #print(child.tag)
             attributes[child.tag.upper()] = child.get("name")
 
+        nr_prints = 6
+        #print(attributes)
+        DATABASES_V = False
         for line in fileinput.input("backend/fmeca-django/backend/settings.py", inplace=True):
-            for key,value in attributes:
-                if key in line:
-                    line = key + ":" + value
-                break
-            print('{}'.format(line), end='')
+            for key,value in attributes.items():
+                if "DATABASES" in line:
+                    DATABASES_V = True
+               
+                if DATABASES_V == True and nr_prints > 0:
+                    if key in line :
+                        line = '\t' +'\''+ str(key) +'\'' +  ":" + '\'' + str(value) +'\''+ "," + "\n"
+                        nr_prints -=1
+                        break
+            print('{}'.format( line), end='') # for Python 3
+        fileinput.close()
 
-        while True:
-    
-            # Get next line from file
-            line = settings.readline()
-
-            
-
-
-
-        
-            if not line:
-                break
-            print(line)
-
-        settings.close()
-
-
-    
     def analyse_cli(self):
         #previous_was_two_part_argument = False
         #for i in range(self._nr_arguments):
@@ -121,8 +123,9 @@ class CLI:
     ##in self._flags we should have the flag and how many arguments we should
     ## have after that
     def initialize(self):
-        self._flags = {"debug":0,"add":1,"delete":1,"-c":1}
-        self._functions = {"debug":self.debug,"add":self.add,"delete":self.delete,"-c":self.config_database}
+        self._flags = {"debug":0,"add":1,"remove":0,"-c":1, "-path":1, "-meta":1, "-tag":1}
+        self._functions = {"debug":self.debug,"add":self.add,"remove":self.delete,"-c":self.config_database,
+                            "-path":self.tag, "-meta":self.meta, "-tag":self.path}
         
         DebugFile.windows = False 
         if platform.system() == "windows":
