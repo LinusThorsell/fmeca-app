@@ -76,22 +76,20 @@ class ProjectSerializer(serializers.ModelSerializer):
         project_instance, created = Project.objects.update_or_create(**validated_data)
         for node in node_set:
             cpu_set = node.pop('cpu_set')
-            node_instance = Node.objects.create(project=project_instance, **node)
+            node_instance, created = Node.objects.update_or_create(project=project_instance, **node)
             for cpu in cpu_set:
                 part_set = cpu.pop('partition_set')
                 app_set = cpu.pop('application_set')
-                cpu_instance = CPU.objects.create(node=node_instance, **cpu)
+                cpu_instance, created = CPU.objects.update_or_create(node=node_instance, **cpu)
                 for application in app_set:
                     application.pop('cpu')
-                    Application.objects.create(cpu=cpu_instance, **application)
+                    Application.objects.update_or_create(cpu=cpu_instance, **application)
                 for partition in part_set:
-                    #if not empty DO:
-                    #   partition.pop('cpu')
                     app2_set = partition.pop('application_set')
-                    Partition.objects.create(cpu=cpu_instance, **partition)
+                    Partition.objects.update_or_create(cpu=cpu_instance, **partition)
                     for application in app2_set:
                         application.pop('cpu')
-                        Application.objects.create(cpu=cpu_instance, **application)
+                        Application.objects.update_or_create(cpu=cpu_instance, **application)
         return project_instance
 
 

@@ -19,6 +19,7 @@ class Node(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, blank=True)
     redundant = models.CharField(max_length=20, blank=True, null=True)
     sync_loss = models.CharField(max_length=20, blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
 
 class CPU(models.Model):
     type = models.CharField(max_length=10, default="")
@@ -28,6 +29,7 @@ class CPU(models.Model):
     name = models.CharField(max_length=10, blank=True, null=True)
     accs_sync_master = models.CharField(max_length=10, blank=True, null=True)
     domain_border = models.CharField(max_length=20, blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
 
 class Partition(models.Model):
     name = models.CharField(max_length=20, blank=True)
@@ -35,17 +37,20 @@ class Partition(models.Model):
     fixed_start = models.BigIntegerField(default=None, null=True)
     partition_id = models.IntegerField(default=None, null=True)
     cpu = models.ForeignKey(CPU, on_delete=models.CASCADE, blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
     # node = models.ForeignKey(CPU, on_delete=models.CASCADE, blank=True)
 
 class Application(models.Model):
     name = models.CharField(max_length=50, blank=True, null=True)
     cpu = models.ForeignKey(CPU, on_delete=models.CASCADE, blank=True, null=True)
     partition = models.ForeignKey(Partition, on_delete=models.CASCADE, blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
     # node = models.ForeignKey(CPU, on_delete=models.CASCADE, blank=True)
 
 class Connection(models.Model):
     requirer = models.ForeignKey(Application, related_name="connection_requirer_set", on_delete=models.CASCADE, blank=True, null=True)
     provider = models.ForeignKey(Application, related_name="connection_provider_set", on_delete=models.CASCADE, blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
 
 # class NodeFailure(models.Model):
 #     id = models.BigAutoField(primary_key=True, default=0)
