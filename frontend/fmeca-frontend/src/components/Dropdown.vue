@@ -31,15 +31,16 @@
   </script>
   
   <style>
-  nav .menu-item svg {
+  .menu-item svg {
     width: 10px;
     margin-left: 10px;
   }
   
-  nav .menu-item .sub-menu {
+  .menu-item .sub-menu {
     position: absolute;
     background-color: #222;
-    top: calc(100% + 18px);
+    top: calc(100% + 3px);
+    outline-color: blue;
     left: 50%;
     transform: translateX(-50%);
     width: max-content;
