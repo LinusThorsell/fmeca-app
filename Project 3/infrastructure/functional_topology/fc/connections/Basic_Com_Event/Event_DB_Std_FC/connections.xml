@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<idb:Connections xmlns:idb="http://www.saabgroup.com/aeronautics/gripen/mg61-01/idb/connections" domain="FlightCritical">
+
+  <TemplateInstantiation name="Basic_Com_Event_DB_FC_Standard">
+    <EntityArgument   name="Application"          value="Event_DB_Std_FC"/>
+    <EntityArgument   name="Domain_Border_Config" value="DB_Basic_Com_Event_Std"/>
+    <EntityArgument   name="Results"              value="Event_Res_FC"/>
+    <IdentityArgument name="Application_Id"       value="Event_DB_NL_Std"/>
+  </TemplateInstantiation>
+
+</idb:Connections>
