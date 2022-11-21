@@ -1,0 +1,35 @@
+<?xml version='1.0' ?>
+
+<Aircraft>
+    <Nodes>
+        <FMC>
+            <Aircraft_Level_Effects text = "Simultaneous loss of all navigation functions and radio." />
+
+            <CPUs>
+                <FMC.1>
+                    <Failure_type text = "Loss of power supply" />
+
+                    <MG32>
+                         <Subsystem_Effect text = "Will lead to all items marked as FMC_x.2 in the Partitions tab." />
+                    </MG32>
+
+                    <MG39>
+                         <Subsystem_Effect text = "Will lead to all items marked as FMC_x.2 in the Partitions tab." />
+                    </MG39>
+
+                </FMC.1>    
+            </CPUs>
+
+        </FMC>
+         <GECU>
+            <Aircraft_Level_Effects text = "Simultaneous loss of all navigation functions and radio." />
+        </GECU>
+         <Ethernet>
+            <Aircraft_Level_Effects text = "Simultaneous loss of all navigation functions and radio." />
+        </Ethernet>
+
+
+
+    </Nodes>
+</Aircraft>
+

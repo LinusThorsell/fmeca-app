@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<idb:FunctionalTopology xmlns:idb="http://www.saabgroup.com/aeronautics/gripen/mg61-01/idb/functional_topology" name="FC">
+
+  <Description>
+    <P>Functional Topology for Flight Critical</P>
+  </Description>
+</idb:FunctionalTopology>
+

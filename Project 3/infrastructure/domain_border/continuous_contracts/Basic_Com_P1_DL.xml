@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<idb:ContinuousDomainBorderContract xmlns:idb="http://www.saabgroup.com/aeronautics/gripen/mg61-01/idb/domain_border"
+			  name="Basic_Com_P1_DL"
+			  numberOfReceiveBuffers="1"
+			  isEdgeTransfer="true"
+			  maximumAge="68">
+  <TransmissionSchedule period="64" offset="19"/>
+</idb:ContinuousDomainBorderContract>
