@@ -19,6 +19,11 @@ class ProjectViewSet(viewsets.ModelViewSet):
     serializer_class = ProjectSerializer
     permissions = permission
 
+class CommentsViewSet(viewsets.ModelViewSet):
+    queryset = CommentsDict.objects.all()
+    serializer_class = DictSerializer
+    permissions = permission
+
 class NodeViewSet(viewsets.ModelViewSet):
     queryset = Node.objects.all()
     serializer_class = NodeSerializer

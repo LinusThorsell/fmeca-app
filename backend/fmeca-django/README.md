@@ -7,8 +7,8 @@ of the database and the api.
 - **change venv path**\
 do so in fmeca-venv/bin/activate.*
 
-- **sudo /etc/init.d/mysql start**\
-*to start the local database.*
+<!-- - **sudo /etc/init.d/mysql start**\
+*to start the local database.* -->
 
 - **python3 manage.py makemigrations**\
 *to create new models defined in api/models.py.*
@@ -17,4 +17,4 @@ do so in fmeca-venv/bin/activate.*
 *to push the models into the mysql database.*
 
 - **python3 manage.py runserver**\
-*starts a development-server and makes the api go live.*
+*starts a development-server and makes the api live.*
