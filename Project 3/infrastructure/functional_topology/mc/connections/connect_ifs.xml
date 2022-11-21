@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<idb:Connections xmlns:idb="Can_Be_Here" domain="MissionCritical">
+
+  <ConnectIFS name="Tiny_1.Tiny_Tester_T60.Tiny_Ifs">
+    <IdentityArgument name="Simple_Id" value="User_1"/>
+  </ConnectIFS>
+  <ConnectIFS name="Tiny_2.Tiny_Tester_T60.Tiny_Ifs">
+    <IdentityArgument name="Simple_Id" value="User_2"/>
+  </ConnectIFS>
+
+</idb:Connections>

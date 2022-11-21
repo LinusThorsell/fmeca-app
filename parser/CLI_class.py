@@ -31,15 +31,18 @@ class CLI:
         self._add_path = None
         self._meta_path = None
         self._project_name = ""
+        self.PRINT = False
         
     def delete(self,project):
         ##Tell the database to delete the project
         self.delete_argument = project
         self._delete = True
+        self._functions = self._delete_functions
 
     def add(self):
         ##Add this project given by the path to the database
         self._add = True
+        self._functions = self._add_functions
         
     def meta(self, meta_path):
         self._meta_path = meta_path
@@ -61,6 +64,10 @@ class CLI:
         self._Paths.initial_path(self._add_path)
         self._Paths.get_paths(self._Paths.fc_path)
         self._Paths.get_paths(self._Paths.mc_path)
+
+    def print_f(self):
+        self.PRINT = True
+        self._functions = self._print_functions
 
     def config_database(self, path):
         DebugFile.debug_print("Configuring database, path to file = " + str(path))
@@ -122,7 +129,7 @@ class CLI:
     ## have after that
     def initialize(self):
         self._flags = {"debug":0,"add":0,"remove":0,"-c":1, "-path":1, "-meta":1, "-tag":1,"print":0}
-        self._functions = {}
+        self._functions = {"add":self.add,"remove":self.delete,"print":self.print_f}
         self._delete_functions = {"remove":self.delete, "-tag":self.tag,"-c":self.config_database,"debug":self.debug}
         self._add_functions = {"add":self.add,"-meta":self.meta,"-tag":self.tag, "-path":self.path,"-c":self.config_database,"debug":self.debug}
         self._print_functions = {"print":self.print_f,"-meta":self.meta,"-tag":self.tag, "-path":self.path}
@@ -130,8 +137,8 @@ class CLI:
         if platform.system() == "windows":
             DebugFile.windows = True 
    
-    def parsing_shit(self):
-                   #Call function that posts to database
+    def parsing(self):
+            #Call function that posts to database
             DebugFile.debug_print("Call function: ADD to database")
             DebugFile.debug_print(self._add_path)
             self.get_paths()
@@ -170,26 +177,22 @@ class CLI:
 
                         print("PATH ===== " ,path + "/application_instance.xml")
                         if os.path.exists(path + "/application_instances.xml"):
-                            print("HEJ")
                             if os.path.isfile( path + "/application_instances.xml"):
-                                print("HRJ IGEN")
                                 application_instances += self._parser.get_application_instances(path + "/application_instances.xml")
 
                     #Search for connections directories
                     elif temppath in path and "functional_topology/mc" in temppath:
                         if os.path.exists(path+"/connections"):
-    
                             for subdir, dirs, files in os.walk(path+"/connections"):
                                 for file in files:
                                     if(file == "connections.xml"):
                                         print(subdir + "/"+file)
                                         connectionlist += self._parser.get_connections(os.path.join(subdir,file))
-                           
                         if os.path.exists(path + "/application_instances.xml"):
                             if os.path.isfile( path + "/application_instances.xml"):
                                 application_instances += self._parser.get_application_instances(path + "/application_instances.xml")
             return Project_type
-   
+
     def get_arguments(self):
         nrarguments = len(sys.argv)
         if(nrarguments >= 2):
@@ -203,22 +206,22 @@ class CLI:
             self._functions = self._add_functions
         elif "delete" in self._arguments:
             self._functions = self._delete_functions      
+    
     def add_and_delete(self):
         
         if(self._delete and self._project_name != ""):
             DebugFile.debug_print("Call function: DELETE from database")
             self._encoder.delete_from_database(self._project_name, "projects/")
         elif (self._add and self._add_path != None and self._project_name != ""):      
-            Project_type = self.parsing_shit()
+            Project_type = self.parsing()
             self.send()
             self._encoder.send_to_database(Project_type,"projects/")
             #self._encoder.send_to_database(Connections,"connections/")
             #self._encoder.send_to_database(Applications,"applications/")
         
         elif self.PRINT:
-            print("Här ska vi printa llt istället lol")
             self.debug()
-            Project_type = self.parsing_shit()
+            Project_type = self.parsing()
             self._encoder.send_to_database(Project_type,"projects/")
             #self._encoder.send_to_database(Connections,"connections/")
             #self._encoder.send_to_database(Applications,"applications/")

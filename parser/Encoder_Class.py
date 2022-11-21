@@ -28,5 +28,10 @@ class Encoder:
         DebugFile.debug_print(string)
         if (DebugFile.send):
             DebugFile.debug_print("Sending to: \n\n", self._url+ folder)
-            response = requests.post(self._url+ folder,string,headers=self._headers)
-            DebugFile.debug_print("Response from send = ",response.text)
+            response = ""
+            try:
+                response = requests.post(self._url+ folder,string,headers=self._headers)
+                DebugFile.debug_print("Response from send = ",response.text)
+            except requests.exceptions.ConnectionError:
+                print("Failed to connect to the Database/API at " + (self._url + folder))
+

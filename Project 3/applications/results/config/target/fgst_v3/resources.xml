@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+************************************************************************
+Item: resources.xml
+
+Description: @description@
+
+$SAAB_LICENSE_BEGIN$
+
+This software code and the information contained herein is the
+property of Saab AB and must not be used, disclosed or altered
+without Saab AB prior written consent.
+
+Copyright (C) 2020 Saab AB. All rights reserved.
+
+Classification
+* Export Control: EXPORT CONTROLLED
+* Company Confidentiality: COMPANY CONFIDENTIAL
+* Defence Secrecy: NOT CLASSIFIED
+
+$SAAB_LICENSE_END$
+************************************************************************
+
+-->
+
+<idb:ResourceRequirements xmlns:idb="http://www.saabgroup.com/aeronautics/gripen/mg61-01/idb/resources"
+     application="Results" initializeStackSize="0" rampoolSize="8192">
+  <PeriodicResourceRequirements thread="Results_60" executionStackSize="4096" executionTime="500000"/>
+</idb:ResourceRequirements>

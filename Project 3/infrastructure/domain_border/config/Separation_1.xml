@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<idb:DomainBorderConfiguration name="Separation_1" xmlns:idb="http://www.saabgroup.com/aeronautics/gripen/mg61-01/idb/domain_border">
+
+  <PacPort name="port_3" interface="ifc3" provider="FlightCritical" domainBorder="DB_T21">
+    <ContinuousFcToMcContract name="P15_Fast"/>
+  </PacPort>
+  <PacPort name="port_1" interface="ifc1" provider="FlightCritical" domainBorder="DB_T21">
+    <ContinuousFcToMcContract name="P8_Fast"/>
+  </PacPort>
+  <PacPort name="Rx_Continuous" interface="ifc3" provider="FlightCritical" domainBorder="DB_T21">
+    <ContinuousFcToMcContract name="P8_Fast"/>
+  </PacPort>
+  <PacPort name="Tx_Continuous" interface="ifc3" provider="MissionCritical" domainBorder="DB_T21">
+    <ContinuousMcToFcContract name="P8_Fast"/>
+  </PacPort>
+  <PacPort name="Ack_Event" interface="events.ack_from_prov" provider="FlightCritical" numberOfConnections="5" domainBorder="DB_T21">
+    <ContinuousMcToFcContract name="P60_Fast"/>
+    <EventFcToMcContract name="P60_Fast"/>
+    <EventMcToFcContract name="P60_Fast"/>
+  </PacPort>
+  <PacPort name="No_Id_Event" interface="events.noid_event" provider="FlightCritical" domainBorder="DB_T21">
+    <EventFcToMcContract name="P60_Fast"/>
+  </PacPort>
+  <PacPort name="Simple_To_App_1" interface="mydir.my_simple_event" provider="FlightCritical" domainBorder="DB_T21">
+    <EventFcToMcContract name="P60_Fast"/>
+  </PacPort>
+  <PacPort name="Simple_From_App_1" interface="mydir.my_simple_event" provider="MissionCritical" domainBorder="DB_T21">
+    <EventMcToFcContract name="P60_Fast"/>
+  </PacPort>
+  <PacPort name="LReader_1" interface="mydir.my_simple_event" provider="FlightCritical" domainBorder="DB_T21">
+    <EventFcToMcContract name="P60_Fast"/>
+  </PacPort>
+  <PacPort name="LReader_2" interface="mydir.my_simple_event" provider="FlightCritical" domainBorder="DB_T21">
+    <EventFcToMcContract name="P60_Fast"/>
+  </PacPort>
+  <PacPort name="LReader_3" interface="mydir.my_simple_event" provider="FlightCritical" domainBorder="DB_T21">
+    <EventFcToMcContract name="P60_Fast"/>
+  </PacPort>
+  <PacPort name="PDCM11_Results" interface="Results.Test_Status_I" provider="FlightCritical" domainBorder="DB_T11">
+    <ContinuousMcToFcContract name="P60_Fast"/>
+  </PacPort>
+  <PacPort name="PDCM12_Results" interface="Results.Test_Status_I" provider="FlightCritical" domainBorder="DB_T12">
+    <ContinuousMcToFcContract name="P60_Fast"/>
+  </PacPort>
+  <PacPort name="PDCM21_Results" interface="Results.Test_Status_I" provider="FlightCritical" domainBorder="DB_T21">
+    <ContinuousMcToFcContract name="P60_Fast"/>
+  </PacPort>
+  <PacPort name="PDCM22_Results" interface="Results.Test_Status_I" provider="FlightCritical" domainBorder="DB_T22">
+    <ContinuousMcToFcContract name="P60_Fast"/>
+  </PacPort>
+  <PacPort name="TMC2_PDCM1_Discretes" interface="tmc_pdcm_asap.analog_discrete_i" provider="MissionCritical" domainBorder="DB_T21">
+    <ContinuousMcToFcContract name="P60_Fast"/>
+  </PacPort>
+
+</idb:DomainBorderConfiguration>
