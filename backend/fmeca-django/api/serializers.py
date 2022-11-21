@@ -93,6 +93,23 @@ class ProjectSerializer(serializers.ModelSerializer):
         return project_instance
 
 
+class KeyValSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = KeyVal
+        fields = '__all__'
+
+class DictSerializer(serializers.ModelSerializer):
+    comments = KeyValSerializer(many=True)
+
+    class Meta:
+        model = CommentsDict
+        fields = '__all__'
+
+    def create(self, validated_data):
+        comments = validated_data.pop('comments')
+        dict_instance, created = CommentsDict.objects.update_or_create(**validated_data)
+        for comment in comments:
+            KeyVal.objects.all().update_or_create(dict_instance, **comment)
 
 
 
