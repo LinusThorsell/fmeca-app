@@ -1,35 +1,26 @@
-# Backend Environment Setup
+# Backend Dependencies
 
-## Automatic Install / Setup
-### Run the setup script `backend_environment_initial_setup.sh`
-`sudo backend_environment_initial_setup.sh`
+## Download script and virtual enviorment - WIP
 
-Done!
+**available soon**
 
-## Manual Install
+## Current Dependencies
 
-### Install required packages
+ - **python3 and pip**\
+ _python3 install pip_
 
-Install Python3
-`sudo apt install python3 -y`
-
-Install Python3-venv (Virtual Environment)
-`sudo apt install python3-venv -y`
-
-Install mariadb-server (& autoinstall its dependencies)
-`sudo apt install mariadb-server -y`
-
-### Python Environment Setup
-
-Create Virtual Environment (python3-venv)
-`python3 -m venv ./fmeca-venv`
-
-Change source to venv `source ./fmeca-venv/bin/activate`
-
-Install PIP packages
-`pip3 install -r requirements.txt`
-
-System is now ready to use. Check `USAGE_README.md` for usage instructions.
-
-When done, Exit again by typing
-`deactivate`
+ - **Django**\
+ _pip install django_
+ 
+ - **Django Rest Framework**\
+ _pip install djangorestframework_
+ 
+ - **Django Cors Headers**\
+ _pip install django-cors-headers_ 
+ 
+ - **MySQL and MySQL Client**\
+ _pip install mysql\
+ pip install mysqlclient_
+ 
+ - **Django Cors Headers**\
+ _pip install django-cors-headers_ 
