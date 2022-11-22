@@ -8,7 +8,7 @@ import DebugFile
 import platform
 import xml.etree.ElementTree as ET
 import fileinput
-
+import time
 #CLI - Command Line Interface
 #Handles the command line interface class and functions
 #Finds the file paths where the data is located
@@ -16,7 +16,7 @@ import fileinput
 class CLI:
     
     def __init__(self):
-        self._delete = False
+        self._remove = False
         self._add = False
         self._arguments = []
         self._flags = {}
@@ -27,17 +27,17 @@ class CLI:
         self._Paths = Paths.Paths()
         self._parser = Parser()
         self._parser.initialisation()
-        self.delete_argument = ""
+        #self.delete_argument = ""
         self._add_path = None
         self._meta_path = None
         self._project_name = ""
         self.PRINT = False
-        
-    def delete(self,project):
+
+    def remove(self):
         ##Tell the database to delete the project
-        self.delete_argument = project
-        self._delete = True
-        self._functions = self._delete_functions
+       # self.delete_argument = project
+        self._remove = True
+        self._functions = self._remove_functions
 
     def add(self):
         ##Add this project given by the path to the database
@@ -129,8 +129,8 @@ class CLI:
     ## have after that
     def initialize(self):
         self._flags = {"debug":0,"add":0,"remove":0,"-c":1, "-path":1, "-meta":1, "-tag":1,"print":0}
-        self._functions = {"add":self.add,"remove":self.delete,"print":self.print_f}
-        self._delete_functions = {"remove":self.delete, "-tag":self.tag,"-c":self.config_database,"debug":self.debug}
+        self._functions = {"add":self.add,"remove":self.remove,"print":self.print_f}
+        self._remove_functions = {"remove":self.remove, "-tag":self.tag,"-c":self.config_database,"debug":self.debug}
         self._add_functions = {"add":self.add,"-meta":self.meta,"-tag":self.tag, "-path":self.path,"-c":self.config_database,"debug":self.debug}
         self._print_functions = {"print":self.print_f,"-meta":self.meta,"-tag":self.tag, "-path":self.path}
         DebugFile.windows = False 
@@ -199,30 +199,31 @@ class CLI:
             self._arguments = sys.argv[1:nrarguments]
             self._nr_arguments = len(self._arguments)
         DebugFile.debug_print("ArgumentList",self._arguments)
-        if "add" in self._arguments and "delete" in self._arguments:
-            print("Cant have both \"add\" and \"delete\" in the arguments")
+        if sum([("add" in self._arguments), ("remove" in self._arguments), ("print" in self._arguments)]) != 1:
+            DebugFile.error_print("Can only have one of \"add\", \"remove\", \"print\" in the arguments")
             exit()
         elif "add" in self._arguments:
             self._functions = self._add_functions
-        elif "delete" in self._arguments:
-            self._functions = self._delete_functions      
+        elif "remove" in self._arguments:
+            self._functions = self._remove_functions      
     
-    def add_and_delete(self):
+    def add_and_remove(self):
         
-        if(self._delete and self._project_name != ""):
+        if(self._remove and self._project_name != ""):
             DebugFile.debug_print("Call function: DELETE from database")
             self._encoder.delete_from_database(self._project_name, "projects/")
         elif (self._add and self._add_path != None and self._project_name != ""):      
             Project_type = self.parsing()
-            self.send()
             self._encoder.send_to_database(Project_type,"projects/")
+            #DebugFile.rainbow_rainbow_print("")
             #self._encoder.send_to_database(Connections,"connections/")
             #self._encoder.send_to_database(Applications,"applications/")
         
         elif self.PRINT:
             self.debug()
             Project_type = self.parsing()
-            self._encoder.send_to_database(Project_type,"projects/")
+            self._encoder.print_project(Project_type)
+            
             #self._encoder.send_to_database(Connections,"connections/")
             #self._encoder.send_to_database(Applications,"applications/")
         
