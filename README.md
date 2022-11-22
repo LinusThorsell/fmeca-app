@@ -2,7 +2,7 @@
 Project developed under the course TDDI17 at Linköping University for customer SAAB Aeronautics. 
 
 ## Purpose
-The purpose of this project to provide a prototype for visualizing FMECA analytics for easier viewing and accessbility
+The purpose of this project to provide a prototype for visualizing FMECA analytics for easier viewing and accessbility.
 
 ## Technical Stack
 Developed with the following stack:
@@ -18,3 +18,9 @@ Developed with the following stack:
 
 ### - Frontend
 -   Vue.js
+
+## Where To Start?
+Check out README in respective folder:
+- **/backend**
+- **/paser**
+- **/frontend** 
