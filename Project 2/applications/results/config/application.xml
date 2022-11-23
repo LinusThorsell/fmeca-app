@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<idb:Application xmlns:idb=""
+<idb:Application xmlns:idb="Test1234"
      name="Results">
 
   <PeriodicThread name="Results_60" rateGroup="P60">

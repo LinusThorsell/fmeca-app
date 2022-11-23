@@ -1,7 +1,8 @@
 <script>
-import { ref, watchEffect } from 'vue'
+import { ref } from 'vue'
 import { vis_table_store } from './vis-table-store.js'
 import html2pdf from 'html2pdf.js';
+
     export default {
         
         mounted() {
@@ -30,7 +31,7 @@ import html2pdf from 'html2pdf.js';
             return {
                 removeColumn,
                 restoreColumns,
-                setupTable,
+                //setupTable,
                 getRow,
                 getColumn,
                 addRow,
@@ -42,6 +43,9 @@ import html2pdf from 'html2pdf.js';
                 getProjects,
                 selected_project,
                 loadProjectFromStore,
+                sendCommentsToBackend,
+
+                notes: [{}],
             }
         },
         /*components: {
@@ -51,7 +55,23 @@ import html2pdf from 'html2pdf.js';
                 //html2pdf(document.getElementById('vis-table'));
                 //console.log(document.getElementById('vis-table').innerHTML)
                 print()
-            }
+            },
+            editComment(target, comment) {
+                while (this.notes.length <= selected_project.value) {
+                    this.notes.push({})
+                }
+
+                console.log("edit comment")
+                console.log(target)
+                let on = getParentClassName(target)
+                console.log(on)
+                console.log(comment)
+                this.notes[selected_project.value][on] = comment;
+
+                //this.value = this.notes[selected_project.value][on]
+                target.value = this.notes[selected_project.value][on]
+
+            },
         },
     }
     var selector, rule, i, /*rowStyles=[],*/ colStyles=[];
@@ -84,6 +104,7 @@ import html2pdf from 'html2pdf.js';
     }
    
     // Gets a specific row ( index ) as an array from the input array ( table_array ).
+
     function getRow(index, table_array) {
         const Row = [];
         for (var column = 0; column < table_array.length; column++) {
@@ -96,6 +117,7 @@ import html2pdf from 'html2pdf.js';
     function getColumn(index, table_array) {
         return table_array[index]
     }
+
     function removeColumn(column) {
         console.log(column)
         colStyles[column-1].display="none";
@@ -175,9 +197,6 @@ import html2pdf from 'html2pdf.js';
                 sheet.insertRule(selector+rule, 0);
             colStyles[i]=(sheet.cssRules)[0].style;
         }
-        
-        // Debug print
-        // console.log(document.styleSheets)
     }
     function stringifyPartitions(obj) {
         console.log("To stringify into partitions")
@@ -208,9 +227,6 @@ import html2pdf from 'html2pdf.js';
                 .then(response => response.json())
                 .then(data => {
                     console.log(data)
-                    /*data.forEach((element, index) => {
-                        vis_table_store.set(0, index, element.project_id)
-                    }); */
                     data.forEach((project, index) => {
                         console.log(index)
                         console.log(project.name)
@@ -229,6 +245,8 @@ import html2pdf from 'html2pdf.js';
                             })
                             cpu_string = cpu_string.slice(0, -1);
                             cpu_partition_string = cpu_partition_string.slice(0, -1)
+                            console.log(cpu_string)
+                            console.log(cpu_partition_string)
                             
                             vis_table_store.set(index, n_index+1, 2, cpu_string)
                             vis_table_store.set(index, n_index+1, 3, cpu_partition_string)
@@ -237,7 +255,6 @@ import html2pdf from 'html2pdf.js';
                             vis_table_store.set(index, index+1, 1, project.name)
                         });*/
                     });
-                    //vis_table_store.set(0, 1, data) 
             });
             have_fetched = true
         }
@@ -252,23 +269,46 @@ import html2pdf from 'html2pdf.js';
         let selection = document.getElementById("project-select").value;
         selected_project.value = vis_table_store.switchProject(selection);
     }
+
+    function getXYFromClassName(element) {
+        let x = element[1]
+        let y = element[2]
+        
+        x = x.slice(x.lastIndexOf('-')+1)
+        y = y.slice(y.lastIndexOf('-')+1)
+        
+        x = parseInt(x)+1
+        y = parseInt(y)+1
+
+        return [x, y]
+    }
+    function getParentClassName(element) {
+
+        console.log(element);
+        console.log(element.parentElement)
+        console.log(element.parentElement.parentElement)
+
+        let vector2d_x_y_position = getXYFromClassName(element.parentElement.parentElement.classList)
+        console.log(vector2d_x_y_position)
+        console.log("get location in array")
+        let className = vis_table_store.get(selected_project.value, vector2d_x_y_position[1], vector2d_x_y_position[0])
+        console.log(className)
+
+        return className
+    }
+    
+    function sendCommentsToBackend() {
+        console.log("Sending comments to backend")
+        
+    }
+    
     </script>
 
 <template>
     {{ $log("Rerender") }}
-    {{ setupTable() }}
+    <!--{{ setupTable() }} -->
     {{ getTableFromBackend() }}
-    
-    <!-- <button @click="generatePdf">Generate PDF</button> 
-    <br> 
-    <label for="project-select">Choose a project:</label>
-    <select name="projects" id="project-select">
-        <option value="">Please choose a project</option>
-        <option v-for="project in getProjects()" :value="project">{{project}}</option>
-        option value="proj1">Project 1</option>
-        <option value="proj2">Project 2</option
-    </select>
-    <button @click="loadProjectFromStore()">Load Selected Project</button>-->
+
     <div id="vis-table">
         <div v-for="row in vis_table_store.getRowCount(selected_project)" class="vis-row">
             <div v-if="row-1 !== 0">
@@ -284,13 +324,7 @@ import html2pdf from 'html2pdf.js';
                 "
             >
                 <p 
-                    style="
-                        margin: 0; 
-                        padding: 0; 
-                        font-size: 20px; 
-                        color: gray;
-                        "
-                    >
+                    style="margin: 0; padding: 0; font-size: 20px; color: gray;">
                         FMECA<br>Analys<br>
                         <button @click="restoreColumns()">Restore Table</button>
                     </p>
@@ -319,7 +353,15 @@ import html2pdf from 'html2pdf.js';
                     v-for="item in vis_table_store.get(selected_project, (row), (column))"
                 >
                     
-                    <textarea class="vis-textarea">{{ item }}</textarea>
+                    <textarea 
+                        class="vis-textarea"
+                        onfocus="this.parentElement.children[1].className = 'vis-comment vis-textarea vis-textarea-comment'; 
+                        this.className = 'vis-textarea'">{{ item }}</textarea>
+                    <textarea 
+                        class="vis-comment vis-textarea vis-textarea-comment"
+                        onfocus="this.parentElement.children[0].className = 'vis-textarea vis-textarea-comment'; 
+                        this.className = 'vis-textarea'"
+                        @input="editComment($event.target, $event.target.value)"></textarea>
                 </div>
             </div>
         </div>
