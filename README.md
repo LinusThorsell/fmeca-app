@@ -1,19 +1,26 @@
 # FMECA Visualizer
-Project developed during the course TDDI17 at Linköping University for customer SAAB Areonautics. 
+Project developed under the course TDDI17 at Linköping University for customer SAAB Aeronautics. 
 
 ## Purpose
-The purpose of this project to visualize FMECA analytics for easier viewing and accessbility
+The purpose of this project to provide a prototype for visualizing FMECA analytics for easier viewing and accessbility.
 
 ## Technical Stack
 Developed with the following stack:
 ### - Backend
 -   Django
--   REST-API
--   MariaDB Database
+-   Django Rest Framework
+-   MariaDB / mySQL
   
 ### - Parser
--   vanilla python
--   ElementTree - xml parsing library
+-   python3
+-   XML
+-   ElementTree
 
 ### - Frontend
 -   Vue.js
+
+## Where To Start?
+Check out README in respective folder:
+- **/backend**
+- **/paser**
+- **/frontend** 

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<idb:FunctionalTopology xmlns:idb="http://www.saabgroup.com/aeronautics/gripen/mg61-01/idb/functional_topology" name="MC">
+
+  <Description>
+    <P>Functional Topology for Mission Critical</P>
+  </Description>
+</idb:FunctionalTopology>
+

@@ -1,20 +1,21 @@
 # Backend
-This is the backend part of the project, here you can find the implementation
-of the database and the api.
+This is the backend part of the project. \
+Here you can find the implementation of the database and the api.
 
 ## How to run
 
-- **change venv path**\
-do so in fmeca-venv/bin/activate.*
-
-- **sudo /etc/init.d/mysql start**\
-*to start the local database.*
+This guide takes for granted that the backend is capable of connecting to an\
+external database and shows how to update the django database models for \
+the api. 
 
 - **python3 manage.py makemigrations**\
-*to create new models defined in api/models.py.*
+Creates new models based on django code in _/api/models.py_
 
 - **python3 manage.py migrate**\
-*to push the models into the mysql database.*
+Pushes the models made by the previous command to a database \
+specified in _/backend/settings.py_ making them available for use
 
 - **python3 manage.py runserver**\
-*starts a development-server and makes the api go live.*
+Starts a local development-server for the rest api and thus make \
+it possible to use as endpoints for data-transfer between parser \
+and database

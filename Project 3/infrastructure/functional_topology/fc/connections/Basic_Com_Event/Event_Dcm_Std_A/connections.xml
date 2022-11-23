@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<idb:Connections xmlns:idb="http://www.saabgroup.com/aeronautics/gripen/mg61-01/idb/connections" domain="FlightCritical">
+
+  <TemplateInstantiation name="Basic_Com_Event_Standard">
+    <EntityArgument   name="Sender"    value="Event_Dcm_Std_A"/>
+    <EntityArgument   name="Receiver"  value="Event_Dcm_Std_B"/>
+    <EntityArgument   name="Results"   value="Event_Res_Dcm"/>
+    <IdentityArgument name="Sender_Id" value="Event_Dcm_Std_A"/>
+  </TemplateInstantiation>
+
+</idb:Connections>

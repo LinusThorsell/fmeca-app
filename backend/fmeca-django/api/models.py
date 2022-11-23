@@ -47,6 +47,15 @@ class Connection(models.Model):
     requirer = models.ForeignKey(Application, related_name="connection_requirer_set", on_delete=models.CASCADE, blank=True, null=True)
     provider = models.ForeignKey(Application, related_name="connection_provider_set", on_delete=models.CASCADE, blank=True, null=True)
 
+class CommentsDict(models.Model):
+    name = models.CharField(max_length=30)
+
+class KeyVal(models.Model):
+    container = models.ForeignKey(CommentsDict, on_delete=models.CASCADE)
+    key = models.CharField(max_length=25)
+    comment = models.TextField() 
+
+
 # class NodeFailure(models.Model):
 #     id = models.BigAutoField(primary_key=True, default=0)
 #     node = models.ForeignKey(Node, on_delete=models.CASCADE)

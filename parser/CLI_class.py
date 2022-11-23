@@ -5,9 +5,13 @@ from Encoder_Class import *
 import DataClass
 import Paths
 import DebugFile
+import platform
+import xml.etree.ElementTree as ET
+import fileinput
 
-#Command Line Interface
-
+#CLI - Command Line Interface
+#Handles the command line interface class and functions
+#Finds the file paths where the data is located
 
 class CLI:
     
@@ -24,30 +28,73 @@ class CLI:
         self._parser = Parser()
         self._parser.initialisation()
         self.delete_argument = ""
+        self._add_path = None
+        self._meta_path = None
+        self._project_name = ""
+        self.PRINT = False
         
     def delete(self,project):
         ##Tell the database to delete the project
         self.delete_argument = project
         self._delete = True
+        self._functions = self._delete_functions
 
-    def add(self,xml_file_path):
+    def add(self):
         ##Add this project given by the path to the database
         self._add = True
-        self._add_path = xml_file_path
+        self._functions = self._add_functions
+        
+    def meta(self, meta_path):
+        self._meta_path = meta_path
+    
+    def path(self, path_to_infrastructure):
+        self._add_path = path_to_infrastructure
+    
+    def tag(self, project_name):
+        self._project_name = project_name
 
     def debug(self):
         DebugFile.debug = True
         DebugFile.debug_print("DEBUG active")
 
-    
+    def send(self):
+        DebugFile.send = True
+
     def get_paths(self):
         self._Paths.initial_path(self._add_path)
         self._Paths.get_paths(self._Paths.fc_path)
         self._Paths.get_paths(self._Paths.mc_path)
 
-    def config_database(self,path):
-        print("Configuring database, path to file = " + str(path))
-    
+    def print_f(self):
+        self.PRINT = True
+        self._functions = self._print_functions
+
+    def config_database(self, path):
+        DebugFile.debug_print("Configuring database, path to file = " + str(path))
+        tree = ET.parse(path)
+        root = tree.getroot()
+        attributes = {}
+
+        for child in root:
+            #print(child.tag)
+            attributes[child.tag.upper()] = child.get("name")
+
+        nr_prints = 6
+        #print(attributes)
+        DATABASES_V = False
+        for line in fileinput.input("backend/fmeca-django/backend/settings.py", inplace=True):
+            for key,value in attributes.items():
+                if "DATABASES" in line:
+                    DATABASES_V = True
+               
+                if DATABASES_V == True and nr_prints > 0:
+                    if key in line :
+                        line = '\t' +'\''+ str(key) +'\'' +  ":" + '\'' + str(value) +'\''+ "," + "\n"
+                        nr_prints -=1
+                        break
+            print('{}'.format( line), end='') # for Python 3
+        fileinput.close()
+
     def analyse_cli(self):
         #previous_was_two_part_argument = False
         #for i in range(self._nr_arguments):
@@ -81,34 +128,26 @@ class CLI:
     ##in self._flags we should have the flag and how many arguments we should
     ## have after that
     def initialize(self):
-        self._flags = {"debug":0,"add":1,"delete":1,"-c":1}
-        self._functions = {"debug":self.debug,"add":self.add,"delete":self.delete,"-c":self.config_database}
-
-    def get_arguments(self):
-        nrarguments = len(sys.argv)
-        if(nrarguments >= 2):
-            self._arguments = sys.argv[1:nrarguments]
-            self._nr_arguments = len(self._arguments)
-        DebugFile.debug_print("ArgumentList",self._arguments)
-        
-    def add_and_delete(self):
-        
-        if(self._delete):
-            DebugFile.debug_print("Call function: DELETE from database")
-            self._encoder.delete_from_database(self.delete_argument, "projects/")
-            
-        if (self._add):
+        self._flags = {"debug":0,"add":0,"remove":0,"-c":1, "-path":1, "-meta":1, "-tag":1,"print":0}
+        self._functions = {"add":self.add,"remove":self.delete,"print":self.print_f}
+        self._delete_functions = {"remove":self.delete, "-tag":self.tag,"-c":self.config_database,"debug":self.debug}
+        self._add_functions = {"add":self.add,"-meta":self.meta,"-tag":self.tag, "-path":self.path,"-c":self.config_database,"debug":self.debug}
+        self._print_functions = {"print":self.print_f,"-meta":self.meta,"-tag":self.tag, "-path":self.path}
+        DebugFile.windows = False 
+        if platform.system() == "windows":
+            DebugFile.windows = True 
+   
+    def parsing(self):
             #Call function that posts to database
             DebugFile.debug_print("Call function: ADD to database")
             DebugFile.debug_print(self._add_path)
             self.get_paths()
             DebugFile.debug_print("PATHS:")
             DebugFile.debug_print(self._Paths._paths)
-            Project_type = DataClass.Project_Data_Class(self._parser.get_project_name(self._add_path))
+            Project_type = DataClass.Project_Data_Class(self._project_name)
             
-            Connections = DataClass.ConnectionContainer(self._parser.get_project_name(self._add_path))
-            Applications = DataClass.ApplicationContainer(self._parser.get_project_name(self._add_path))
-            #Behöver göra om detta i framtiden, funkar for now
+            Connections = DataClass.ConnectionContainer(self._project_name)
+            Applications = DataClass.ApplicationContainer(self._project_name)
             runorder = ["fc/hw_topology.xml", "mc/hw_topology.xml","fc/sw_topology.xml","mc/sw_topology.xml","functional_topology/fc","functional_topology/mc"]
             #runorder = ["functional_topology/fc","functional_topology/mc"]
 
@@ -126,13 +165,6 @@ class CLI:
                     elif temppath in path and "mc/sw_topology.xml" in temppath:
                         Project_type.insert_applications(self._parser.get_cpu_applications(path))
 
-            self._encoder.send_to_database(Project_type,"projects/")
-            #self._encoder.send_to_database(Connections,"connections/")
-            #self._encoder.send_to_database(Applications,"applications/")
-
-
-
-'''
                     #För connections: Kolla efter <Project>/infrastructure/functional_topology/ sedan fc eller mc
                     elif temppath in path and "functional_topology/fc" in temppath:
                         if os.path.exists(path+"/connections"):
@@ -143,39 +175,58 @@ class CLI:
                                         print(subdir + "/"+file)
                                         connectionlist += self._parser.get_connections(os.path.join(subdir,file))
 
-
-                            #for filename in os.scandir(path+"/connections"):
-                            #    if filename.is_file():
-                            #        print(filename.path)
-#                            Connections.connectionlist += connectionlist
                         print("PATH ===== " ,path + "/application_instance.xml")
-                        if os.path.exists(path + "/application_instance.xml"):
-                            print("hejhej")
-                            if os.path.isfile( path + "/application_instance.xml"):
-                                print("tjabba")
-                                application_instances += self._parser.get_application_instances(path + "/application_instance.xml")
+                        if os.path.exists(path + "/application_instances.xml"):
+                            if os.path.isfile( path + "/application_instances.xml"):
+                                application_instances += self._parser.get_application_instances(path + "/application_instances.xml")
 
-                        #Leta efter connections
+                    #Search for connections directories
                     elif temppath in path and "functional_topology/mc" in temppath:
-                        #Connection.connectionlist += conntionlist
                         if os.path.exists(path+"/connections"):
-    
                             for subdir, dirs, files in os.walk(path+"/connections"):
                                 for file in files:
                                     if(file == "connections.xml"):
                                         print(subdir + "/"+file)
                                         connectionlist += self._parser.get_connections(os.path.join(subdir,file))
-                            
-                            
- #                            Connections.connectionlist += connectionlist
-                           
-                        if os.path.exists(path + "/application_instance.xml"):
-                            if os.path.isfile( path + "/application_instance.xml"):
-                                print("tja")
-                                application_instances += self._parser.get_application_instances(path + "/application_instance.xml")
-                            
- 
-                        #Leta efter connections
-            Connections.connectionlist += connectionlist
-            Applications.applicationlist += application_instances
-            '''
+                        if os.path.exists(path + "/application_instances.xml"):
+                            if os.path.isfile( path + "/application_instances.xml"):
+                                application_instances += self._parser.get_application_instances(path + "/application_instances.xml")
+            return Project_type
+
+    def get_arguments(self):
+        nrarguments = len(sys.argv)
+        if(nrarguments >= 2):
+            self._arguments = sys.argv[1:nrarguments]
+            self._nr_arguments = len(self._arguments)
+        DebugFile.debug_print("ArgumentList",self._arguments)
+        if "add" in self._arguments and "delete" in self._arguments:
+            print("Cant have both \"add\" and \"delete\" in the arguments")
+            exit()
+        elif "add" in self._arguments:
+            self._functions = self._add_functions
+        elif "delete" in self._arguments:
+            self._functions = self._delete_functions      
+    
+    def add_and_delete(self):
+        
+        if(self._delete and self._project_name != ""):
+            DebugFile.debug_print("Call function: DELETE from database")
+            self._encoder.delete_from_database(self._project_name, "projects/")
+        elif (self._add and self._add_path != None and self._project_name != ""):      
+            Project_type = self.parsing()
+            self.send()
+            self._encoder.send_to_database(Project_type,"projects/")
+            #self._encoder.send_to_database(Connections,"connections/")
+            #self._encoder.send_to_database(Applications,"applications/")
+        
+        elif self.PRINT:
+            self.debug()
+            Project_type = self.parsing()
+            self._encoder.send_to_database(Project_type,"projects/")
+            #self._encoder.send_to_database(Connections,"connections/")
+            #self._encoder.send_to_database(Applications,"applications/")
+        
+        else:
+            print("bad")
+            exit()
+            
