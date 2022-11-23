@@ -223,9 +223,8 @@ class CLI:
             self.debug()
             Project_type = self.parsing()
             self._encoder.print_project(Project_type)
-            
-            #self._encoder.send_to_database(Connections,"connections/")
-            #self._encoder.send_to_database(Applications,"applications/")
+            self._encoder.print_project(Connections,"connections/")
+            self._encoder.print_project(Applications,"applications/")
         
         else:
             print("bad")
