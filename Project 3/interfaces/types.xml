@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<idb:Types xmlns:idb="">
+<idb:Types xmlns:idb="Test1234">
 
   <TypeList>
     <!-- ACCS Primitives -->
