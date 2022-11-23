@@ -7,9 +7,6 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 
 from . import serializers
-# from rest_framework import viewsets
-# from rest_framework import permissions
-
 # Create your views here.
 
 permission = '__all__'
@@ -17,11 +14,6 @@ permission = '__all__'
 class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    permissions = permission
-
-class CommentsViewSet(viewsets.ModelViewSet):
-    queryset = CommentsDict.objects.all()
-    serializer_class = DictSerializer
     permissions = permission
 
 class NodeViewSet(viewsets.ModelViewSet):
@@ -49,20 +41,25 @@ class ConnectionViewSet(viewsets.ModelViewSet):
     serializer_class = ConnectionSerializer
     permissions = permission
 
-# --------------------------------------------------
+#------------------------------------------------
 
-
-# class NodeFailureViewSet(viewsets.ModelViewSet):
-#     queryset = NodeFailure.objects.all()
-#     serializer_class = NodeFailureSerializer 
+# Problem:
+# Get id from application with application name and project name
+# class GetApplicationID(viewsets.ReadOnlyModelViewSet):
+#     queryset = Application.objects.all()
+#     serializer_class = GetApplicationIDSerializer
+#     http_method_names = ['get']
 #     permissions = permission
 
-# class PartitionFailureViewSet(viewsets.ModelViewSet):
-#     queryset = PartitionFailure.objects.all()
-#     serializer_class = PartitionFailureSerializer
-#     permissions = permission
+#     def retrieve(self, request):
+#         queryset = Application.objects.all()
+#         application = get_object_or_404(queryset, name=request.name, project=request.project)
+#         serializer = GetApplicationIDSerializer(application)
+#         return Response(serializer.data)
 
-# class MaterialGroupViewSet(viewsets.ModelViewSet):
-#     queryset = MaterialGroup.objects.all()
-#     serializer_class = MaterialGroupSerializer
-#     permissions = permission
+#------------------------------------------------
+
+class CommentsViewSet(viewsets.ModelViewSet):
+    queryset = CommentsDict.objects.all()
+    serializer_class = DictSerializer
+    permissions = permission
