@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<idb:Interface xmlns:idb="" name="Test_Status_I" supportedRoles="ProviderAndRequirer" providerExpectsIdentity="true">
+<idb:Interface xmlns:idb="Test1234" name="Test_Status_I" supportedRoles="ProviderAndRequirer" providerExpectsIdentity="true">
 
   <TypeList>
     <Array name="String_Info_Type" type="Byte_Type" numberOfElements="64"/>

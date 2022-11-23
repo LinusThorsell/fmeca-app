@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
-<idb:ResourceRequirements xmlns:idb=""
+<idb:ResourceRequirements xmlns:idb="Test1234"
      application="Basic_Com_Event" initializeStackSize="0" rampoolSize="98304">
   <PeriodicResourceRequirements thread="Event_P60" executionStackSize="16384" executionTime="100000"/>
   <PeriodicResourceRequirements thread="Event_P30" executionStackSize="16384" executionTime="100000"/>

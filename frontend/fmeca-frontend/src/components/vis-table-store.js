@@ -40,12 +40,17 @@ export const vis_table_store = reactive({
             console.log("Err: " + error)
         }
     },
-    getArray(num)
-    {
+    getArray(num) {
         return this.array[num].slice(0);
     },
     set(num, row, column, data) {
         this.array[num][row][column] = data
+    },
+    setComment(num, row, column, comment) {
+        console.log("Setting comment")
+        console.log(num + " " + row + " " + column + " " + comment)
+        console.log(this.array[num][row][column])
+        console.log(comment)
     },
     getProjectNames() {
 
@@ -63,7 +68,7 @@ export const vis_table_store = reactive({
         return projectNames;
     },
     generateEmpty(num, rows, cols) {
-        if (this.getRowCount(num) === 0) { // TODO REMOVE HARDCODED VALUES
+        if (this.getRowCount(num) === 0) {
             const temp_array = []
             console.log("Generating empty array: " + num + " Array empty, creating example")
             for (var col = 0; col < cols; col++) {
@@ -84,7 +89,6 @@ export const vis_table_store = reactive({
                 index_of_project = index;
             }
         })
-        //console.log("Selection: " + selected_project + " Result: " + index_of_project);
         return index_of_project;
     }
 })
