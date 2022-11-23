@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<idb:Namespace xmlns:idb="" name="Results">
+<idb:Namespace xmlns:idb="Test1234" name="Results">
 
   <Description>
     <P>This namespace contains interfaces.</P>

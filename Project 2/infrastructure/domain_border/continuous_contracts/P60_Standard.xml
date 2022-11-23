@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
-<idb:ContinuousDomainBorderContract xmlns:idb=""
+<idb:ContinuousDomainBorderContract xmlns:idb="Test1234"
 			  name="P60_Standard"
 			  numberOfReceiveBuffers="2"
 			  isEdgeTransfer="false"

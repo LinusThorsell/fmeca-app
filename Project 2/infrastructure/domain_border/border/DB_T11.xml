@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
-<idb:DomainBorder name="DB_T11" arl="5" xmlns:idb=""
+<idb:DomainBorder name="DB_T11" arl="5" xmlns:idb="Test1234"
                   transferFromFcStart="1900000"
                   transferFromFcEnd="2000000"
                   multiTransferStart="7950000"

@@ -12,6 +12,14 @@ _/parser.py_
 
 #### Commands:
 
+<<<<<<< HEAD
+debug
+Args(0)
+Explanation:
+Prints information to terminal
+
+
+=======
 - **add** \
 _Adds project specified in _-path_ with name in _-tag_ to database specified in _-c__ \
 _-c_ <'path to config'> _-OPTIONAL_ \ _-path_ <'path to system infrastructure'> _-REQUIRED_ \
@@ -29,3 +37,4 @@ _-path_ <'path to system infrastructure'> _-REQUIRED_
 #### Example:
  
  - */parser/parser.py -c Linus_DB.xml -path "Project 2"/infrastructure -tag "name"*
+>>>>>>> master

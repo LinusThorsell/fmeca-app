@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
-<idb:Connections xmlns:idb="" domain="FlightCritical">
+<idb:Connections xmlns:idb="Test1234" domain="FlightCritical">
 
   <TemplateInstantiation name="Basic_Com_Event_DB_FC_No_Latency">
     <EntityArgument   name="Application"          value="Event_DB_NL_FC"/>

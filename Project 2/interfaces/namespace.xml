@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<idb:Namespace xmlns:idb="" name="interfaces">
+<idb:Namespace xmlns:idb="Test1234" name="interfaces">
 
   <Description>
     <P>This is the top namespace</P>
