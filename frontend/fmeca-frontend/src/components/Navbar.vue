@@ -26,20 +26,38 @@
 </template>
 
 <script>
+
+function generatePdf() 
+{
+print()
+}
 //Searchbarfunction
-import {getProjects, loadProjectFromStore} from './VisTable.vue'
+import {getProjects, loadProjectFromStore, selected_project, removeAllColumns, createFilteredTable} from './VisTable.vue'
+import {vis_table_store} from './vis-table-store.js'
 
 function filteredList(input) 
 {  
-//Input är det som skrivs in
-// filterSearch(input);
 console.log(input);
-//localStorage.setItem("columnfilter", input);
+removeAllColumns();
+console.log("removed");
+// console.log(vis_table_store.getArray(selected_project.value))
+let temp_array = vis_table_store.getArray(selected_project.value)
+temp_array.forEach((array_outer, index_x) => {
+  //console.log(array_outer);
+  array_outer.forEach((array_inner, index_y) => {
+  //console.log(array_inner);
+     if(array_inner == input)
+     {
+      
+     }
+    });
+  });
 
 }
 
 
 import Dropdown from './Dropdown.vue';
+
 
 export default {
   name: 'navbar',
@@ -49,6 +67,12 @@ export default {
   },
   data () {
     return {
+      vis_table_store,
+      selected_project,
+      removeAllColumns,
+      createFilteredTable,
+      filteredList,
+      generatePdf,
       getProjects,
       loadProjectFromStore,
       services: [

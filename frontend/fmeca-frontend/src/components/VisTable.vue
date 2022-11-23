@@ -1,7 +1,6 @@
 <script>
 import { ref, watchEffect } from 'vue'
 import { vis_table_store } from './vis-table-store.js'
-import html2pdf from 'html2pdf.js';
     export default {
         
         mounted() {
@@ -29,6 +28,8 @@ import html2pdf from 'html2pdf.js';
         data() {
             return {
                 removeColumn,
+                removeAllColumns,
+                createFilteredTable,
                 restoreColumns,
                 setupTable,
                 getRow,
@@ -47,18 +48,13 @@ import html2pdf from 'html2pdf.js';
         /*components: {
         },*/
         methods: {
-            generatePdf() {
-                //html2pdf(document.getElementById('vis-table'));
-                //console.log(document.getElementById('vis-table').innerHTML)
-                print()
-            }
         },
     }
     var selector, rule, i, /*rowStyles=[],*/ colStyles=[];
     const array_columns = 6;
     const array_rows = 6;
     const default_column_width = 100;
-    var selected_project = ref(0);
+    export var selected_project = ref(0);
 /*
     watchEffect(() => {
     // tracks A0 and A1
@@ -99,6 +95,25 @@ import html2pdf from 'html2pdf.js';
     function removeColumn(column) {
         console.log(column)
         colStyles[column-1].display="none";
+    }
+    export function removeAllColumns(column){
+        for(i = 0; i < vis_table_store.getColumnCount(selected_project.value); i++)
+        {
+            colStyles[i].display = "none";
+        }
+    }
+    export function createFilteredTable(input, array_inner)
+    {
+        for(i = 0; i < vis_table_store.getColumnCount(selected_project.value); i++)
+        {
+            console.log(input);
+            console.log(array_inner);
+            if(input == array_inner)
+            {
+            console.log("array");
+            colStyles[i].display = "flex";
+            }
+        }
     }
     function restoreColumns() {
         console.log(vis_table_store.getColumnCount(selected_project.value))
