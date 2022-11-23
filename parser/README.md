@@ -1,27 +1,40 @@
-# FMECA PARSER DOCUMENTATION :)
-How to use parser
+# Parser
+## Prerequisites 
 
-First make sure that you have all the dependencies, such as python3 and the libraries we use.
-In order to run this parser you first of all have to be in the fmeca folder.
-when you are in the folder you run the program by writing: 
-"python3 parser/parser.py" followed by the appropriate flags
-  
+First make sure that a rest api server is live in the backend. This is necessary \
+because the parser send the parsed data in json format to endpoint in the api \
+which  in turn forwards it to the database.
 
-Commands:
+## Commands and Arguments
 
-add 
-Args(1): path
-Explanation:
-Parse new project and send to database
+#### Always start with: 
+_/parser.py_
 
-delete
-Args(1): project_name
-Explanation:
-Delete project from database
+#### Commands:
 
+<<<<<<< HEAD
 debug
 Args(0)
 Explanation:
 Prints information to terminal
 
 
+=======
+- **add** \
+_Adds project specified in _-path_ with name in _-tag_ to database specified in _-c__ \
+_-c_ <'path to config'> _-OPTIONAL_ \ _-path_ <'path to system infrastructure'> _-REQUIRED_ \
+ _-tag_ <'project name'> _-REQUIRED_
+
+- **remove** \
+_Removes the project specified in _-tag_ from database_ \
+ _-c_ <'path to config'> _-OPTIONAL_ \
+ _-tag_ <'project name'> _-REQUIRED_
+
+- **print** \
+_Prints the data in the form it will be sent to the database_ \
+_-path_ <'path to system infrastructure'> _-REQUIRED_ 
+ 
+#### Example:
+ 
+ - */parser/parser.py -c Linus_DB.xml -path "Project 2"/infrastructure -tag "name"*
+>>>>>>> master
