@@ -1,5 +1,5 @@
 <template>
-  <nav class="nav-background">
+  <nav id="nav-bar-id" class="nav-background">
     <button @click="generatePdf">Generate PDF</button>
     <br> 
     <!-- <label for="project-select">Choose a project:</label> -->
@@ -10,15 +10,15 @@
         <option value="proj2">Project 2</option-->
     </select>
     <button @click="loadProjectFromStore()">Load Selected Project</button>
-    <div class="menu-item"><a href="#">fortnite</a></div>
-    <div class="menu-item"><a href="#">Gripen X(Unreleased)</a></div>
-    <Dropdown title="Change view" :items="services" />
+    <!-- TODO TOG BORT <div class="menu-item"><a href="#">fortnite</a></div> -->
+    <!-- TODO TOG BORT <div class="menu-item"><a href="#">Gripen X(Unreleased)</a></div> -->
+    <!-- TODO TOG BORT <Dropdown title="Change view" :items="services" /> -->
     <!-- <label for="project-select">Choose a project</label> -->
     <!-- <select name ="projects" id="project-select"> -->
       <!-- <option value =""> Please choose a project</option> -->
       <!-- <option v-for="project in getProjects()" value ="project">{{project}}</option> -->
     <!-- </select> -->
-    <div class="menu-item"><a href="#">Adam fan page</a></div>
+    <!-- TODO TOG BORT <div class="menu-item"><a href="#">Adam fan page</a></div>-->
     <!-- sökbar som aktiveras genom enter -->
     <input type="text" @keydown.enter="filteredList(input)" v-model="input" placeholder="Filter..." />
 
@@ -51,7 +51,7 @@ export default {
     return {
       getProjects,
       loadProjectFromStore,
-      services: [
+      /*services: [
         {
           title: 'S',
           link: '#fortnite',
@@ -80,7 +80,7 @@ export default {
               console.log("nörd");
           }
         }
-      ]
+      ]*/
     }
   },
   
