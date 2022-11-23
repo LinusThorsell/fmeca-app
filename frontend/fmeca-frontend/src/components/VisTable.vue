@@ -66,7 +66,6 @@ import { vis_table_store } from './vis-table-store.js'
                 while (this.notes.length <= selected_project.value) {
                     this.notes.push({})
                 }
-                if ()
 
                 console.log("edit comment")
                 console.log(target)
@@ -382,7 +381,7 @@ import { vis_table_store } from './vis-table-store.js'
                         class="vis-comment vis-textarea vis-textarea-comment"
                         onfocus="this.parentElement.children[0].className = 'vis-textarea vis-textarea-comment'; 
                         this.className = 'vis-textarea'"
-                        @input="editComment($event.target, $event.target.value)">{{ getCorrectNotes(this) }}</textarea>
+                        @input="editComment($event.target, $event.target.value)"></textarea>
                 </div>
 
             </div>
