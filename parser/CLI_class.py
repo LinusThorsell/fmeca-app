@@ -152,9 +152,9 @@ class CLI:
             
             self.Connections = DataClass.ConnectionContainer(self._project_name)
             self.Applications = DataClass.ApplicationContainer(self._project_name)
-            #runorder = ["fc/hw_topology.xml", "mc/hw_topology.xml","fc/sw_topology.xml","mc/sw_topology.xml",
-            #"functional_topology/fc","functional_topology/mc", "/applications/"]
-            runorder = ["functional_topology/fc","functional_topology/mc"]
+            runorder = []
+            runorder += ["fc/hw_topology.xml", "mc/hw_topology.xml","fc/sw_topology.xml","mc/sw_topology.xml"]
+            runorder += ["functional_topology/fc","functional_topology/mc"]
             runorder += ["/applications/"]
             connectionlist =  []
             application_instances = []
