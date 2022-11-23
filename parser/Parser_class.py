@@ -1,5 +1,6 @@
 import xml.etree.ElementTree as ET
 from os import path as OSPATH
+import os
 import DataClass
 
 import DebugFile
@@ -52,8 +53,8 @@ class Parser:
         rampool = raw_application_data.get("rampool")
         instanceOf = raw_application_data.get("instanceOf")
         affinity = raw_application_data.get("affinity")
-
-        return DataClass.Application(name, rampool, instanceOf, affinity, node, cpu, partition)
+        application = DataClass.Application(name, rampool, instanceOf, affinity, node, cpu, partition)
+        return application
 
     def create_partitions_in_cpu(self,raw_partition_data):
         partitions = []
@@ -73,7 +74,6 @@ class Parser:
                 applications.append(self.create_application(child, node, cpu, None))
         return applications 
 
-    
 
     #create a single node, handle cpus related to node
     def create_node(self,raw_node_data):
@@ -116,6 +116,37 @@ class Parser:
         return DataClass.Application_Instances(name, instanceOf)
 
 
+
+    
+    def get_connection_list(self, path):
+        connectionlist = []
+        if os.path.exists(path+"/connections"):
+            for subdir, dirs, files in os.walk(path+"/connections"):
+                for file in files:
+                    if(file == "connections.xml"):
+                        print(subdir + "/"+file)
+                        connectionlist += self.get_connections(os.path.join(subdir,file))
+        return connectionlist
+
+    def get_threads(self, path):
+        tree = ET.parse(path)
+        root = tree.getroot()
+        returnlist = []
+        for child in root:
+            if(child.tag == "PeriodicThread"):
+                thread = DataClass.Threads(child.get("name"), child.get("rateGroup"))
+                for second_child in child:
+                    port = DataClass.PacPorts(second_child.get("name"), second_child.get("interface"), second_child.get("role"))
+                    thread.port_list.append(port)
+                returnlist.append(thread)
+        return returnlist
+
+
+
+
+    
+
+
     
     def get_connections(self, path):
         # Return all connections in path
@@ -125,7 +156,18 @@ class Parser:
         for child in root:
             if(child.tag == "Connection"):
                 returnlist.append(self.create_connection(child))
-        return returnlist      
+            elif child.tag == "TemplateInstantiation":
+                DebugFile.warning_print("Template instantiation in {0}".format(path))
+        return returnlist    
+
+
+    def get_applications_instances_list(self, path):
+        application_instances = []
+        if os.path.exists(path + "/application_instances.xml"):
+            if os.path.isfile( path + "/application_instances.xml"):
+                application_instances += self.get_application_instances(path + "/application_instances.xml")
+        return application_instances
+  
 
     def get_application_instances(self,path):
         tree = ET.parse(path)
@@ -136,9 +178,6 @@ class Parser:
                 returnlist.append(self.create_application_instance(child))
         return returnlist  
 
-
-            
-            
     #retrieves all nodes(and cpus) from fc/hw_topology
     def get_nodes(self,path):
         tree = ET.parse(path)
@@ -161,6 +200,8 @@ class Parser:
                     #returnlist.append(self.functions[node.tag](partitions))
                     returnlist += self.create_partitions_in_cpu(partitions)
         return returnlist
+
+
     
     def get_cpu_applications(self,path):
         tree = ET.parse(path)

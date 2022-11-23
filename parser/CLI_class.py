@@ -32,7 +32,11 @@ class CLI:
         self._meta_path = None
         self._project_name = ""
         self.PRINT = False
-
+        
+        self.Project_Type = ""
+        self.Applications = ""
+        self.Connections = ""
+        self.Threads = ""
     def remove(self):
         ##Tell the database to delete the project
        # self.delete_argument = project
@@ -144,54 +148,76 @@ class CLI:
             self.get_paths()
             DebugFile.debug_print("PATHS:")
             DebugFile.debug_print(self._Paths._paths)
-            Project_type = DataClass.Project_Data_Class(self._project_name)
+            self.Project_Type = DataClass.Project_Data_Class(self._project_name)
             
-            Connections = DataClass.ConnectionContainer(self._project_name)
-            Applications = DataClass.ApplicationContainer(self._project_name)
-            runorder = ["fc/hw_topology.xml", "mc/hw_topology.xml","fc/sw_topology.xml","mc/sw_topology.xml","functional_topology/fc","functional_topology/mc"]
-            #runorder = ["functional_topology/fc","functional_topology/mc"]
-
+            self.Connections = DataClass.ConnectionContainer(self._project_name)
+            self.Applications = DataClass.ApplicationContainer(self._project_name)
+            #runorder = ["fc/hw_topology.xml", "mc/hw_topology.xml","fc/sw_topology.xml","mc/sw_topology.xml",
+            #"functional_topology/fc","functional_topology/mc", "/applications/"]
+            runorder = ["functional_topology/fc","functional_topology/mc"]
+            runorder += ["/applications/"]
             connectionlist =  []
             application_instances = []
+            
+            if(self._project_name == ""): 
+                self._project_name = self._parser.get_project_name(self._add_path) 
             
             for temppath in runorder:
                 for path in self._Paths._paths:
                     if temppath in path and "fc/hw_topology.xml" in temppath:
-                        Project_type.filter(self._parser.get_nodes(path))
+                        self.Project_Type.filter(self._parser.get_nodes(path))
                     elif temppath in path and "mc/hw_topology.xml" in temppath:
-                        Project_type.filter(self._parser.get_nodes(path))
+                        self.Project_Type.filter(self._parser.get_nodes(path))
                     elif temppath in path and "fc/sw_topology.xml" in temppath:
-                        Project_type.insert_partitions(self._parser.get_partitions(path))
+                        self.Project_Type.insert_partitions(self._parser.get_partitions(path))
                     elif temppath in path and "mc/sw_topology.xml" in temppath:
-                        Project_type.insert_applications(self._parser.get_cpu_applications(path))
-
+                        self.Project_Type.insert_applications(self._parser.get_cpu_applications(path))
                     #För connections: Kolla efter <Project>/infrastructure/functional_topology/ sedan fc eller mc
                     elif temppath in path and "functional_topology/fc" in temppath:
-                        if os.path.exists(path+"/connections"):
-
-                            for subdir, dirs, files in os.walk(path+"/connections"):
-                                for file in files:
-                                    if(file == "connections.xml"):
-                                        print(subdir + "/"+file)
-                                        connectionlist += self._parser.get_connections(os.path.join(subdir,file))
-
-                        print("PATH ===== " ,path + "/application_instance.xml")
-                        if os.path.exists(path + "/application_instances.xml"):
-                            if os.path.isfile( path + "/application_instances.xml"):
-                                application_instances += self._parser.get_application_instances(path + "/application_instances.xml")
-
-                    #Search for connections directories
+                       self.Applications.applicationlist = self._parser.get_applications_instances_list(path)
+                       self.Connections.connectionlist = self._parser.get_connection_list(path)
                     elif temppath in path and "functional_topology/mc" in temppath:
-                        if os.path.exists(path+"/connections"):
-                            for subdir, dirs, files in os.walk(path+"/connections"):
-                                for file in files:
-                                    if(file == "connections.xml"):
-                                        print(subdir + "/"+file)
-                                        connectionlist += self._parser.get_connections(os.path.join(subdir,file))
-                        if os.path.exists(path + "/application_instances.xml"):
-                            if os.path.isfile( path + "/application_instances.xml"):
-                                application_instances += self._parser.get_application_instances(path + "/application_instances.xml")
-            return Project_type
+                        self.Applications.applicationlist += self._parser.get_applications_instances_list(path)
+                        self.Connections.connectionlist += self._parser.get_connection_list(path)
+                    elif temppath in path and "/applications/" in temppath:
+                        
+                #----------------------------------------------------------------------------
+                        if self.Threads == "":
+                            self.Threads = DataClass.ThreadContainer(self._project_name)
+                        #print(path)
+                        threads = []
+                        for subdir, dirs, files in os.walk(path):
+                            for file in files:
+                                print(file)
+                                if(file == "application.xml"):
+                                    print(subdir + "/"+file)
+                                    threads += self._parser.get_threads(os.path.join(subdir,file))
+                        self.Threads.thread_set += threads
+                        
+                #-----------------------------------------------------------------------------
+                        
+            for node in self.Project_Type.node_set:
+                for cpu in node.cpus:
+                    for partition in cpu.partitions:
+                        self.Project_Type.Applications += partition.applications
+                    self.Project_Type.Applications += cpu.applications
+            
+
+            found = False
+            for instance in self.Applications.applicationlist:
+                for applications in self.Project_Type.Applications:
+                    if instance.name == applications.name:
+                        DebugFile.blue_print("Found it")
+                        DebugFile.error_print(applications.name + "==" + instance.name)
+                        found = True
+                if(not found):
+                    DebugFile.warning_print("Did not find application for instance {0}".format(instance.name))
+                    found = False
+
+            
+
+            self.Applications.add_project_name(self._project_name)
+            
 
     def get_arguments(self):
         nrarguments = len(sys.argv)
@@ -213,20 +239,20 @@ class CLI:
             DebugFile.debug_print("Call function: DELETE from database")
             self._encoder.delete_from_database(self._project_name, "projects/")
         elif (self._add and self._add_path != None and self._project_name != ""):      
-            Project_type = self.parsing()
-            self._encoder.send_to_database(Project_type,"projects/")
+            self.parsing()
+            self._encoder.send_to_database(self.Project_Type,"projects/")
             #DebugFile.rainbow_rainbow_print("")
             #self._encoder.send_to_database(Connections,"connections/")
             #self._encoder.send_to_database(Applications,"applications/")
         
         elif self.PRINT:
             self.debug()
-            Project_type = self.parsing()
-            self._encoder.print_project(Project_type)
-            self._encoder.print_project(Connections,"connections/")
-            self._encoder.print_project(Applications,"applications/")
-        
+            self.parsing()
+            self._encoder.print_project(self.Project_Type)
+            self._encoder.print_project(self.Connections)
+            self._encoder.print_project(self.Applications)
+            self._encoder.print_project(self.Threads)
         else:
-            print("bad")
+            DebugFile.warning_print("bad")
             exit()
             

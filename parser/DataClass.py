@@ -31,7 +31,6 @@ class Partition_Data_Class:
     def __init__(self,name,ltmbool,id, node,cpu):
         self.name = name
         self.isLTM = ltmbool
-        #Denna va med i project 1... lol?
         self.fixedStartNs = None
         self.partiton_id = id
         self.nodename = node
@@ -42,7 +41,6 @@ class Partition_Data_Class:
                 "application_set":self.applications,"fixed_start":self.fixedStartNs}
 
 class Application:
-    #<DipsApplication name="Port_Gateway_1" rampool="0x10000" instanceOf="port_gateway" affinity="0"/>
     def __init__(self,name, rampool, instanceOf, affinity,node,cpu,partition):
         self.name = name
         self.rampool = rampool
@@ -61,15 +59,42 @@ class Application_Instances:
         self.instanceOf = instanceOf
     
     def reprJSON(self):
-        return {"name":self.name}
+        return {"name":self.name,"instanceof":self.instanceOf}
     
 class ApplicationContainer:
     def __init__(self,name):
         self.name = name
         self.applicationlist = []
-    
+        self.project_name = None
+    def add_project_name(self,name):
+        self.project_name = name
     def reprJSON(self):
-        return {"name":self.name,"applicaitonlist":self.applicationlist}
+        return {"project_name":self.project_name,"name":self.name,"applicationlist":self.applicationlist}
+
+
+class ThreadContainer:
+    def __init__(self,project):
+        self.project = project
+        self.thread_set = []
+    def reprJSON(self):
+        return {"project_name":self.project,"thread_set":self.thread_set}
+class Threads:
+    def __init__(self,name,rategroup):
+        self.name = name
+        self.rategroup = rategroup
+        self.port_list = []
+    def reprJSON(self):
+        return {"name":self.name,"rategroup":self.rategroup,"port_list":self.port_list}
+
+class PacPorts:
+    def __init__(self,name, interface, role):
+        self.name = name
+        self.interface = interface
+        self.role = role
+        self.project_name = None
+    def reprJSON(self):
+        return {"project_name":self.project_name,"name":self.name,"interface":self.interface,"role":self.role}
+
 class Connection:
     
     def __init__(self, Provider_name, Provider_Application, Requirer_name, Requirer_Application):
@@ -90,12 +115,11 @@ class ConnectionContainer:
     def reprJSON(self):
         return {"project_name":self.project_name,"connectionlist":self.connectionlist}
 
-#The lists should contain Objects of the Objects
-
 class Project_Data_Class:
     def __init__(self,name):
         self.name = name
         self.node_set = []
+        self.Applications = []
     def reprJSON(self):
         return {"name":self.name,"node_set":self.node_set}
          
@@ -116,7 +140,7 @@ class Project_Data_Class:
                         if application.cpuname == cpu.name:
                             if(application.partitionname == None):
                                 cpu.applications.append(application)
-                            #cpu.partitions.append(partition)  
+                                self.Applications.append(application)
     
     def filter(self,objectlist):
         

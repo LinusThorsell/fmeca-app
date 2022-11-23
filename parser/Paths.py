@@ -62,8 +62,8 @@ class Paths:
         self._paths.add(newpath)
 
     def initial_path(self,path):
-        self.fc_path = path + "/fc/system.xml"
-        self.mc_path = path + "/mc/system.xml"
+        self.fc_path = path + "infrastructure/fc/system.xml"
+        self.mc_path = path + "infrastructure/mc/system.xml"
         
     def get_paths(self, path):
         tree = ET.parse(path)

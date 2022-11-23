@@ -17,6 +17,8 @@ HEADER = '\033[95m'
 OKCYAN = '\033[96m'
 
 debug = False
+slow_mode = False
+
 
 def error_print(string):
     print(CRED + string + ENDC)
@@ -29,6 +31,9 @@ def success_print(string):
 
 def blue_print(string):
     print(OKBLUE + string + ENDC)
+
+def underline_print(string):
+    print(UNDERLINE + string + ENDC)
 
 def underline_print(string):
     print(UNDERLINE + string + ENDC)
