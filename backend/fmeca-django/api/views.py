@@ -36,10 +36,38 @@ class ApplicationViewSet(viewsets.ModelViewSet):
     serializer_class = ApplicationSerializer
     permissions = permission
 
+class ApplicationInstanceViewSet(viewsets.ModelViewSet):
+    queryset = ApplicationInstance.objects.all()
+    serializer_class = ApplicationInstanceSerializer
+    permissions = permission
+
+    def create(self, request):
+        request_data = request.data
+        project_name = request_data.pop('project_name')
+        application_name = request_data.pop('application_name')
+        project_instance = get_object_or_404(Project.objects.all(), name=project_name)
+        application_instance = get_object_or_404(Application.objects.all(), name=application_name, project=project_instance)
+        application_id = getattr(application_instance, 'id')
+        
+        request_data['application'] = application_id
+        serializer = self.get_serializer(data=request_data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(serializer.data)
+
 class ConnectionViewSet(viewsets.ModelViewSet):
     queryset = Connection.objects.all()
     serializer_class = ConnectionSerializer
     permissions = permission
+
+class ThreadViewSet(viewsets.ModelViewSet):
+    queryset = Thread.objects.all()
+    serializer_class = ThreadSerializer
+    permissions = permission
+
+    def create(self, request):
+        pass
+
 
 #------------------------------------------------
 
