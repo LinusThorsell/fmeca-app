@@ -63,9 +63,13 @@ def rainbow_rainbow_print(string):
 def debug_print(*object_to_be_printed, color = ENDC):
     global debug
     if(debug == True):
-        print(color)
         try:
-            print(*object_to_be_printed) 
+            if color != ENDC:
+                for args in object_to_be_printed:
+                    string = str(args)
+                    string = color + string + ENDC
+                    print(string)
+            else:
+                print(*object_to_be_printed) 
         except Exception:
             error_print("Couldnt print the object in debug_print")
-        print(ENDC)

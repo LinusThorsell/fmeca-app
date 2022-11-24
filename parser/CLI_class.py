@@ -14,7 +14,6 @@ import time
 #Finds the file paths where the data is located
 
 class CLI:
-    
     def __init__(self):
         self._remove = False
         self._add = False
@@ -148,10 +147,7 @@ class CLI:
             self.get_paths()
             DebugFile.debug_print("PATHS:")
             DebugFile.debug_print(self._Paths._paths)
-            self.Project_Type = DataClass.Project_Data_Class(self._project_name)
-            
-            self.Connections = DataClass.ConnectionContainer(self._project_name)
-            self.Applications = DataClass.ApplicationContainer(self._project_name)
+
             runorder = []
             runorder += ["fc/hw_topology.xml", "mc/hw_topology.xml","fc/sw_topology.xml","mc/sw_topology.xml"]
             runorder += ["functional_topology/fc","functional_topology/mc"]
@@ -161,6 +157,11 @@ class CLI:
             
             if(self._project_name == ""): 
                 self._project_name = self._parser.get_project_name(self._add_path) 
+            
+            
+            self.Project_Type = DataClass.Project_Data_Class(self._project_name)
+            self.Connections = DataClass.ConnectionContainer(self._project_name)
+            self.Applications = DataClass.ApplicationContainer(self._project_name)
             
             for temppath in runorder:
                 for path in self._Paths._paths:
@@ -174,8 +175,8 @@ class CLI:
                         self.Project_Type.insert_applications(self._parser.get_cpu_applications(path))
                     #För connections: Kolla efter <Project>/infrastructure/functional_topology/ sedan fc eller mc
                     elif temppath in path and "functional_topology/fc" in temppath:
-                       self.Applications.applicationlist = self._parser.get_applications_instances_list(path)
-                       self.Connections.connectionlist = self._parser.get_connection_list(path)
+                        self.Applications.applicationlist = self._parser.get_applications_instances_list(path)
+                        self.Connections.connectionlist = self._parser.get_connection_list(path)
                     elif temppath in path and "functional_topology/mc" in temppath:
                         self.Applications.applicationlist += self._parser.get_applications_instances_list(path)
                         self.Connections.connectionlist += self._parser.get_connection_list(path)
@@ -240,15 +241,16 @@ class CLI:
             self._encoder.delete_from_database(self._project_name, "projects/")
         elif (self._add and self._add_path != None and self._project_name != ""):      
             self.parsing()
+            ##Anteckning: Sätt en boolean = true som representerar om man får skicka skit, om en skickning misslyckas ska denna blir false och sen måste man deleata projectet man skickade upp
+            
             self._encoder.send_to_database(self.Project_Type,"projects/")
-            #DebugFile.rainbow_rainbow_print("")
             #self._encoder.send_to_database(Connections,"connections/")
             #self._encoder.send_to_database(Applications,"applications/")
         
         elif self.PRINT:
             self.debug()
             self.parsing()
-            self._encoder.print_project(self.Project_Type)
+            #self._encoder.print_project(self.Project_Type)
             self._encoder.print_project(self.Connections)
             self._encoder.print_project(self.Applications)
             self._encoder.print_project(self.Threads)

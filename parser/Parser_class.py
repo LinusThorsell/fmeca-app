@@ -96,18 +96,26 @@ class Parser:
                         node.cpus.append(self.functions[cpu.tag](cpu)) 
             return node
     
-
-    
     def create_connection(self, raw_connection_data):
-        for child in raw_connection_data:
-            if(child.tag == "ProviderPort"):
-                Provider_name = child.get('name')
-                Provider_Application = Provider_name.split('.')[0]
-            elif(child.tag == "RequirerPort"):
-                Requirer_name = child.get('name')
-                Requirer_Application = Requirer_name.split('.')[0]
+        temp_list = []
 
-        return DataClass.Connection(Provider_name, Provider_Application, Requirer_name, Requirer_Application)
+        for child in raw_connection_data:
+            arg1 = arg2 = arg3 = arg4 = arg5 = arg6 = arg7 = ""
+            if(child.tag == "ProviderPort"):
+                temp_list += child.get('name').split(".")
+                print(temp_list)
+                #arg1,arg2, arg3 = somethinglist[0],somethinglist[1],somethinglist[2]#= child.get('name').split("."), child.get('name').split("."), child.get('name').split(".")
+                
+            elif(child.tag == "RequirerPort"):
+                temp_list += child.get('name').split(".")
+                print(temp_list)
+
+                #arg4, arg5, arg6 = child.get('name').split("."), child.get('name').split("."), child.get('name').split(".")
+                temp_list.append(child.get('identity'))
+                
+        DebugFile.debug_print(*temp_list, DebugFile.OKCYAN)
+
+        return DataClass.Connection(*temp_list)
 
 
     def create_application_instance(self, raw_application_instance_data):
@@ -131,10 +139,14 @@ class Parser:
     def get_threads(self, path):
         tree = ET.parse(path)
         root = tree.getroot()
+        application = "unknown"
         returnlist = []
+        application = root.get("name")
         for child in root:
+            #if(child.tag == "Application"):
+            #    application = child.get("name")
             if(child.tag == "PeriodicThread"):
-                thread = DataClass.Threads(child.get("name"), child.get("rateGroup"))
+                thread = DataClass.Threads(child.get("name"),application, child.get("rateGroup"))
                 for second_child in child:
                     port = DataClass.PacPorts(second_child.get("name"), second_child.get("interface"), second_child.get("role"))
                     thread.port_list.append(port)

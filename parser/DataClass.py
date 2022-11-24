@@ -62,15 +62,13 @@ class Application_Instances:
         return {"name":self.name,"instanceof":self.instanceOf}
     
 class ApplicationContainer:
-    def __init__(self,name):
-        self.name = name
+    def __init__(self,project):
         self.applicationlist = []
-        self.project_name = None
+        self.project_name = project
     def add_project_name(self,name):
         self.project_name = name
     def reprJSON(self):
-        return {"project_name":self.project_name,"name":self.name,"applicationlist":self.applicationlist}
-
+        return {"project_name":self.project_name,"applicationlist":self.applicationlist}
 
 class ThreadContainer:
     def __init__(self,project):
@@ -79,33 +77,37 @@ class ThreadContainer:
     def reprJSON(self):
         return {"project_name":self.project,"thread_set":self.thread_set}
 class Threads:
-    def __init__(self,name,rategroup):
+    def __init__(self,name,application, rategroup):
         self.name = name
+        self.application = application
         self.rategroup = rategroup
         self.port_list = []
     def reprJSON(self):
-        return {"name":self.name,"rategroup":self.rategroup,"port_list":self.port_list}
+        return {"name":self.name,"application":self.application, "rategroup":self.rategroup,"port_list":self.port_list}
 
 class PacPorts:
     def __init__(self,name, interface, role):
         self.name = name
         self.interface = interface
         self.role = role
-        self.project_name = None
     def reprJSON(self):
-        return {"project_name":self.project_name,"name":self.name,"interface":self.interface,"role":self.role}
+        return {"name":self.name,"interface":self.interface,"role":self.role}
 
 class Connection:
     
-    def __init__(self, Provider_name, Provider_Application, Requirer_name, Requirer_Application):
-        self.Provider_name = Provider_name
-        self.Requirer_name = Requirer_name
-        self.Provider_Application = Provider_Application
-        self.Requirer_Application = Requirer_Application
+    def __init__(self, Provider_application, Provider_thread, Provider_port,
+        Requirer_application, Requirer_thread, Requirer_port, identity):
+        self.Provider_application = Provider_application
+        self.Provider_thread = Provider_thread
+        self.Provider_port = Provider_port
+        self.Requirer_application = Requirer_application
+        self.Requirer_thread =  Requirer_thread
+        self.Requirer_port = Requirer_port
+        self.identity = identity
         
     def reprJSON(self):
-        return {"Provider_name":self.Provider_name,"Provider_Application":self.Provider_Application,
-        "Requirer_name":self.Requirer_name, "Requirer_Application":self.Requirer_Application} 
+        return {"provider_application":self.Provider_application,"provider_thread":self.Provider_thread,"provider_port":self.Provider_port,
+                "requirer_application":self.Requirer_application,"requirer_thread":self.Requirer_thread,"requirer_port":self.Requirer_port,"identity":self.identity} 
 
 class ConnectionContainer:
     def __init__(self,projectname):
@@ -132,7 +134,6 @@ class Project_Data_Class:
                             cpu.partitions.append(partition)   
     
     def insert_applications(self,applicationlist):
-        
         for application in applicationlist:
             for node in self.node_set:
                 if application.nodename == node.name:
