@@ -1,30 +1,11 @@
 <script>
 import { ref } from 'vue'
 import { vis_table_store } from './vis-table-store.js'
-import html2pdf from 'html2pdf.js';
 
     export default {
         
         mounted() {
             generateCustomStylesheet()
-            setTimeout(() => {
-                /*
-                    Function to fix bug on most chromium based browsers.
-                    Required for resizing to work on a majority of browsers
-                    that do not support native custom stylesheets.
-                    Firefox will gain a performance advantage for supporting this,
-                    while for example Google Chrome has to be forced to reload the
-                    styles by nudging the elements downwards slightly.
-                */
-                // Get all the 'Loading...' text elements, and nudge the rest down slightly.
-                document.getElementsByClassName("chrome_is_messy_fix")[0].style.height="100px";
-                // Wait until the stylesheet is triggered to reload, then hide elements.
-                setTimeout(() => {
-                    Array.from(document.getElementsByClassName("chrome_is_messy_fix")).forEach(div => {
-                        div.style.display="none";
-                    });
-                }, 500);
-            }, 10000);
         },
         
         data() {
@@ -37,6 +18,7 @@ import html2pdf from 'html2pdf.js';
                 addRow,
                 addColumn,
                 getClass,
+                getRowClass,
                 handleResize,
                 getTableFromBackend,
                 vis_table_store,
@@ -74,7 +56,7 @@ import html2pdf from 'html2pdf.js';
             },
         },
     }
-    var selector, rule, i, /*rowStyles=[],*/ colStyles=[];
+    var selector, rule, i, rowStyles=[], colStyles=[];
     const array_columns = 6;
     const array_rows = 6;
     const default_column_width = 100;
@@ -151,6 +133,10 @@ import html2pdf from 'html2pdf.js';
     function getClass(column, row) {
         return "vis-column-" + column + " vis-row-" + row;
     }
+
+    function getRowClass(row) {
+        return "vis-row-" + row;
+    }
     
     // Calculates with of a row, to resize table container element to fit all content.
     function calculateWidthOfRows() {
@@ -161,12 +147,12 @@ import html2pdf from 'html2pdf.js';
                 max_width += column.offsetWidth;
             }
         });
-        document.getElementById("vis-table").style.width = max_width + 100 + "px";
+        document.getElementById("vis-table").style.width = max_width + 200 + "px";
+        document.getElementById("nav-bar-id").style.width = max_width - 10 + "px";
     }
     // Called by vue-resize-observer when a column is resized.
     // Changes stylesheet to resize elements
     function handleResize({ width }, { __currentTarget__ }) {
-        
         var column_array = __currentTarget__.classList[2]
         var column_id = column_array.slice(column_array.lastIndexOf('-')+1)
         //console.log(column_id)
@@ -181,13 +167,13 @@ import html2pdf from 'html2pdf.js';
         var sheet=document.styleSheets[1];
         // Generate stylesheet for row height.
         // Not currently in use because native resizing is working.
-        /*for (i=0; i<array_rows; i++) {
+        for (i=0; i<array_rows; i++) {
             selector=".vis-row-"+i;
-            rule="{height:" + default_column_width + "px;}";
+            rule="{min-height: 50px;}";
             if (sheet.insertRule)
                 sheet.insertRule(selector+rule, 0);//This puts the rule at index 0
             
-            rowStyles[i]=(sheet.cssRules)[0].style; }*/
+            rowStyles[i]=(sheet.cssRules)[0].style; }
         
         // Creates classes for vis-columnbox width.
         for (i=0; i<array_columns; i++) {
@@ -207,6 +193,86 @@ import html2pdf from 'html2pdf.js';
         });
         console.log("returning: " + build_partition_string)
         return build_partition_string;
+    }
+
+    function onFetched() {
+        console.log("Fetched data...")
+
+        /*
+            Function to fix bug on most chromium based browsers.
+            Required for resizing to work on a majority of browsers
+            that do not support native custom stylesheets.
+            Firefox will gain a performance advantage for supporting this,
+            while for example Google Chrome has to be forced to reload the
+            styles by nudging the elements downwards slightly.
+        */
+
+        // Get all the 'Loading...' text elements, and nudge the rest down slightly.
+        document.getElementsByClassName("chrome_is_messy_fix")[0].style.height="100px";
+        // Wait until the stylesheet is triggered to reload, then hide elements.
+        setTimeout(() => {
+            Array.from(document.getElementsByClassName("chrome_is_messy_fix")).forEach(div => {
+                div.style.display="none";
+            });
+        }, 500);
+
+        // Loop through vis_table_store array
+        let columns_to_make_bigger = []
+        let rows_to_make_bigger = []
+        let temp_array = vis_table_store.getArray(selected_project.value)
+        console.log(temp_array)
+        console.log(temp_array[1][2])
+        for (let column = 0; column < temp_array.length; column++) {
+            for (let row = 0; row < temp_array[column].length; row++) {
+                // If the element is a partition, parse it into a string.
+                console.log("column: ", column, " row: ", row, " item: ", temp_array[column][row])
+                if (temp_array[column][row].toString().split('|').length > 1) {
+                    rows_to_make_bigger.push({row: column-1, size: temp_array[column][row].toString().split('|').length})
+                    temp_array[column][row].toString().split('|').forEach((name, index) => {
+                        if (name.length > 10) {
+                            columns_to_make_bigger.push(column)
+                        }
+                    });
+                } 
+                else {
+                    if (temp_array[column][row].toString().length > 10) {
+                        columns_to_make_bigger.push(column)
+                    }
+                }
+            }
+        }
+        console.log("columns to make bigger: ", columns_to_make_bigger)
+        
+        // remove duplicate elements from columns_to_make_bigger array
+        columns_to_make_bigger = [...new Set(columns_to_make_bigger)]
+
+        columns_to_make_bigger.forEach(column => {
+            //console.log("column: ", column)
+            colStyles[column].minWidth = "200px"
+            calculateWidthOfRows();
+        });
+        calculateWidthOfRows();
+
+        console.log("rows to make bigger: ", rows_to_make_bigger)
+        // remove all duplicate row from rows_to_make_bigger array and keep the one with largest size
+        rows_to_make_bigger = rows_to_make_bigger.filter((thing, index, self) =>
+            index === self.findIndex((t) => (
+                t.row === thing.row
+            ))
+        )
+        console.log("rows to make bigger: ", rows_to_make_bigger)
+        rows_to_make_bigger.forEach(row => {
+            console.log("row: ", row)
+            console.log("rowstyles: ", rowStyles[row.row])
+
+            let style = (row.size * 50).toString() + "px"
+            console.log(style)
+            rowStyles[row.row].minHeight = style;
+            console.log("rowstyles: ", rowStyles[row.row])
+        });
+
+        console.log("rowstyle: ", rowStyles[3])
+        console.log("rowstyle: ", rowStyles[4])
     }
     
     var have_fetched = false;
@@ -232,7 +298,6 @@ import html2pdf from 'html2pdf.js';
                         console.log(project.name)
                         vis_table_store.generateEmpty(index, array_rows, array_columns)
                         vis_table_store.set(index, 0, 0, project)
-                        //vis_table_store.set(index, 1, 1, project.name)
                         
                         project.node_set.forEach((node, n_index) => {
                             vis_table_store.set(index, n_index+1, 1, node.name);
@@ -251,11 +316,11 @@ import html2pdf from 'html2pdf.js';
                             vis_table_store.set(index, n_index+1, 2, cpu_string)
                             vis_table_store.set(index, n_index+1, 3, cpu_partition_string)
                         })
-                        /*project.node_set.forEach((node, index) => {
-                            vis_table_store.set(index, index+1, 1, project.name)
-                        });*/
-                    });
-            });
+                    })
+                })
+                .then(() => {
+                    onFetched() 
+                });
             have_fetched = true
         }
     }
@@ -312,7 +377,7 @@ import html2pdf from 'html2pdf.js';
     <div id="vis-table">
         <div v-for="row in vis_table_store.getRowCount(selected_project)" class="vis-row">
             <div v-if="row-1 !== 0">
-                <div class="vis-columnbox vis-resizable-row"> Resizable Row </div>
+                <div class="vis-columnbox vis-resizable-row" :class="getRowClass(row-2)"> Resizable Row </div>
             </div>
             <div v-if="row-1 === 0"
                 class="vis-columnbox"
@@ -346,7 +411,7 @@ import html2pdf from 'html2pdf.js';
             
             <div v-if="row-1 !== 0" v-for="column in vis_table_store.getColumnCount(selected_project)" 
                 class="vis-columnbox" 
-                :class="getClass(column-1, row-1)"
+                :class="getClass(column-1, row-2)"
             >
                 <div 
                     class="vis-textarea-container"

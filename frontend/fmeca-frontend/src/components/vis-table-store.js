@@ -40,6 +40,9 @@ export const vis_table_store = reactive({
             console.log("Err: " + error)
         }
     },
+    getArray(num) {
+        return this.array[num].slice(0);
+    },
     set(num, row, column, data) {
         this.array[num][row][column] = data
     },
