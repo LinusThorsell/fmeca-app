@@ -3,18 +3,39 @@ from ssl import ALERT_DESCRIPTION_BAD_CERTIFICATE_STATUS_RESPONSE
 from .models import *
 from rest_framework import serializers
 
+class PacPortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PacPort
+        fields = '__all__'
+
+class ThreadSerializer(serializers.ModelSerializer):
+    pacport_set = PacPortSerializer(many=True)
+
+    class Meta:
+        model = Thread
+        fields = '__all__'
+
 class ConnectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Connection
         fields = '__all__'
 
+class ApplicationInstanceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ApplicationInstance
+        fields = '__all__'
+
 class ApplicationSerializer(serializers.ModelSerializer):
-    # connection_reciver_set = ConnectionSerializer(many=True)
-    # connection_provider_set = ConnectionSerializer(many=True)
+    # reciver_set = ConnectionSerializer(many=True)
+    # provider_set = ConnectionSerializer(many=True)
+    # thread_set = ThreadSerializer(many=True)
 
     class Meta:
         model = Application
         fields = '__all__'
+
+    def update(self, **validated_data):
+        pass
 
 class PartitionSerializer(serializers.ModelSerializer):
     application_set = ApplicationSerializer(many=True)

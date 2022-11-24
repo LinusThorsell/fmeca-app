@@ -24,15 +24,7 @@ router.register(r'nodes', NodeViewSet, basename="node")
 router.register(r'proccessors', CPUViewSet, basename="cpu")
 router.register(r'partitions', PartitionViewSet, basename="parition")
 router.register(r'applications', ApplicationViewSet, basename="application")
+router.register(r'application-instance', ApplicationInstanceViewSet, basename="application-instance")
 router.register(r'connections', ConnectionViewSet, basename="connection")
 router.register(r'comments', CommentsViewSet, basename="comments")
-# router.register(r'nodes-failure', NodeFailureViewSet, basename="node-failure")
-# router.register(r'partitions-failure', PartitionFailureViewSet, basename="partition-failure")
-# router.register(r'material-groups', MaterialGroupViewSet, basename="materal-group")
 urlpatterns = router.urls
-
-# urlpatterns = [
-#     path('admin/', admin.site.urls),
-#     # path('/', include('router.urls'))
-#     # path('api/', include('api.urls'))
-# ]
