@@ -79,11 +79,9 @@ class CLI:
         attributes = {}
 
         for child in root:
-            #print(child.tag)
             attributes[child.tag.upper()] = child.get("name")
 
         nr_prints = 6
-        #print(attributes)
         DATABASES_V = False
         for line in fileinput.input("backend/fmeca-django/backend/settings.py", inplace=True):
             for key,value in attributes.items():
@@ -180,20 +178,9 @@ class CLI:
                     elif temppath in path and "functional_topology/mc" in temppath:
                         self.Applications.applicationlist += self._parser.get_applications_instances_list(path)
                         self.Connections.connectionlist += self._parser.get_connection_list(path)
-                    elif temppath in path and "/applications/" in temppath:
-                        
-                #----------------------------------------------------------------------------
-                        if self.Threads == "":
-                            self.Threads = DataClass.ThreadContainer(self._project_name)
-                        #print(path)
-                        threads = []
-                        for subdir, dirs, files in os.walk(path):
-                            for file in files:
-                                print(file)
-                                if(file == "application.xml"):
-                                    print(subdir + "/"+file)
-                                    threads += self._parser.get_threads(os.path.join(subdir,file))
-                        self.Threads.thread_set += threads
+                    elif temppath in path and "/applications/" in temppath and self.Threads == "":
+                        self.Threads = DataClass.ThreadContainer(self._project_name)
+                        self.Threads.thread_set += self._parser.get_threads(path)
                         
                 #-----------------------------------------------------------------------------
                         
@@ -208,8 +195,6 @@ class CLI:
             for instance in self.Applications.applicationlist:
                 for applications in self.Project_Type.Applications:
                     if instance.name == applications.name:
-                        DebugFile.blue_print("Found it")
-                        DebugFile.error_print(applications.name + "==" + instance.name)
                         found = True
                 if(not found):
                     DebugFile.warning_print("Did not find application for instance {0}".format(instance.name))
