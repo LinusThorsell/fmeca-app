@@ -45,7 +45,9 @@ import { vis_table_store } from './vis-table-store.js'
 
                 console.log("edit comment")
                 console.log(target)
-                let on = getParentClassName(target)
+                
+                let on = target.parentElement.childNodes[0].innerHTML
+                //let on = getParentClassName(target)
                 console.log(on)
                 console.log(comment)
                 this.notes[selected_project.value][on] = comment;
@@ -340,7 +342,7 @@ import { vis_table_store } from './vis-table-store.js'
         y = y.slice(y.lastIndexOf('-')+1)
         
         x = parseInt(x)+1
-        y = parseInt(y)+1
+        y = parseInt(y)+2
 
         return [x, y]
     }
@@ -378,6 +380,8 @@ import { vis_table_store } from './vis-table-store.js'
             },
             body: JSON.stringify(data)
         })
+
+        console.log(JSON.stringify(data))
     }
     
     </script>
