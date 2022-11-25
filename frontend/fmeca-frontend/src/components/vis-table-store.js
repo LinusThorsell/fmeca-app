@@ -52,6 +52,9 @@ export const vis_table_store = reactive({
         console.log(this.array[num][row][column])
         console.log(comment)
     },
+    getComment(num, row, column) {
+        return this.array[num][row][column].comment
+    },
     getProjectNames() {
 
         if (typeof this.array[0][0] == 'undefined')
