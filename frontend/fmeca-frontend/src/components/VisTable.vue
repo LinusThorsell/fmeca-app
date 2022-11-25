@@ -362,6 +362,22 @@ import { vis_table_store } from './vis-table-store.js'
     function sendCommentsToBackend() {
         console.log("Sending comments to backend")
         
+        let projects = vis_table_store.getProjectNames()
+        let comments = this.notes;
+
+        let data = {
+            project: projects[selected_project.value],
+            comments: comments[selected_project.value]
+        }
+
+        fetch("http://localhost:8000/comments/", {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
     }
     
     </script>
