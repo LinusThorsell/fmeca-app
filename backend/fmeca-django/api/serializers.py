@@ -135,7 +135,11 @@ class DictSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
-        comments = validated_data.pop('comments')
-        dict_instance, created = CommentsDict.objects.update_or_create(**validated_data)
-        for comment in comments:
-            KeyVal.objects.all().update_or_create(dict_instance, **comment)
+        comments_dict = validated_data.pop('comments')
+        container_instance = CommentsDict.objects.create(**validated_data)
+        for key, value in comments_dict.items:
+            keys = key
+            keys = keys.split(',')
+            for k in keys:
+                if k != '':
+                    KeyVal.objects.create(key=k, comment=value, container=container_instance)
