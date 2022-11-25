@@ -19,12 +19,14 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
-router.register(r'projects', ProjectViewSet, basename="project")
-router.register(r'nodes', NodeViewSet, basename="node")
-router.register(r'proccessors', CPUViewSet, basename="cpu")
-router.register(r'partitions', PartitionViewSet, basename="parition")
-router.register(r'applications', ApplicationViewSet, basename="application")
-router.register(r'application-instance', ApplicationInstanceViewSet, basename="application-instance")
-router.register(r'connections', ConnectionViewSet, basename="connection")
-router.register(r'comments', CommentsViewSet, basename="comments")
+router.register(r'projects', ProjectViewSet)
+router.register(r'nodes', NodeViewSet)
+router.register(r'proccessors', CPUViewSet)
+router.register(r'partitions', PartitionViewSet)
+router.register(r'applications', ApplicationViewSet)
+router.register(r'application-instances', ApplicationInstanceViewSet)
+router.register(r'connections', ConnectionViewSet)
+router.register(r'threads', ThreadViewSet)
+router.register(r'pac-ports', PacPortViewSet)
+router.register(r'comments', CommentsViewSet)
 urlpatterns = router.urls
