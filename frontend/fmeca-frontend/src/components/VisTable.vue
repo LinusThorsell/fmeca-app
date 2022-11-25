@@ -221,21 +221,24 @@ import { vis_table_store } from './vis-table-store.js'
         let rows_to_make_bigger = []
         let temp_array = vis_table_store.getArray(selected_project.value)
         console.log(temp_array)
-        console.log(temp_array[1][2])
         for (let column = 0; column < temp_array.length; column++) {
+            colStyles[column].minWidth = "150px";
             for (let row = 0; row < temp_array[column].length; row++) {
+                rowStyles[row].minHeight = "50px";
                 // If the element is a partition, parse it into a string.
-                console.log("column: ", column, " row: ", row, " item: ", temp_array[column][row])
                 if (temp_array[column][row].toString().split('|').length > 1) {
                     rows_to_make_bigger.push({row: column-1, size: temp_array[column][row].toString().split('|').length})
                     temp_array[column][row].toString().split('|').forEach((name, index) => {
                         if (name.length > 10) {
-                            columns_to_make_bigger.push(column)
+                            console.log(name, "larger than 10, ", name.length, "column: ", column, "row: ", row)
+                            columns_to_make_bigger.push(row-1)
                         }
                     });
                 } 
                 else {
                     if (temp_array[column][row].toString().length > 10) {
+                        console.log(temp_array[column][row].toString(), "larger than 10, ", temp_array[column][row].toString().length, "column: ", column, "row: ", row)
+                        console.log(temp_array[column][row])
                         columns_to_make_bigger.push(column)
                     }
                 }
@@ -248,12 +251,13 @@ import { vis_table_store } from './vis-table-store.js'
 
         columns_to_make_bigger.forEach(column => {
             //console.log("column: ", column)
-            colStyles[column].minWidth = "200px"
+            if (column != 0) {
+                colStyles[column].minWidth = "200px";
+            }
             calculateWidthOfRows();
         });
         calculateWidthOfRows();
 
-        console.log("rows to make bigger: ", rows_to_make_bigger)
         // remove all duplicate row from rows_to_make_bigger array and keep the one with largest size
         rows_to_make_bigger = rows_to_make_bigger.filter((thing, index, self) =>
             index === self.findIndex((t) => (
@@ -262,17 +266,9 @@ import { vis_table_store } from './vis-table-store.js'
         )
         console.log("rows to make bigger: ", rows_to_make_bigger)
         rows_to_make_bigger.forEach(row => {
-            console.log("row: ", row)
-            console.log("rowstyles: ", rowStyles[row.row])
-
             let style = (row.size * 50).toString() + "px"
-            console.log(style)
             rowStyles[row.row].minHeight = style;
-            console.log("rowstyles: ", rowStyles[row.row])
         });
-
-        console.log("rowstyle: ", rowStyles[3])
-        console.log("rowstyle: ", rowStyles[4])
     }
     
     var have_fetched = false;
@@ -333,6 +329,7 @@ import { vis_table_store } from './vis-table-store.js'
     {
         let selection = document.getElementById("project-select").value;
         selected_project.value = vis_table_store.switchProject(selection);
+        onFetched();
     }
 
     function getXYFromClassName(element) {
