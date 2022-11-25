@@ -16,19 +16,12 @@ class Parser:
 
     #creates a cpu datatype
     def cpu(self,raw_cpu_data):
-    
         type = raw_cpu_data.tag
         name = raw_cpu_data.get("name")
         unitid = raw_cpu_data.get("unitId")
         IOPRef = raw_cpu_data.get("IOPRef")
         ACCSSyncMaster = raw_cpu_data.get("ACCSSyncMaster")
-        domainBorder = raw_cpu_data.get("domainBorder")
-        
-        # for children in raw_cpu_data:
-        #     print("\t\t" + children.tag)
-        #     if children.tag in self.functions:
-        #         returnlist += self.functions[children.tag](children)
-                
+        domainBorder = raw_cpu_data.get("domainBorder")         
         return DataClass.Cpu(name,type,unitid,IOPRef,ACCSSyncMaster,domainBorder)
 
     def create_partition(self,raw_partition_data,node,cpu):
@@ -100,20 +93,27 @@ class Parser:
         temp_list = []
 
         for child in raw_connection_data:
-            arg1 = arg2 = arg3 = arg4 = arg5 = arg6 = arg7 = ""
             if(child.tag == "ProviderPort"):
-                temp_list += child.get('name').split(".")
-                print(temp_list)
-                #arg1,arg2, arg3 = somethinglist[0],somethinglist[1],somethinglist[2]#= child.get('name').split("."), child.get('name').split("."), child.get('name').split(".")
+                providerport_list = child.get('name').split(".")
+                temp_list += providerport_list
+                if(len(providerport_list) == 3):
+                    temp_list.append(False) ## Is not domainborder
+                elif(len(providerport_list) == 2):
+                    temp_list.insert(1,None) # Thread parmeter is not valid
+                    temp_list.append(True) ## Is domainborder
                 
             elif(child.tag == "RequirerPort"):
-                temp_list += child.get('name').split(".")
-                print(temp_list)
-
-                #arg4, arg5, arg6 = child.get('name').split("."), child.get('name').split("."), child.get('name').split(".")
+                requirerport_list = child.get('name').split(".")
+                temp_list += requirerport_list
+                if(len(requirerport_list) == 3):
+                    temp_list.append(False)
+                elif(len(requirerport_list) == 2):
+                    temp_list.insert(5,None) # Thread parmeter is not valid
+                    temp_list.append(True) # Is domainborder
+                
                 temp_list.append(child.get('identity'))
                 
-        DebugFile.debug_print(*temp_list, DebugFile.OKCYAN)
+        DebugFile.debug_print(temp_list, DebugFile.OKCYAN)
 
         return DataClass.Connection(*temp_list)
 
@@ -123,20 +123,27 @@ class Parser:
         instanceOf = raw_application_instance_data.get("instanceOf")
         return DataClass.Application_Instances(name, instanceOf)
 
-
-
-    
     def get_connection_list(self, path):
         connectionlist = []
         if os.path.exists(path+"/connections"):
             for subdir, dirs, files in os.walk(path+"/connections"):
                 for file in files:
                     if(file == "connections.xml"):
-                        print(subdir + "/"+file)
+                        DebugFile.debug_print(subdir + "/"+file)
                         connectionlist += self.get_connections(os.path.join(subdir,file))
         return connectionlist
-
+    
     def get_threads(self, path):
+        threads = []
+        for subdir, dirs, files in os.walk(path):
+            for file in files:
+                DebugFile.debug_print(file)
+                if(file == "application.xml"):
+                    DebugFile.debug_print(subdir + "/"+file)
+                    threads += self.get_thread(os.path.join(subdir,file))
+        return threads
+
+    def get_thread(self, path):
         tree = ET.parse(path)
         root = tree.getroot()
         application = "unknown"
@@ -153,13 +160,6 @@ class Parser:
                 returnlist.append(thread)
         return returnlist
 
-
-
-
-    
-
-
-    
     def get_connections(self, path):
         # Return all connections in path
         tree = ET.parse(path)

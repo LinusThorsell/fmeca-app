@@ -85,6 +85,12 @@ class Threads:
     def reprJSON(self):
         return {"name":self.name,"application":self.application, "rategroup":self.rategroup,"port_list":self.port_list}
 
+class DomainBorder:
+    def __init__(self, name):
+        self.name = name
+        self.port_list = []
+
+
 class PacPorts:
     def __init__(self,name, interface, role):
         self.name = name
@@ -95,19 +101,25 @@ class PacPorts:
 
 class Connection:
     
-    def __init__(self, Provider_application, Provider_thread, Provider_port,
-        Requirer_application, Requirer_thread, Requirer_port, identity):
-        self.Provider_application = Provider_application
+    def __init__(self, Provider_owner, Provider_thread, Provider_port,provider_is_domainborder,
+        Requirer_owner, Requirer_thread, Requirer_port,requirer_is_domainborder, identity):
+        self.Provider_owner = Provider_owner
         self.Provider_thread = Provider_thread
         self.Provider_port = Provider_port
-        self.Requirer_application = Requirer_application
+        self.Provider_is_domainborder = provider_is_domainborder
+
+        self.Requirer_is_domainborder = requirer_is_domainborder
+        self.Requirer_owner = Requirer_owner
         self.Requirer_thread =  Requirer_thread
         self.Requirer_port = Requirer_port
         self.identity = identity
         
     def reprJSON(self):
-        return {"provider_application":self.Provider_application,"provider_thread":self.Provider_thread,"provider_port":self.Provider_port,
-                "requirer_application":self.Requirer_application,"requirer_thread":self.Requirer_thread,"requirer_port":self.Requirer_port,"identity":self.identity} 
+        return {"provider_owner":self.Provider_owner,"provider_thread":self.Provider_thread,
+                "provider_port":self.Provider_port,"provider_is_domainborder":self.Provider_is_domainborder,
+                "requirer_owner":self.Requirer_owner,"requirer_thread":self.Requirer_thread,
+                "requirer_port":self.Requirer_port,"requirer_is_domainborder":self.Requirer_is_domainborder,
+                "identity":self.identity} 
 
 class ConnectionContainer:
     def __init__(self,projectname):

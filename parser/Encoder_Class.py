@@ -39,7 +39,7 @@ class Encoder:
     
     def send_to_database(self,project_segment,folder):
         string = self.get_json(project_segment)
-        DebugFile.debug_print(string)
+        #DebugFile.debug_print(string)
         DebugFile.debug_print("Sending to: \n\n", self._url + folder)
         response = ""
         try:
