@@ -114,10 +114,12 @@ import { vis_table_store } from './vis-table-store.js'
         // rowStyles[0].display = "flex";
         console.log(input);
         console.log(array_inner);
-        if(input == array_inner)
+
+        if((input.indexOf(index_x-1)) != -1 && array_inner != "")
         {
+            console.log(array_inner);
             console.log("träff");
-            rowStyles[index_x].display = "flex";
+            rowStyles[(index_x-1)].display = "flex";
         }
     }
     function restoreColumns() {
