@@ -117,6 +117,70 @@ class Parser:
 
         return DataClass.Connection(*temp_list)
 
+    def get_domainborders(self, path):
+        tree = ET.parse(path)
+        root = tree.getroot()
+        domain_borders = []
+        DebugFile.error_print("Root.tag == {0}".format(root.tag))
+        if("domainborder" in root.tag.lower()):
+            DebugFile.error_print("Hej")
+            domain_borders.append(DataClass.DomainBorder(root.get("name")))
+        return domain_borders
+
+
+    def get_domain_border_ports(self, path):
+        tree = ET.parse(path)
+        root = tree.getroot()
+        port_dict = {}
+        for child in root:
+            if(child.tag == "PacPort"):
+                port = DataClass.PacPorts(child.get("name"), child.get("interface"),child.get("role"),child.get("provider"))
+                if child.get("domainBorder") in port_dict:
+                    port_dict[child.get("domainBorder")].append(port)
+                else:
+                    port_dict[child.get("domainBorder")] = [port]
+                     
+        return port_dict
+
+
+    def get_all_domains(self, path, container):
+        domainborders = []
+        pacports = {} ## "key":lista
+        print("Path for domainborders {0}".format(path))
+        if os.path.exists(path):
+            for subdir, dirs, files in os.walk(path):
+                for file in files:
+                    #print("File in files {0}".format(file))
+                    #print("Subdir {0}".format(subdir))
+                    if(subdir == (path + "/border")):
+                        #print("Subidr= {0}".format(subdir))
+                        DebugFile.debug_print(subdir + "/"+file)
+                        domainborders += self.get_domainborders(os.path.join(subdir,file))
+                    elif (subdir == (path + "/config")):
+                        tempdict = self.get_domain_border_ports(os.path.join(subdir,file))
+                        for key,value in tempdict.items():
+                            if key in pacports:
+                                pacports[key] += value
+                            else:
+                                pacports[key] = value
+                    elif (subdir == (path + "/continous_contracts")):
+                        pass
+                        #pacports += self._parser.get_domain_border_ports(os.path.join(subdir,file))
+                    elif (subdir == (path + "/event_contracts")):
+                        pass
+                        #pacports += self._parser.get_domain_border_ports(os.path.join(subdir,file))
+                    else:
+                        DebugFile.warning_print("Unhandled directories under domain_border")
+
+            #{"Domain_border":PacPort, ...}
+            container.domain_border_list += domainborders
+            ##Put the ports in domaiborders
+            #for key,value in tempdict.items():
+            for Domainborder in container.domain_border_list:
+                if Domainborder.name in pacports:
+                    Domainborder.port_list += pacports[Domainborder.name]
+
+
 
     def create_application_instance(self, raw_application_instance_data):
         name = raw_application_instance_data.get('name')

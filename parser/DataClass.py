@@ -85,19 +85,28 @@ class Threads:
     def reprJSON(self):
         return {"name":self.name,"application":self.application, "rategroup":self.rategroup,"port_list":self.port_list}
 
+class DomainBorders:
+    def __init__(self, project):
+        self.project_name = project
+        self.domain_border_list = []
+    def reprJSON(self):
+        return {"project_name":self.project_name,"domain_border_list":self.domain_border_list}
+
 class DomainBorder:
     def __init__(self, name):
-        self.name = name
+        self.name = name 
         self.port_list = []
-
-
+    def reprJSON(self):
+        return {"name":self.name,"port_list":self.port_list}
+    
 class PacPorts:
-    def __init__(self,name, interface, role):
+    def __init__(self,name, interface, role, provider = None):
         self.name = name
         self.interface = interface
         self.role = role
+        self.provider = provider
     def reprJSON(self):
-        return {"name":self.name,"interface":self.interface,"role":self.role}
+        return {"name":self.name,"interface":self.interface,"role":self.role, "provider":self.provider}
 
 class Connection:
     

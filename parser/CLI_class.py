@@ -36,6 +36,7 @@ class CLI:
         self.Applications = ""
         self.Connections = ""
         self.Threads = ""
+        self.DomainBorder = ""
     def remove(self):
         ##Tell the database to delete the project
        # self.delete_argument = project
@@ -149,7 +150,7 @@ class CLI:
             runorder = []
             runorder += ["fc/hw_topology.xml", "mc/hw_topology.xml","fc/sw_topology.xml","mc/sw_topology.xml"]
             runorder += ["functional_topology/fc","functional_topology/mc"]
-            runorder += ["/applications/"]
+            runorder += ["/applications/", "/domain_border"]
             connectionlist =  []
             application_instances = []
             
@@ -160,7 +161,9 @@ class CLI:
             self.Project_Type = DataClass.Project_Data_Class(self._project_name)
             self.Connections = DataClass.ConnectionContainer(self._project_name)
             self.Applications = DataClass.ApplicationContainer(self._project_name)
-            
+            self.Threads = DataClass.ThreadContainer(self._project_name)
+            self.DomainBorder = DataClass.DomainBorders(self._project_name)
+
             for temppath in runorder:
                 for path in self._Paths._paths:
                     if temppath in path and "fc/hw_topology.xml" in temppath:
@@ -179,8 +182,9 @@ class CLI:
                         self.Applications.applicationlist += self._parser.get_applications_instances_list(path)
                         self.Connections.connectionlist += self._parser.get_connection_list(path)
                     elif temppath in path and "/applications/" in temppath and self.Threads == "":
-                        self.Threads = DataClass.ThreadContainer(self._project_name)
                         self.Threads.thread_set += self._parser.get_threads(path)
+                    elif temppath in path and "/domain_border" in temppath:
+                        self._parser.get_all_domains(path,self.DomainBorder)
                         
                 #-----------------------------------------------------------------------------
                         
@@ -199,8 +203,33 @@ class CLI:
                 if(not found):
                     DebugFile.warning_print("Did not find application for instance {0}".format(instance.name))
                     found = False
+                    
 
-            
+            # Check if all ports in connections exist
+
+            found = False
+            for connection in self.Connections.connectionlist:
+                if connection.Provider_thread != None:
+                    for thread in self.Threads.thread_set:
+                        for port in thread.port_list:
+                            if connection.Provider_port == port.name:
+                                found = True
+                            
+                else:
+                    for domain_border in self.DomainBorder.domain_border_list:
+                        for port in domain_border.port_list:
+                            if connection.Provider_port == port.name:
+                                found = True
+                
+                if(not found):
+                    DebugFile.error_print("{0} port not found".format(connection.Provider_port))
+                
+                else:
+                    found = False
+
+
+                
+                
 
             self.Applications.add_project_name(self._project_name)
             
@@ -229,16 +258,19 @@ class CLI:
             ##Anteckning: Sätt en boolean = true som representerar om man får skicka skit, om en skickning misslyckas ska denna blir false och sen måste man deleata projectet man skickade upp
             
             self._encoder.send_to_database(self.Project_Type,"projects/")
-            #self._encoder.send_to_database(Connections,"connections/")
-            #self._encoder.send_to_database(Applications,"applications/")
+            #self._encoder.send_to_database(self.Connections,"connections/")
+            #self._encoder.send_to_database(self.Applications,"applications/")
+            #self._encoder.send_to_database(self.Threads,"threads/")
+            #self._encoder.send_to_database(self.DomainBorder,"domain_border/")
         
         elif self.PRINT:
             self.debug()
             self.parsing()
             #self._encoder.print_project(self.Project_Type)
-            self._encoder.print_project(self.Connections)
-            self._encoder.print_project(self.Applications)
-            self._encoder.print_project(self.Threads)
+            #self._encoder.print_project(self.Connections)
+            #self._encoder.print_project(self.Applications)
+            #self._encoder.print_project(self.Threads)
+            #self._encoder.print_project(self.DomainBorder)
         else:
             DebugFile.warning_print("bad")
             exit()
