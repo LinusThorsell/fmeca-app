@@ -9,6 +9,9 @@ from django.db import models
 
 # Create your models here.
 
+# All models except "Project" has
+# auto-incremented integer primary key.
+
 class Project(models.Model):
     name = models.CharField(max_length=50, primary_key=True)
 
@@ -46,19 +49,37 @@ class Application(models.Model):
     project = models.ForeignKey(Project, related_name="app_project_set", on_delete=models.CASCADE, blank=True, null=True)
     cpu = models.ForeignKey(CPU, on_delete=models.CASCADE, blank=True, null=True)
 
+class ApplicationInstance(models.Model):
+    name = models.CharField(max_length=30, blank=True, null=True)
+    # ForeignKeys
+    application = models.ForeignKey(Application, on_delete=models.CASCADE, blank=True, null=True)
+
 class Connection(models.Model):
     # ForeignKeys
-    requirer = models.ForeignKey(Application, related_name="connection_requirer_set", on_delete=models.CASCADE, blank=True, null=True)
-    provider = models.ForeignKey(Application, related_name="connection_provider_set", on_delete=models.CASCADE, blank=True, null=True)
+    requirer = models.ForeignKey(Application, related_name="requirer_set", on_delete=models.CASCADE, blank=True, null=True)
+    provider = models.ForeignKey(Application, related_name="provider_set", on_delete=models.CASCADE, blank=True, null=True)
 
+class Thread(models.Model):
+    name = models.CharField(max_length=50, blank=True, null=True)
+    rategroup = models.CharField(max_length=20, blank=True, null=True)
+    #ForeignKeys
+    application = models.ForeignKey(Application, on_delete=models.CASCADE, blank=True, null=True)
+    
+class PacPort(models.Model):
+    name = models.CharField(max_length=50, blank=True, null=True)
+    interface = models.CharField(max_length=255, blank=True, null=True)
+    role = models.CharField(max_length=50, blank=True, null=True)
+    #ForeignKeys
+    thread = models.ForeignKey(Thread, on_delete=models.CASCADE, blank=True, null=True)
 
 #----------------------------------------------------------------
 
 class CommentsDict(models.Model):
-    name = models.CharField(max_length=30)
+    # ForeignKeys
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
 class KeyVal(models.Model):
-    key = models.CharField(max_length=25)
-    comment = models.TextField() 
+    key = models.CharField(max_length=100, blank=True, null=True)
+    comment = models.TextField(blank=True, null=True) 
     # ForeignKeys
     container = models.ForeignKey(CommentsDict, on_delete=models.CASCADE)

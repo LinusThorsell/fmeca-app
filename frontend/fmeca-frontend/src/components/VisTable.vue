@@ -19,6 +19,7 @@ import { vis_table_store } from './vis-table-store.js'
                 addRow,
                 addColumn,
                 getClass,
+                getRowClass,
                 handleResize,
                 getTableFromBackend,
                 vis_table_store,
@@ -41,7 +42,9 @@ import { vis_table_store } from './vis-table-store.js'
 
                 console.log("edit comment")
                 console.log(target)
-                let on = getParentClassName(target)
+                
+                let on = target.parentElement.childNodes[0].innerHTML
+                //let on = getParentClassName(target)
                 console.log(on)
                 console.log(comment)
                 this.notes[selected_project.value][on] = comment;
@@ -146,6 +149,10 @@ import { vis_table_store } from './vis-table-store.js'
     function getClass(column, row) {
         return "vis-column-" + column + " vis-row-" + row;
     }
+
+    function getRowClass(row) {
+        return "vis-row-" + row;
+    }
     
     // Calculates with of a row, to resize table container element to fit all content.
     function calculateWidthOfRows() {
@@ -157,6 +164,7 @@ import { vis_table_store } from './vis-table-store.js'
             }
         });
         document.getElementById("vis-table").style.width = max_width + 200 + "px";
+        document.getElementById("nav-bar-id").style.width = max_width - 10 + "px";
     }
     // Called by vue-resize-observer when a column is resized.
     // Changes stylesheet to resize elements
@@ -177,7 +185,7 @@ import { vis_table_store } from './vis-table-store.js'
         // Not currently in use because native resizing is working.
         for (i=0; i<array_rows; i++) {
             selector=".vis-row-"+i;
-            rule="{height: 400px;}";
+            rule="{min-height: 50px;}";
             if (sheet.insertRule)
                 sheet.insertRule(selector+rule, 0);//This puts the rule at index 0
             
@@ -226,26 +234,27 @@ import { vis_table_store } from './vis-table-store.js'
 
         // Loop through vis_table_store array
         let columns_to_make_bigger = []
+        let rows_to_make_bigger = []
         let temp_array = vis_table_store.getArray(selected_project.value)
+        console.log(temp_array)
         for (let column = 0; column < temp_array.length; column++) {
+            colStyles[column].minWidth = "150px";
             for (let row = 0; row < temp_array[column].length; row++) {
+                rowStyles[row].minHeight = "50px";
                 // If the element is a partition, parse it into a string.
-                console.log("column: ", column, " row: ", row, " item: ", temp_array[column][row])
                 if (temp_array[column][row].toString().split('|').length > 1) {
-                    console.log("Multiline name: ", temp_array[column][row])
-                    console.log("Multiline name: ", temp_array[column][row].toString().split('|'))
-                    temp_array[column][row].toString().split('|').forEach(name => {
-                        console.log("Name: ", name)
-                        console.log("name length: " + name.length)
+                    rows_to_make_bigger.push({row: column-1, size: temp_array[column][row].toString().split('|').length})
+                    temp_array[column][row].toString().split('|').forEach((name, index) => {
                         if (name.length > 10) {
-                            console.log("Longer name found in multiline: ", name)
-                            columns_to_make_bigger.push(column)
+                            console.log(name, "larger than 10, ", name.length, "column: ", column, "row: ", row)
+                            columns_to_make_bigger.push(row-1)
                         }
                     });
                 } 
                 else {
                     if (temp_array[column][row].toString().length > 10) {
-                        console.log("Longer name found: ", temp_array[column][row])
+                        console.log(temp_array[column][row].toString(), "larger than 10, ", temp_array[column][row].toString().length, "column: ", column, "row: ", row)
+                        console.log(temp_array[column][row])
                         columns_to_make_bigger.push(column)
                     }
                 }
@@ -257,11 +266,25 @@ import { vis_table_store } from './vis-table-store.js'
         columns_to_make_bigger = [...new Set(columns_to_make_bigger)]
 
         columns_to_make_bigger.forEach(column => {
-            console.log("column: ", column)
-            colStyles[column].minWidth = "200px"
+            //console.log("column: ", column)
+            if (column != 0) {
+                colStyles[column].minWidth = "200px";
+            }
             calculateWidthOfRows();
         });
         calculateWidthOfRows();
+
+        // remove all duplicate row from rows_to_make_bigger array and keep the one with largest size
+        rows_to_make_bigger = rows_to_make_bigger.filter((thing, index, self) =>
+            index === self.findIndex((t) => (
+                t.row === thing.row
+            ))
+        )
+        console.log("rows to make bigger: ", rows_to_make_bigger)
+        rows_to_make_bigger.forEach(row => {
+            let style = (row.size * 50).toString() + "px"
+            rowStyles[row.row].minHeight = style;
+        });
     }
     
     var have_fetched = false;
@@ -322,6 +345,7 @@ import { vis_table_store } from './vis-table-store.js'
     {
         let selection = document.getElementById("project-select").value;
         selected_project.value = vis_table_store.switchProject(selection);
+        onFetched();
     }
 
     function getXYFromClassName(element) {
@@ -332,7 +356,7 @@ import { vis_table_store } from './vis-table-store.js'
         y = y.slice(y.lastIndexOf('-')+1)
         
         x = parseInt(x)+1
-        y = parseInt(y)+1
+        y = parseInt(y)+2
 
         return [x, y]
     }
@@ -354,6 +378,24 @@ import { vis_table_store } from './vis-table-store.js'
     function sendCommentsToBackend() {
         console.log("Sending comments to backend")
         
+        let projects = vis_table_store.getProjectNames()
+        let comments = this.notes;
+
+        let data = {
+            project: projects[selected_project.value],
+            comments: comments[selected_project.value]
+        }
+
+        fetch("http://localhost:8000/comments/", {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+
+        console.log(JSON.stringify(data))
     }
     
     </script>
@@ -366,7 +408,7 @@ import { vis_table_store } from './vis-table-store.js'
     <div id="vis-table">
         <div v-for="row in vis_table_store.getRowCount(selected_project)" class="vis-row">
             <div v-if="row-1 !== 0">
-                <div class="vis-columnbox vis-resizable-row"> Resizable Row </div>
+                <div class="vis-columnbox vis-resizable-row" :class="getRowClass(row-2)"> Resizable Row </div>
             </div>
             <div v-if="row-1 === 0"
                 class="vis-columnbox"
@@ -400,7 +442,7 @@ import { vis_table_store } from './vis-table-store.js'
             
             <div v-if="row-1 !== 0" v-for="column in vis_table_store.getColumnCount(selected_project)" 
                 class="vis-columnbox" 
-                :class="getClass(column-1, row-1)"
+                :class="getClass(column-1, row-2)"
             >
                 <div 
                     class="vis-textarea-container"

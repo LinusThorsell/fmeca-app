@@ -29,6 +29,35 @@ export const vis_table_store = reactive({
         try {
             if (this.array[num][row-1][column].includes("|")) {
                 let temp = this.array[num][row-1][column].split("|")
+
+                let temp_temp = [];
+                let empty_objects = 0;
+                temp.forEach((element, index) => {
+                    console.log("pre-|-split: ", element)
+                    if (element.includes('\n')) {
+                        console.log("element with \n: ", element)
+                        element.split("\n").forEach((element2, index2) => {
+                            console.log("To split again: ", element2)
+                            if (element2.length > 0) {
+                                temp_temp.push(element2)
+                            }
+                            else {
+                                empty_objects++;
+                            }
+                        })
+                    }
+                })
+                
+                console.log("temp: ", temp)
+                console.log("temp_temp: ", temp_temp)
+
+                if (temp.length < temp_temp.length + empty_objects) {
+                    temp = temp_temp
+
+                    for (let i = 0; i < empty_objects*2; i++) {
+                        temp.push("")
+                    }
+                }
                 return temp
             }
             else {
@@ -51,6 +80,9 @@ export const vis_table_store = reactive({
         console.log(num + " " + row + " " + column + " " + comment)
         console.log(this.array[num][row][column])
         console.log(comment)
+    },
+    getComment(num, row, column) {
+        return this.array[num][row][column].comment
     },
     getProjectNames() {
 
