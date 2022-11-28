@@ -46,10 +46,9 @@ temp_array.forEach((array_outer, index_x) => {
   //console.log(array_outer);
   array_outer.forEach((array_inner, index_y) => {
   //console.log(array_inner);
-     if(array_inner == input)
-     {
-      
-     }
+    console.log("under är index");
+    console.log(index_y);
+    createFilteredTable(input, array_inner, index_y, index_x);
     });
   });
 

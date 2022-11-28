@@ -101,22 +101,20 @@ import { vis_table_store } from './vis-table-store.js'
         colStyles[column-1].display="none";
     }
     export function removeAllColumns(column){
-        for(i = 0; i < vis_table_store.getColumnCount(selected_project.value); i++)
+        for(i = 0; i < (vis_table_store.getColumnCount(selected_project.value)+1); i++)
         {
-            colStyles[i].display = "none";
+            rowStyles[i].display = "none";
         }
     }
-    export function createFilteredTable(input, array_inner)
+    export function createFilteredTable(input, array_inner, index, index_x)
     {
-        for(i = 0; i < vis_table_store.getColumnCount(selected_project.value); i++)
+        // rowStyles[0].display = "flex";
+        console.log(input);
+        console.log(array_inner);
+        if(input == array_inner)
         {
-            console.log(input);
-            console.log(array_inner);
-            if(input == array_inner)
-            {
-            console.log("array");
-            colStyles[i].display = "flex";
-            }
+            console.log("träff");
+            rowStyles[index_x].display = "flex";
         }
     }
     function restoreColumns() {
