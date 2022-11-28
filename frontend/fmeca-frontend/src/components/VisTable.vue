@@ -1,7 +1,6 @@
 <script>
 import { ref } from 'vue'
 import { vis_table_store } from './vis-table-store.js'
-
     export default {
         
         mounted() {
@@ -11,6 +10,8 @@ import { vis_table_store } from './vis-table-store.js'
         data() {
             return {
                 removeColumn,
+                removeAllColumns,
+                createFilteredTable,
                 restoreColumns,
                 //setupTable,
                 getRow,
@@ -33,11 +34,7 @@ import { vis_table_store } from './vis-table-store.js'
         /*components: {
         },*/
         methods: {
-            generatePdf() {
-                //html2pdf(document.getElementById('vis-table'));
-                //console.log(document.getElementById('vis-table').innerHTML)
-                print()
-            },
+
             editComment(target, comment) {
                 while (this.notes.length <= selected_project.value) {
                     this.notes.push({})
@@ -62,7 +59,7 @@ import { vis_table_store } from './vis-table-store.js'
     const array_columns = 6;
     const array_rows = 6;
     const default_column_width = 100;
-    var selected_project = ref(0);
+    export var selected_project = ref(0);
 /*
     watchEffect(() => {
     // tracks A0 and A1
@@ -105,6 +102,23 @@ import { vis_table_store } from './vis-table-store.js'
     function removeColumn(column) {
         console.log(column)
         colStyles[column-1].display="none";
+    }
+    export function removeAllColumns(column){
+        for(i = 0; i < (vis_table_store.getColumnCount(selected_project.value)+1); i++)
+        {
+            rowStyles[i].display = "none";
+        }
+    }
+    export function createFilteredTable(input, array_inner, index, index_x)
+    {
+        // rowStyles[0].display = "flex";
+        console.log(input);
+        console.log(array_inner);
+        if(input == array_inner)
+        {
+            console.log("träff");
+            rowStyles[index_x].display = "flex";
+        }
     }
     function restoreColumns() {
         console.log(vis_table_store.getColumnCount(selected_project.value))
