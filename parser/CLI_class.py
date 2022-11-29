@@ -147,6 +147,8 @@ class CLI:
             DebugFile.debug_print("PATHS:")
             DebugFile.debug_print(self._Paths._paths)
 
+
+            # The order we want to parse the files in
             runorder = []
             runorder += ["fc/hw_topology.xml", "mc/hw_topology.xml","fc/sw_topology.xml","mc/sw_topology.xml"]
             runorder += ["functional_topology/fc","functional_topology/mc"]
@@ -154,16 +156,19 @@ class CLI:
             connectionlist =  []
             application_instances = []
             
+            # If no tag was specified use name from folder
             if(self._project_name == ""): 
                 self._project_name = self._parser.get_project_name(self._add_path) 
             
             
+            # Init containers
             self.Project_Type = DataClass.Project_Data_Class(self._project_name)
             self.Connections = DataClass.ConnectionContainer(self._project_name)
             self.Applications = DataClass.ApplicationContainer(self._project_name)
             self.Threads = DataClass.ThreadContainer(self._project_name)
             self.DomainBorder = DataClass.DomainBorders(self._project_name)
 
+            # Parse files in good order
             for temppath in runorder:
                 for path in self._Paths._paths:
                     if temppath in path and "fc/hw_topology.xml" in temppath:
@@ -174,7 +179,6 @@ class CLI:
                         self.Project_Type.insert_partitions(self._parser.get_partitions(path))
                     elif temppath in path and "mc/sw_topology.xml" in temppath:
                         self.Project_Type.insert_applications(self._parser.get_cpu_applications(path))
-                    #För connections: Kolla efter <Project>/infrastructure/functional_topology/ sedan fc eller mc
                     elif temppath in path and "functional_topology/fc" in temppath:
                         self.Applications.applicationlist = self._parser.get_applications_instances_list(path)
                         self.Connections.connectionlist = self._parser.get_connection_list(path)
@@ -187,7 +191,8 @@ class CLI:
                         self._parser.get_all_domains(path,self.DomainBorder)
                         
                 #-----------------------------------------------------------------------------
-                        
+            
+            # Add all scheduled applications to project som we can later check if all are created 
             for node in self.Project_Type.node_set:
                 for cpu in node.cpus:
                     for partition in cpu.partitions:
@@ -208,6 +213,10 @@ class CLI:
             # Check if all ports in connections exist
 
             found = False
+            #bad connections == connections that doesnt have any existing ports
+            
+            
+            bad_connections =  []
             for connection in self.Connections.connectionlist:
                 if connection.Provider_thread != None:
                     for thread in self.Threads.thread_set:
@@ -222,14 +231,14 @@ class CLI:
                                 found = True
                 
                 if(not found):
-                    DebugFile.error_print("{0} port not found".format(connection.Provider_port))
-                
+                    DebugFile.debug_print("{0} port not found, removing connections".format(connection.Provider_port),DebugFile.WARNING)
+                    bad_connections.append(connection)
                 else:
                     found = False
-
-
                 
-                
+            for connection in bad_connections:
+                self.Connections.connectionlist.remove(connection)
+
 
             self.Applications.add_project_name(self._project_name)
             
@@ -242,7 +251,7 @@ class CLI:
         DebugFile.debug_print("ArgumentList",self._arguments)
         if sum([("add" in self._arguments), ("remove" in self._arguments), ("print" in self._arguments)]) != 1:
             DebugFile.error_print("Can only have one of \"add\", \"remove\", \"print\" in the arguments")
-            exit()
+            exit(1)
         elif "add" in self._arguments:
             self._functions = self._add_functions
         elif "remove" in self._arguments:
@@ -256,22 +265,23 @@ class CLI:
         elif (self._add and self._add_path != None and self._project_name != ""):      
             self.parsing()
             ##Anteckning: Sätt en boolean = true som representerar om man får skicka skit, om en skickning misslyckas ska denna blir false och sen måste man deleata projectet man skickade upp
-            
+            self._encoder.Project = self._project_name
             self._encoder.send_to_database(self.Project_Type,"projects/")
-            #self._encoder.send_to_database(self.Connections,"connections/")
-            #self._encoder.send_to_database(self.Applications,"applications/")
-            #self._encoder.send_to_database(self.Threads,"threads/")
-            #self._encoder.send_to_database(self.DomainBorder,"domain_border/")
+            self._encoder.send_to_database(self.Connections,"connections/")
+            self._encoder.send_to_database(self.Applications,"applications/")
+            self._encoder.send_to_database(self.Threads,"threads/")
+            self._encoder.send_to_database(self.DomainBorder,"domain_border/")
         
         elif self.PRINT:
             self.debug()
             self.parsing()
-            #self._encoder.print_project(self.Project_Type)
-            #self._encoder.print_project(self.Connections)
-            #self._encoder.print_project(self.Applications)
-            #self._encoder.print_project(self.Threads)
-            #self._encoder.print_project(self.DomainBorder)
+            self._encoder.Project = self._project_name
+            self._encoder.print_project(self.Project_Type)
+            self._encoder.print_project(self.Connections)
+            self._encoder.print_project(self.Applications)
+            self._encoder.print_project(self.Threads)
+            self._encoder.print_project(self.DomainBorder)
         else:
-            DebugFile.warning_print("bad")
+            DebugFile.error_print("bad")
             exit()
             
