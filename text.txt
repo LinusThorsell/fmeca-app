@@ -1,0 +1,1411 @@
+{
+    "name": "Test",
+    "node_set": [
+        {
+            "name": "FMC",
+            "load_set_type": "FMC",
+            "redundant": "true",
+            "platform": "fgst_v3",
+            "sync_loss": "EQ-SPECIFIC",
+            "cpu_set": [
+                {
+                    "name": "APP",
+                    "type": "APP",
+                    "unit_id": "1",
+                    "iop_ref": "IOP",
+                    "accs_sync_master": null,
+                    "domain_border": null,
+                    "partition_set": [
+                        {
+                            "name": "PART_LTM_FMC",
+                            "is_ltm": "true",
+                            "partition_id": "3",
+                            "application_set": [
+                                {
+                                    "name": "LTM_FMC",
+                                    "cpu": null
+                                }
+                            ],
+                            "fixed_start": null
+                        },
+                        {
+                            "name": "PART_RESULTS",
+                            "is_ltm": null,
+                            "partition_id": null,
+                            "application_set": [
+                                {
+                                    "name": "Results",
+                                    "cpu": null
+                                }
+                            ],
+                            "fixed_start": null
+                        }
+                    ],
+                    "application_set": []
+                },
+                {
+                    "name": "IOP",
+                    "type": "IOP",
+                    "unit_id": "0",
+                    "iop_ref": null,
+                    "accs_sync_master": "true",
+                    "domain_border": null,
+                    "partition_set": [],
+                    "application_set": []
+                }
+            ]
+        },
+        {
+            "name": "TMC1",
+            "load_set_type": "TMC",
+            "redundant": null,
+            "platform": "fgst_v3",
+            "sync_loss": "STANDALONE",
+            "cpu_set": [
+                {
+                    "name": "APP1",
+                    "type": "APP",
+                    "unit_id": "2",
+                    "iop_ref": "IOP1",
+                    "accs_sync_master": null,
+                    "domain_border": null,
+                    "partition_set": [
+                        {
+                            "name": "PART_LTM_TMC1_APP1",
+                            "is_ltm": "true",
+                            "partition_id": "3",
+                            "application_set": [
+                                {
+                                    "name": "LTM_TMC1_APP1",
+                                    "cpu": null
+                                }
+                            ],
+                            "fixed_start": null
+                        },
+                        {
+                            "name": "PART_MPP",
+                            "is_ltm": null,
+                            "partition_id": null,
+                            "application_set": [
+                                {
+                                    "name": "Event_Res_Dcm",
+                                    "cpu": null
+                                }
+                            ],
+                            "fixed_start": null
+                        },
+                        {
+                            "name": "PART_T11_EVENT_A",
+                            "is_ltm": null,
+                            "partition_id": null,
+                            "application_set": [
+                                {
+                                    "name": "Event_Dcm_D_NL_A",
+                                    "cpu": null
+                                }
+                            ],
+                            "fixed_start": null
+                        },
+                        {
+                            "name": "PART_T11_EVENT_B",
+                            "is_ltm": null,
+                            "partition_id": null,
+                            "application_set": [
+                                {
+                                    "name": "Event_Dcm_D_NL_B",
+                                    "cpu": null
+                                }
+                            ],
+                            "fixed_start": null
+                        }
+                    ],
+                    "application_set": []
+                },
+                {
+                    "name": "APP2",
+                    "type": "APP",
+                    "unit_id": "3",
+                    "iop_ref": "IOP2",
+                    "accs_sync_master": null,
+                    "domain_border": null,
+                    "partition_set": [
+                        {
+                            "name": "PART_MRS_TMC1_APP2",
+                            "is_ltm": null,
+                            "partition_id": "2",
+                            "application_set": [
+                                {
+                                    "name": "TMC12_Results",
+                                    "cpu": null
+                                }
+                            ],
+                            "fixed_start": null
+                        },
+                        {
+                            "name": "PART_LTM_TMC1_APP2",
+                            "is_ltm": "true",
+                            "partition_id": "3",
+                            "application_set": [
+                                {
+                                    "name": "LTM_TMC1_APP2",
+                                    "cpu": null
+                                }
+                            ],
+                            "fixed_start": null
+                        },
+                        {
+                            "name": "PART_T12_EVENT_A",
+                            "is_ltm": null,
+                            "partition_id": null,
+                            "application_set": [
+                                {
+                                    "name": "Event_Dcm_D_Std_A",
+                                    "cpu": null
+                                }
+                            ],
+                            "fixed_start": null
+                        },
+                        {
+                            "name": "PART_T12_EVENT_B",
+                            "is_ltm": null,
+                            "partition_id": null,
+                            "application_set": [
+                                {
+                                    "name": "Event_Dcm_D_Std_B",
+                                    "cpu": null
+                                }
+                            ],
+                            "fixed_start": null
+                        }
+                    ],
+                    "application_set": []
+                },
+                {
+                    "name": "IOP1",
+                    "type": "IOP",
+                    "unit_id": "0",
+                    "iop_ref": null,
+                    "accs_sync_master": null,
+                    "domain_border": "DB_T11",
+                    "partition_set": [],
+                    "application_set": []
+                },
+                {
+                    "name": "IOP2",
+                    "type": "IOP",
+                    "unit_id": "1",
+                    "iop_ref": null,
+                    "accs_sync_master": null,
+                    "domain_border": "DB_T12",
+                    "partition_set": [],
+                    "application_set": []
+                }
+            ]
+        },
+        {
+            "name": "TMC2",
+            "load_set_type": "TMC",
+            "redundant": null,
+            "platform": "fgst_v3",
+            "sync_loss": "RESTART",
+            "cpu_set": [
+                {
+                    "name": "APP1",
+                    "type": "APP",
+                    "unit_id": "2",
+                    "iop_ref": "IOP1",
+                    "accs_sync_master": null,
+                    "domain_border": null,
+                    "partition_set": [
+                        {
+                            "name": "PART_MRS_TMC2_APP1",
+                            "is_ltm": null,
+                            "partition_id": "2",
+                            "application_set": [
+                                {
+                                    "name": "TMC21_Results",
+                                    "cpu": null
+                                }
+                            ],
+                            "fixed_start": null
+                        },
+                        {
+                            "name": "PART_LTM_TMC2_APP1",
+                            "is_ltm": "true",
+                            "partition_id": "3",
+                            "application_set": [
+                                {
+                                    "name": "LTM_TMC2_APP1",
+                                    "cpu": null
+                                }
+                            ],
+                            "fixed_start": null
+                        },
+                        {
+                            "name": "PART3",
+                            "is_ltm": null,
+                            "partition_id": null,
+                            "application_set": [
+                                {
+                                    "name": "Event_Dcm_NL_A",
+                                    "cpu": null
+                                }
+                            ],
+                            "fixed_start": null
+                        },
+                        {
+                            "name": "PART_ES",
+                            "is_ltm": null,
+                            "partition_id": null,
+                            "application_set": [
+                                {
+                                    "name": "Event_Dcm_NL_B",
+                                    "cpu": null
+                                }
+                            ],
+                            "fixed_start": null
+                        },
+                        {
+                            "name": "PART5_CP",
+                            "is_ltm": null,
+                            "partition_id": null,
+                            "application_set": [
+                                {
+                                    "name": "Event_DB_NL_FC",
+                                    "cpu": null
+                                }
+                            ],
+                            "fixed_start": null
+                        },
+                        {
+                            "name": "PART10",
+                            "is_ltm": null,
+                            "partition_id": null,
+                            "application_set": [
+                                {
+                                    "name": "Event_DB_Std_FC",
+                                    "cpu": null
+                                }
+                            ],
+                            "fixed_start": null
+                        },
+                        {
+                            "name": "PART_TIME",
+                            "is_ltm": null,
+                            "partition_id": null,
+                            "application_set": [
+                                {
+                                    "name": "Event_Res_FC",
+                                    "cpu": null
+                                }
+                            ],
+                            "fixed_start": null
+                        }
+                    ],
+                    "application_set": []
+                },
+                {
+                    "name": "APP2",
+                    "type": "APP",
+                    "unit_id": "3",
+                    "iop_ref": "IOP2",
+                    "accs_sync_master": null,
+                    "domain_border": null,
+                    "partition_set": [
+                        {
+                            "name": "PART_MRS_TMC2_APP2",
+                            "is_ltm": null,
+                            "partition_id": "2",
+                            "application_set": [
+                                {
+                                    "name": "TMC22_Results",
+                                    "cpu": null
+                                }
+                            ],
+                            "fixed_start": null
+                        },
+                        {
+                            "name": "PART_LTM_TMC2_APP2",
+                            "is_ltm": "true",
+                            "partition_id": null,
+                            "application_set": [
+                                {
+                                    "name": "LTM_TMC2_APP2",
+                                    "cpu": null
+                                }
+                            ],
+                            "fixed_start": null
+                        },
+                        {
+                            "name": "PART4",
+                            "is_ltm": null,
+                            "partition_id": null,
+                            "application_set": [
+                                {
+                                    "name": "Event_Dcm_Std_A",
+                                    "cpu": null
+                                }
+                            ],
+                            "fixed_start": null
+                        },
+                        {
+                            "name": "PART11",
+                            "is_ltm": null,
+                            "partition_id": null,
+                            "application_set": [
+                                {
+                                    "name": "Event_Dcm_Std_B",
+                                    "cpu": null
+                                }
+                            ],
+                            "fixed_start": null
+                        }
+                    ],
+                    "application_set": []
+                },
+                {
+                    "name": "IOP1",
+                    "type": "IOP",
+                    "unit_id": "0",
+                    "iop_ref": null,
+                    "accs_sync_master": null,
+                    "domain_border": "DB_T21",
+                    "partition_set": [],
+                    "application_set": []
+                },
+                {
+                    "name": "IOP2",
+                    "type": "IOP",
+                    "unit_id": "1",
+                    "iop_ref": null,
+                    "accs_sync_master": null,
+                    "domain_border": "DB_T22",
+                    "partition_set": [],
+                    "application_set": []
+                }
+            ]
+        },
+        {
+            "name": "TMC1_PDCM1",
+            "load_set_type": "PDCM",
+            "redundant": null,
+            "platform": "pdcm_v3",
+            "sync_loss": null,
+            "cpu_set": [
+                {
+                    "name": "PP",
+                    "type": "PP",
+                    "unit_id": null,
+                    "iop_ref": null,
+                    "accs_sync_master": null,
+                    "domain_border": "DB_T11",
+                    "partition_set": [],
+                    "application_set": [
+                        {
+                            "name": "Identification_Proxy",
+                            "cpu": null
+                        },
+                        {
+                            "name": "Event_Pdcm_NL_A",
+                            "cpu": null
+                        },
+                        {
+                            "name": "PDCM11_Results",
+                            "cpu": null
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "TMC1_PDCM2",
+            "load_set_type": "PDCM",
+            "redundant": null,
+            "platform": "pdcm_v3",
+            "sync_loss": null,
+            "cpu_set": [
+                {
+                    "name": "PP",
+                    "type": "PP",
+                    "unit_id": null,
+                    "iop_ref": null,
+                    "accs_sync_master": null,
+                    "domain_border": "DB_T12",
+                    "partition_set": [],
+                    "application_set": []
+                }
+            ]
+        }
+    ]
+}
+{
+    "project_name": "Test",
+    "connectionlist": [
+        {
+            "provider_owner": "Separation_1",
+            "provider_thread": null,
+            "provider_port": "PDCM11_Results",
+            "provider_is_domainborder": true,
+            "requirer_owner": "PDCM11_Results",
+            "requirer_thread": "Results_60",
+            "requirer_port": "Summary",
+            "requirer_is_domainborder": false,
+            "identity": null
+        },
+        {
+            "provider_owner": "Separation_1",
+            "provider_thread": null,
+            "provider_port": "PDCM12_Results",
+            "provider_is_domainborder": true,
+            "requirer_owner": "PDCM12_Results",
+            "requirer_thread": "Results_60",
+            "requirer_port": "Summary",
+            "requirer_is_domainborder": false,
+            "identity": null
+        },
+        {
+            "provider_owner": "Separation_1",
+            "provider_thread": null,
+            "provider_port": "PDCM21_Results",
+            "provider_is_domainborder": true,
+            "requirer_owner": "PDCM21_Results",
+            "requirer_thread": "Results_60",
+            "requirer_port": "Summary",
+            "requirer_is_domainborder": false,
+            "identity": null
+        },
+        {
+            "provider_owner": "Separation_1",
+            "provider_thread": null,
+            "provider_port": "PDCM22_Results",
+            "provider_is_domainborder": true,
+            "requirer_owner": "PDCM22_Results",
+            "requirer_thread": "Results_60",
+            "requirer_port": "Summary",
+            "requirer_is_domainborder": false,
+            "identity": null
+        }
+    ]
+}
+{
+    "project_name": "Test",
+    "applicationlist": [
+        {
+            "name": "LTM_FMC",
+            "instanceof": "EDS_LTM"
+        },
+        {
+            "name": "LTM_TMC1_APP1",
+            "instanceof": "EDS_LTM"
+        },
+        {
+            "name": "LTM_TMC1_APP2",
+            "instanceof": "EDS_LTM"
+        },
+        {
+            "name": "LTM_TMC2_APP1",
+            "instanceof": "EDS_LTM"
+        },
+        {
+            "name": "LTM_TMC2_APP2",
+            "instanceof": "EDS_LTM"
+        },
+        {
+            "name": "TMC11_Results",
+            "instanceof": "Results"
+        },
+        {
+            "name": "TMC12_Results",
+            "instanceof": "Results"
+        },
+        {
+            "name": "Results",
+            "instanceof": "Results"
+        },
+        {
+            "name": "Event_Dcm_NL_A",
+            "instanceof": "Basic_Com_Event"
+        },
+        {
+            "name": "Event_Dcm_NL_B",
+            "instanceof": "Basic_Com_Event"
+        },
+        {
+            "name": "Event_Dcm_NL_QP_A",
+            "instanceof": "Basic_Com_Event"
+        },
+        {
+            "name": "Event_Dcm_NL_QP_B",
+            "instanceof": "Basic_Com_Event"
+        },
+        {
+            "name": "Event_Dcm_Std_A",
+            "instanceof": "Basic_Com_Event"
+        },
+        {
+            "name": "Event_Dcm_Std_B",
+            "instanceof": "Basic_Com_Event"
+        },
+        {
+            "name": "Event_Dcm_D_NL_A",
+            "instanceof": "Basic_Com_Event"
+        },
+        {
+            "name": "Event_Dcm_D_NL_B",
+            "instanceof": "Basic_Com_Event"
+        },
+        {
+            "name": "Event_Dcm_D_Std_A",
+            "instanceof": "Basic_Com_Event"
+        },
+        {
+            "name": "Event_Dcm_D_Std_B",
+            "instanceof": "Basic_Com_Event"
+        },
+        {
+            "name": "Event_DB_NL_FC",
+            "instanceof": "Basic_Com_Event"
+        },
+        {
+            "name": "Event_DB_Std_FC",
+            "instanceof": "Basic_Com_Event"
+        },
+        {
+            "name": "PDCM11_Results",
+            "instanceof": "Results"
+        },
+        {
+            "name": "PDCM12_Results",
+            "instanceof": "Results"
+        },
+        {
+            "name": "PDCM21_Results",
+            "instanceof": "Results"
+        },
+        {
+            "name": "PDCM22_Results",
+            "instanceof": "Results"
+        },
+        {
+            "name": "PDCM_Com_Results",
+            "instanceof": "Results"
+        },
+        {
+            "name": "Event_Res_Pdcm",
+            "instanceof": "Results"
+        },
+        {
+            "name": "Event_Res_MC",
+            "instanceof": "Results"
+        },
+        {
+            "name": "Event_Pdcm_NL_A",
+            "instanceof": "Basic_Com_Event"
+        },
+        {
+            "name": "Event_Pdcm_NL_B",
+            "instanceof": "Basic_Com_Event"
+        },
+        {
+            "name": "Event_Pdcm_NL_C",
+            "instanceof": "Basic_Com_Event"
+        },
+        {
+            "name": "Event_Pdcm_NL_D",
+            "instanceof": "Basic_Com_Event"
+        },
+        {
+            "name": "Event_Pdcm_Std_A",
+            "instanceof": "Basic_Com_Event"
+        },
+        {
+            "name": "Event_Pdcm_Std_B",
+            "instanceof": "Basic_Com_Event"
+        },
+        {
+            "name": "Event_Pdcm_D_NL_A",
+            "instanceof": "Basic_Com_Event"
+        },
+        {
+            "name": "Event_Pdcm_D_NL_B",
+            "instanceof": "Basic_Com_Event"
+        },
+        {
+            "name": "Event_Pdcm_D_Std_A",
+            "instanceof": "Basic_Com_Event"
+        },
+        {
+            "name": "Event_Pdcm_D_Std_B",
+            "instanceof": "Basic_Com_Event"
+        },
+        {
+            "name": "Event_DB_NL_MC",
+            "instanceof": "Basic_Com_Event"
+        },
+        {
+            "name": "Event_DB_Std_MC",
+            "instanceof": "Basic_Com_Event"
+        }
+    ]
+}
+{
+    "project_name": "Test",
+    "thread_set": []
+}
+{
+    "project_name": "Test",
+    "domain_border_list": [
+        {
+            "name": "DB_T12",
+            "port_list": [
+                {
+                    "name": "FP_Test_PDCM_A",
+                    "interface": "FP_I.Float_Test",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "FP_Test_DCM_A",
+                    "interface": "FP_I.Float_Test",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "PDCM12_Results",
+                    "interface": "Results.Test_Status_I",
+                    "role": null,
+                    "provider": "FlightCritical"
+                }
+            ]
+        },
+        {
+            "name": "DB_T21",
+            "port_list": [
+                {
+                    "name": "FC_P60_To_MC_P60",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P60_To_FC_P60",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P60_To_MC_P30",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P60_To_FC_P30",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P60_To_MC_P15",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P60_To_FC_P15",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P60_To_MC_P8",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P60_To_FC_P8",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P60_To_MC_P4",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P60_To_FC_P4",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P60_To_MC_P1",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P60_To_FC_P1",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P30_To_MC_P60",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P30_To_FC_P60",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P30_To_MC_P30",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P30_To_FC_P30",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P15_To_MC_P60",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P15_To_FC_P60",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P15_To_MC_P15",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P15_To_FC_P15",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P8_To_MC_P60",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P8_To_FC_P60",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P8_To_MC_P8",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P8_To_FC_P8",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P4_To_MC_P60",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P4_To_FC_P60",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P4_To_MC_P4",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P4_To_FC_P4",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P1_To_MC_P60",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P1_To_FC_P60",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P1_To_MC_P1",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P1_To_FC_P1",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "port_3",
+                    "interface": "ifc3",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "port_1",
+                    "interface": "ifc1",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "Rx_Continuous",
+                    "interface": "ifc3",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "Tx_Continuous",
+                    "interface": "ifc3",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "Ack_Event",
+                    "interface": "events.ack_from_prov",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "No_Id_Event",
+                    "interface": "events.noid_event",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "Simple_To_App_1",
+                    "interface": "mydir.my_simple_event",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "Simple_From_App_1",
+                    "interface": "mydir.my_simple_event",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "LReader_1",
+                    "interface": "mydir.my_simple_event",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "LReader_2",
+                    "interface": "mydir.my_simple_event",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "LReader_3",
+                    "interface": "mydir.my_simple_event",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "PDCM21_Results",
+                    "interface": "Results.Test_Status_I",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "TMC2_PDCM1_Discretes",
+                    "interface": "tmc_pdcm_asap.analog_discrete_i",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P60_To_MC_P60",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P60_To_FC_P60",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P60_To_MC_P30",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P60_To_FC_P30",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P60_To_MC_P15",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P60_To_FC_P15",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P60_To_MC_P8",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P60_To_FC_P8",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P60_To_MC_P4",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P60_To_FC_P4",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P60_To_MC_P1",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P60_To_FC_P1",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P30_To_MC_P60",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P30_To_FC_P60",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P30_To_MC_P30",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P30_To_FC_P30",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P30_To_MC_P15",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P30_To_FC_P15",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P30_To_MC_P8",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P30_To_FC_P8",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P30_To_MC_P4",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P30_To_FC_P4",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P30_To_MC_P1",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P30_To_FC_P1",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P15_To_MC_P60",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P15_To_FC_P60",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P15_To_MC_P30",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P15_To_FC_P30",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P15_To_MC_P15",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P15_To_FC_P15",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P15_To_MC_P8",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P15_To_FC_P8",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P15_To_MC_P4",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P15_To_FC_P4",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P15_To_MC_P1",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P15_To_FC_P1",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P8_To_MC_P60",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P8_To_FC_P60",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P8_To_MC_P30",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P8_To_FC_P30",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P8_To_MC_P15",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P8_To_FC_P15",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P8_To_MC_P8",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P8_To_FC_P8",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P8_To_MC_P4",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P8_To_FC_P4",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P8_To_MC_P1",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P8_To_FC_P1",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P4_To_MC_P60",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P4_To_FC_P60",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P4_To_MC_P30",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P4_To_FC_P30",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P4_To_MC_P15",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P4_To_FC_P15",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P4_To_MC_P8",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P4_To_FC_P8",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P4_To_MC_P4",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P4_To_FC_P4",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P4_To_MC_P1",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P4_To_FC_P1",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P1_To_MC_P60",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P1_To_FC_P60",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P1_To_MC_P30",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P1_To_FC_P30",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P1_To_MC_P15",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P1_To_FC_P15",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P1_To_MC_P8",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P1_To_FC_P8",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "FC_P1_To_MC_P4",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "MC_P1_To_FC_P4",
+                    "interface": "Basic_Com_I.Event.Pac",
+                    "role": null,
+                    "provider": "MissionCritical"
+                }
+            ]
+        },
+        {
+            "name": "DB_T22",
+            "port_list": [
+                {
+                    "name": "FP_Test_PDCM_B",
+                    "interface": "FP_I.Float_Test",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "FP_Test_DCM_B",
+                    "interface": "FP_I.Float_Test",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "PDCM22_Results",
+                    "interface": "Results.Test_Status_I",
+                    "role": null,
+                    "provider": "FlightCritical"
+                }
+            ]
+        },
+        {
+            "name": "DB_T11",
+            "port_list": [
+                {
+                    "name": "PDCM11_Results",
+                    "interface": "Results.Test_Status_I",
+                    "role": null,
+                    "provider": "FlightCritical"
+                }
+            ]
+        }
+    ]
+}

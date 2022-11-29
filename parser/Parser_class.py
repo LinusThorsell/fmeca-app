@@ -121,9 +121,7 @@ class Parser:
         tree = ET.parse(path)
         root = tree.getroot()
         domain_borders = []
-        DebugFile.error_print("Root.tag == {0}".format(root.tag))
         if("domainborder" in root.tag.lower()):
-            DebugFile.error_print("Hej")
             domain_borders.append(DataClass.DomainBorder(root.get("name")))
         return domain_borders
 
@@ -146,7 +144,6 @@ class Parser:
     def get_all_domains(self, path, container):
         domainborders = []
         pacports = {} ## "key":lista
-        print("Path for domainborders {0}".format(path))
         if os.path.exists(path):
             for subdir, dirs, files in os.walk(path):
                 for file in files:
@@ -170,7 +167,7 @@ class Parser:
                         pass
                         #pacports += self._parser.get_domain_border_ports(os.path.join(subdir,file))
                     else:
-                        DebugFile.warning_print("Unhandled directories under domain_border")
+                        DebugFile.debug_print("Unhandled directories under domain_border",DebugFile.WARNING)
 
             #{"Domain_border":PacPort, ...}
             container.domain_border_list += domainborders
@@ -233,7 +230,7 @@ class Parser:
             if(child.tag == "Connection"):
                 returnlist.append(self.create_connection(child))
             elif child.tag == "TemplateInstantiation":
-                DebugFile.warning_print("Template instantiation in {0}".format(path))
+                DebugFile.debug_print("Template instantiation in {0}".format(path), DebugFile.WARNING)
         return returnlist    
 
 
