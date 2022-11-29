@@ -74,12 +74,12 @@ class PacPort(models.Model):
 
 #----------------------------------------------------------------
 
-class CommentsDict(models.Model):
+class CommentsContainer(models.Model):
     # ForeignKeys
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.OneToOneField(Project, primary_key=True, on_delete=models.CASCADE,  default="")
 
 class KeyVal(models.Model):
     key = models.CharField(max_length=100, blank=True, null=True)
     comment = models.TextField(blank=True, null=True) 
     # ForeignKeys
-    container = models.ForeignKey(CommentsDict, on_delete=models.CASCADE)
+    container = models.ForeignKey(CommentsContainer, related_name="comments", on_delete=models.CASCADE)

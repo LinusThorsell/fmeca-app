@@ -115,31 +115,17 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 #---------------------------------------------------------------------
 
-class GetApplicationIDSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Application
-        fields = ['id', 'name']
-
-#---------------------------------------------------------------------
-
 class KeyValSerializer(serializers.ModelSerializer):
     class Meta:
         model = KeyVal
         fields = '__all__'
 
-class DictSerializer(serializers.ModelSerializer):
+class CommentsContainerSerializer(serializers.ModelSerializer):
     comments = KeyValSerializer(many=True)
 
     class Meta:
-        model = CommentsDict
+        model = CommentsContainer
         fields = '__all__'
 
     def create(self, validated_data):
-        comments_dict = validated_data.pop('comments')
-        container_instance = CommentsDict.objects.create(**validated_data)
-        for key, value in comments_dict.items:
-            keys = key
-            keys = keys.split(',')
-            for k in keys:
-                if k != '':
-                    KeyVal.objects.create(key=k, comment=value, container=container_instance)
+        return CommentsContainer(**validated_data)
