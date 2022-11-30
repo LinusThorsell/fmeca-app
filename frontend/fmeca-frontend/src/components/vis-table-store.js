@@ -30,33 +30,47 @@ export const vis_table_store = reactive({
             if (this.array[num][row-1][column].includes("|")) {
                 let temp = this.array[num][row-1][column].split("|")
 
+                let highest_split_count = 0
+                temp.forEach((element, index) => {
+                    let split_count = element.split("\n").length
+                    if (split_count > highest_split_count) {
+                        highest_split_count = split_count
+                    }
+                });
+
                 let temp_temp = [];
-                let empty_objects = 0;
+                let multisplit = false
+                let split_count = 0
                 temp.forEach((element, index) => {
                     console.log("pre-|-split: ", element)
                     if (element.includes('\n')) {
+                        split_count = element.split('\n').length
                         console.log("element with \n: ", element)
                         element.split("\n").forEach((element2, index2) => {
                             console.log("To split again: ", element2)
                             if (element2.length > 0) {
                                 temp_temp.push(element2)
-                            }
-                            else {
-                                empty_objects++;
+                                multisplit = true
                             }
                         })
+                        // Fill to match the maximum split count.
+                        for (let i = split_count; i < highest_split_count; i++) {
+                            temp_temp.push("")
+                        }
+                    }
+                    // this is an empty row, should scale to match the amount of splits
+                    else { 
+                        for (let i = 0; i < highest_split_count-1; i++) {
+                            temp_temp.push("")
+                        }
                     }
                 })
                 
                 console.log("temp: ", temp)
                 console.log("temp_temp: ", temp_temp)
 
-                if (temp.length < temp_temp.length + empty_objects) {
+                if (multisplit) {
                     temp = temp_temp
-
-                    for (let i = 0; i < empty_objects*2; i++) {
-                        temp.push("")
-                    }
                 }
                 return temp
             }
