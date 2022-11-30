@@ -47,7 +47,6 @@ export default {
       console.log(comment);
       this.notes[selected_project.value][on] = comment;
 
-      //this.value = this.notes[selected_project.value][on]
       target.value = this.notes[selected_project.value][on];
     },
   },
@@ -62,28 +61,8 @@ const array_columns = 6;
 const array_rows = 6;
 const default_column_width = 100;
 export var selected_project = ref(0);
-/*
-    watchEffect(() => {
-    // tracks A0 and A1
-        A2.value = A0.value + A1.value
-    })*/
+
 // Gets entire table ( TODO : interface with backend here )
-function setupTable() {
-  /*
-        if (vis_table_store.getRowCount(selected_project) === 0) {
-            const temp_array = []
-            console.log("Array empty, creating example")
-            for (var column = 0; column < array_columns+1; column++) {
-                temp_array[column] = [];
-                for (var row = 0; row < array_rows+1; row++) {
-                    temp_array[column][row] = "";
-                }
-            }
-            vis_table_store.setArray(selected_project, temp_array)
-        }*/
-  // return table_array;
-  //vis_table_store.generateEmpty()
-}
 
 // Gets a specific row ( index ) as an array from the input array ( table_array ).
 
@@ -114,7 +93,6 @@ export function removeAllColumns(column) {
   }
 }
 export function createFilteredTable(input, array_inner, index, index_x) {
-  // rowStyles[0].display = "flex";
   console.log(input);
   console.log(array_inner);
 
@@ -131,24 +109,6 @@ function restoreColumns() {
   }
 }
 
-// TODO : Fix, Is currently not working with rest of program structure.
-function addRow(row, table_array) {
-  if (row.length !== table_array[0].length) {
-    console.log(
-      "Error: in addRow. Input row not of same length as input array."
-    );
-  }
-
-  var table_array_column_length = table_array[0].length;
-  for (var i = 0; i < getRow(0, table_array).length; i++) {
-    table_array[i][table_array_column_length] = row[i];
-  }
-  console.log(table_array);
-}
-// TODO : Fix, Implement function
-function addColumn() {}
-// Gets the class for a specific vis-columnbox element.
-// These styles are used by the generated stylesheet to allow resizing.
 function getClass(column, row) {
   return "vis-column-" + column + " vis-row-" + row;
 }
@@ -169,15 +129,17 @@ function calculateWidthOfRows() {
   document.getElementById("vis-table").style.width = max_width + 200 + "px";
   document.getElementById("nav-bar-id").style.width = max_width - 10 + "px";
 }
+
 // Called by vue-resize-observer when a column is resized.
 // Changes stylesheet to resize elements
 function handleResize({ width }, { __currentTarget__ }) {
   var column_array = __currentTarget__.classList[2];
   var column_id = column_array.slice(column_array.lastIndexOf("-") + 1);
-  //console.log(column_id)
+
   colStyles[parseInt(column_id)].width = width + "px";
   calculateWidthOfRows();
 }
+
 // Generates custom stylesheet.
 // Used to effectively resize big amounts of elements fast.
 function generateCustomStylesheet() {
