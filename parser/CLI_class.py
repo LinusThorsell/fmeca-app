@@ -185,7 +185,7 @@ class CLI:
                     elif temppath in path and "functional_topology/mc" in temppath:
                         self.Applications.applicationlist += self._parser.get_applications_instances_list(path)
                         self.Connections.connectionlist += self._parser.get_connection_list(path)
-                    elif temppath in path and "/applications/" in temppath and self.Threads == "":
+                    elif temppath in path and "/applications/" in temppath:
                         self.Threads.thread_set += self._parser.get_threads(path)
                     elif temppath in path and "/domain_border" in temppath:
                         self._parser.get_all_domains(path,self.DomainBorder)
@@ -264,7 +264,6 @@ class CLI:
             self._encoder.delete_from_database(self._project_name, "projects/")
         elif (self._add and self._add_path != None and self._project_name != ""):      
             self.parsing()
-            ##Anteckning: Sätt en boolean = true som representerar om man får skicka skit, om en skickning misslyckas ska denna blir false och sen måste man deleata projectet man skickade upp
             self._encoder.Project = self._project_name
             self._encoder.send_to_database(self.Project_Type,"projects/")
             self._encoder.send_to_database(self.Connections,"connections/")
