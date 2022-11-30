@@ -35,31 +35,37 @@ class Partition_Data_Class:
         self.partiton_id = id
         self.nodename = node
         self.cpuname = cpu
-        self.application_set = []
+        
     def reprJSON(self):
         return {"name":self.name,"is_ltm":self.isLTM,"partition_id":self.partiton_id,
                 "application_set":self.application_set,"fixed_start":self.fixedStartNs}
 
-class Application:
-    def __init__(self,name, rampool, instanceOf, affinity,node,cpu,partition):
+class Application_Instance:
+    def __init__(self,name, application):
+        # Retrieved when parsing application_instances.xml for either mc or fc
         self.name = name
-        self.rampool = rampool
-        self.instanceOf = instanceOf
-        self.affinity = affinity
-        self.nodename = node
-        self.cpuname = cpu
-        self.partitionname = partition
+        self.instanceOfApplication = application
+
+        # Below attributes are known after parsing sw_topology.xml
+        self.rampool = ""
+        self.instanceOf = ""
+        self.affinity = ""
+        self.nodename = ""
+        self.cpuname = ""
+        self.partitionname = ""
 
     def reprJSON(self):
-        return {"name":self.name,"cpu":None} #,"rampool":self.rampool,"instanceOf":self.instanceOf,"affinity":self.affinity}
+        return {"name":self.name, "instanceOfApplication":self.instanceOfApplication,"rampool":self.rampool,"instanceOf":self.instanceOf,"affinity":self.affinity,
+        "nodename":self.nodename, "cpuname":self.cpuname,"partitionname":self.partitionname}
 
-class Application_Instances:
-    def __init__(self,name, instanceOf):
+class Application:
+    def __init__(self,name):
         self.name = name
-        self.instanceOf = instanceOf
+    # Application also have thread but those are sent separately to the database  
+        
     
     def reprJSON(self):
-        return {"name":self.name,"instanceof":self.instanceOf}
+        return {"name":self.name}
     
 class ApplicationContainer:
     def __init__(self,project):
@@ -141,10 +147,16 @@ class ConnectionContainer:
 class Project_Data_Class:
     def __init__(self,name):
         self.name = name
+        self.application_set =  []
+        self.application_instance_set = []
         self.node_set = []
-        self.Applications = []
+        self.thread_set = []
+        self.domain_border_set = []
+        self.connection_set = []
+        
     def reprJSON(self):
-        return {"name":self.name,"node_set":self.node_set}
+        return {"name":self.name,"application_set":self.application_set,"node_set":self.node_set,"application_instance_set":self.application_instance_set,
+                "thread_set":self.thread_set,"domain_border_set":self.domain_border_set,"connection_set":self.connection_set}
          
     def insert_partitions(self,partition_set):
         for partition in partition_set:

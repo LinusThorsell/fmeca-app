@@ -150,11 +150,10 @@ class CLI:
 
             # The order we want to parse the files in
             runorder = []
-            runorder += ["fc/hw_topology.xml", "mc/hw_topology.xml","fc/sw_topology.xml","mc/sw_topology.xml"]
             runorder += ["functional_topology/fc","functional_topology/mc"]
-            runorder += ["/applications/", "/domain_border"]
-            connectionlist =  []
-            application_instances = []
+            runorder += ["fc/hw_topology.xml", "mc/hw_topology.xml","fc/sw_topology.xml","mc/sw_topology.xml"]
+            runorder += [ "/applications/", "/domain_border"]
+            
             
             # If no tag was specified use name from folder
             if(self._project_name == ""): 
@@ -163,12 +162,14 @@ class CLI:
             
             # Init containers
             self.Project_Type = DataClass.Project_Data_Class(self._project_name)
-            self.Connections = DataClass.ConnectionContainer(self._project_name)
-            self.Applications = DataClass.ApplicationContainer(self._project_name)
-            self.Threads = DataClass.ThreadContainer(self._project_name)
-            self.DomainBorder = DataClass.DomainBorders(self._project_name)
+            #self.Connections = DataClass.ConnectionContainer(self._project_name)
+            #self.Applications = DataClass.ApplicationContainer(self._project_name)
+            #self.Threads = DataClass.ThreadContainer(self._project_name)
+            #self.DomainBorder = DataClass.DomainBorders(self._project_name)
+            #self.Applications = []
+            #self.Applications_Instances = []
 
-            # Parse files in good order
+            # Parse files by order specified by runorder list
             for temppath in runorder:
                 for path in self._Paths._paths:
                     if temppath in path and "fc/hw_topology.xml" in temppath:
@@ -176,19 +177,29 @@ class CLI:
                     elif temppath in path and "mc/hw_topology.xml" in temppath:
                         self.Project_Type.filter(self._parser.get_nodes(path))
                     elif temppath in path and "fc/sw_topology.xml" in temppath:
-                        self.Project_Type.insert_partitions(self._parser.get_partitions(path))
+                        self.Project_Type.insert_partitions(self._parser.get_partitions(self.Project_Type,path))
                     elif temppath in path and "mc/sw_topology.xml" in temppath:
                         self.Project_Type.insert_applications(self._parser.get_cpu_applications(path))
                     elif temppath in path and "functional_topology/fc" in temppath:
-                        self.Applications.application_set = self._parser.get_applications_instances_list(path)
-                        self.Connections.connection_set = self._parser.get_connection_list(path)
+                        self.Project_Type.connection_set += self._parser.get_connection_list(path)
+                        self.Project_Type.application_set +=  self._parser.get_applications_list(path)
+                        self.Project_Type.application_instance_set +=  self._parser.get_applications_instances_list(path)
+                        
+
+                        # self.Applications.application_set = self._parser.get_applications_instances_list(path)
+                        #self.Connections.connection_set = self._parser.get_connection_list(path)
                     elif temppath in path and "functional_topology/mc" in temppath:
-                        self.Applications.application_set += self._parser.get_applications_instances_list(path)
-                        self.Connections.connection_set += self._parser.get_connection_list(path)
+                        self.Project_Type.application_set +=  self._parser.get_applications_list(path)
+                        self.Project_Type.application_instance_set += self._parser.get_applications_instances_list(path)
+                        self.Project_Type.connection_set += self._parser.get_connection_list(path)
+                        #self.Applications.application_set += self._parser.get_applications_instances_list(path)
+                        #self.Connections.connection_set += self._parser.get_connection_list(path)
                     elif temppath in path and "/applications/" in temppath:
-                        self.Threads.thread_set += self._parser.get_threads(path)
+                        self.Project_Type.thread_set += self._parser.get_threads(path)
+                        #self.Threads.thread_set += self._parser.get_threads(path)
                     elif temppath in path and "/domain_border" in temppath:
-                        self._parser.get_all_domains(path,self.DomainBorder)
+                        self._parser.get_all_domains(path,self.Project_Type.domain_border_set)
+                        #self._parser.get_all_domains(path,self.DomainBorder)
                         
                 #-----------------------------------------------------------------------------
             
