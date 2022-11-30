@@ -180,11 +180,11 @@ class CLI:
                     elif temppath in path and "mc/sw_topology.xml" in temppath:
                         self.Project_Type.insert_applications(self._parser.get_cpu_applications(path))
                     elif temppath in path and "functional_topology/fc" in temppath:
-                        self.Applications.applicationlist = self._parser.get_applications_instances_list(path)
-                        self.Connections.connectionlist = self._parser.get_connection_list(path)
+                        self.Applications.application_set = self._parser.get_applications_instances_list(path)
+                        self.Connections.connection_set = self._parser.get_connection_list(path)
                     elif temppath in path and "functional_topology/mc" in temppath:
-                        self.Applications.applicationlist += self._parser.get_applications_instances_list(path)
-                        self.Connections.connectionlist += self._parser.get_connection_list(path)
+                        self.Applications.application_set += self._parser.get_applications_instances_list(path)
+                        self.Connections.connection_set += self._parser.get_connection_list(path)
                     elif temppath in path and "/applications/" in temppath:
                         self.Threads.thread_set += self._parser.get_threads(path)
                     elif temppath in path and "/domain_border" in temppath:
@@ -195,13 +195,13 @@ class CLI:
             # Add all scheduled applications to project som we can later check if all are created 
             for node in self.Project_Type.node_set:
                 for cpu in node.cpus:
-                    for partition in cpu.partitions:
-                        self.Project_Type.Applications += partition.applications
-                    self.Project_Type.Applications += cpu.applications
+                    for partition in cpu.partition_set:
+                        self.Project_Type.Applications += partition.application_set
+                    self.Project_Type.Applications += cpu.application_set
             
 
             found = False
-            for instance in self.Applications.applicationlist:
+            for instance in self.Applications.application_set:
                 for applications in self.Project_Type.Applications:
                     if instance.name == applications.name:
                         found = True
@@ -217,16 +217,16 @@ class CLI:
             
             
             bad_connections =  []
-            for connection in self.Connections.connectionlist:
+            for connection in self.Connections.connection_set:
                 if connection.Provider_thread != None:
                     for thread in self.Threads.thread_set:
-                        for port in thread.port_list:
+                        for port in thread.port_set:
                             if connection.Provider_port == port.name:
                                 found = True
                             
                 else:
-                    for domain_border in self.DomainBorder.domain_border_list:
-                        for port in domain_border.port_list:
+                    for domain_border in self.DomainBorder.domain_border_set:
+                        for port in domain_border.port_set:
                             if connection.Provider_port == port.name:
                                 found = True
                 

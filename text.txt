@@ -441,7 +441,7 @@
 }
 {
     "project_name": "Test",
-    "connectionlist": [
+    "connection_set": [
         {
             "provider_owner": "TMC22_Results",
             "provider_thread": "Results_60",
@@ -578,7 +578,7 @@
 }
 {
     "project_name": "Test",
-    "applicationlist": [
+    "application_set": [
         {
             "name": "LTM_FMC",
             "instanceof": "EDS_LTM"
@@ -741,35 +741,10 @@
     "project_name": "Test",
     "thread_set": [
         {
-            "name": "Results_60",
-            "application": "Results",
-            "rategroup": "P60",
-            "port_list": [
-                {
-                    "name": "Results",
-                    "interface": "Results.Test_Status_I",
-                    "role": "Provider",
-                    "provider": null
-                },
-                {
-                    "name": "Summary",
-                    "interface": "Results.Test_Status_I",
-                    "role": "Requirer",
-                    "provider": null
-                },
-                {
-                    "name": "Success_Indicator",
-                    "interface": "Results.Summary",
-                    "role": "Provider",
-                    "provider": null
-                }
-            ]
-        },
-        {
             "name": "EDS_LTM_60",
             "application": "EDS_LTM",
             "rategroup": "P60",
-            "port_list": [
+            "port_set": [
                 {
                     "name": "Test_Results",
                     "interface": "Results.Test_Status_I",
@@ -788,7 +763,7 @@
             "name": "Event_P60",
             "application": "Basic_Com_Event",
             "rategroup": "P60",
-            "port_list": [
+            "port_set": [
                 {
                     "name": "Test_Results",
                     "interface": "Results.Test_Status_I",
@@ -885,7 +860,7 @@
             "name": "Event_P30",
             "application": "Basic_Com_Event",
             "rategroup": "P30",
-            "port_list": [
+            "port_set": [
                 {
                     "name": "Test_Results",
                     "interface": "Results.Test_Status_I",
@@ -982,7 +957,7 @@
             "name": "Event_P15",
             "application": "Basic_Com_Event",
             "rategroup": "P15",
-            "port_list": [
+            "port_set": [
                 {
                     "name": "Test_Results",
                     "interface": "Results.Test_Status_I",
@@ -1079,7 +1054,7 @@
             "name": "Event_P8",
             "application": "Basic_Com_Event",
             "rategroup": "P8",
-            "port_list": [
+            "port_set": [
                 {
                     "name": "Test_Results",
                     "interface": "Results.Test_Status_I",
@@ -1176,7 +1151,7 @@
             "name": "Event_P4",
             "application": "Basic_Com_Event",
             "rategroup": "P4",
-            "port_list": [
+            "port_set": [
                 {
                     "name": "Test_Results",
                     "interface": "Results.Test_Status_I",
@@ -1273,7 +1248,7 @@
             "name": "Event_P1",
             "application": "Basic_Com_Event",
             "rategroup": "P1",
-            "port_list": [
+            "port_set": [
                 {
                     "name": "Test_Results",
                     "interface": "Results.Test_Status_I",
@@ -1365,15 +1340,40 @@
                     "provider": null
                 }
             ]
+        },
+        {
+            "name": "Results_60",
+            "application": "Results",
+            "rategroup": "P60",
+            "port_set": [
+                {
+                    "name": "Results",
+                    "interface": "Results.Test_Status_I",
+                    "role": "Provider",
+                    "provider": null
+                },
+                {
+                    "name": "Summary",
+                    "interface": "Results.Test_Status_I",
+                    "role": "Requirer",
+                    "provider": null
+                },
+                {
+                    "name": "Success_Indicator",
+                    "interface": "Results.Summary",
+                    "role": "Provider",
+                    "provider": null
+                }
+            ]
         }
     ]
 }
 {
     "project_name": "Test",
-    "domain_border_list": [
+    "domain_border_set": [
         {
             "name": "DB_T12",
-            "port_list": [
+            "port_set": [
                 {
                     "name": "FP_Test_PDCM_A",
                     "interface": "FP_I.Float_Test",
@@ -1396,7 +1396,7 @@
         },
         {
             "name": "DB_T21",
-            "port_list": [
+            "port_set": [
                 {
                     "name": "FC_P60_To_MC_P60",
                     "interface": "Basic_Com_I.Event.Pac",
@@ -2091,7 +2091,7 @@
         },
         {
             "name": "DB_T22",
-            "port_list": [
+            "port_set": [
                 {
                     "name": "FP_Test_PDCM_B",
                     "interface": "FP_I.Float_Test",
@@ -2114,7 +2114,7 @@
         },
         {
             "name": "DB_T11",
-            "port_list": [
+            "port_set": [
                 {
                     "name": "PDCM11_Results",
                     "interface": "Results.Test_Status_I",

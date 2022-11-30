@@ -35,7 +35,7 @@ class Parser:
             if children.tag in self.functions:
                 #typ onödig men whatever
                 if children.tag == "Application":
-                    Partition.applications.append(self.functions[children.tag](children,node,cpu,name))        
+                    Partition.application_set.append(self.functions[children.tag](children,node,cpu,name))        
         return  Partition
 
 
@@ -170,12 +170,12 @@ class Parser:
                         DebugFile.debug_print("Unhandled directories under domain_border",DebugFile.WARNING)
 
             #{"Domain_border":PacPort, ...}
-            container.domain_border_list += domainborders
+            container.domain_border_set += domainborders
             ##Put the ports in domaiborders
             #for key,value in tempdict.items():
-            for Domainborder in container.domain_border_list:
+            for Domainborder in container.domain_border_set:
                 if Domainborder.name in pacports:
-                    Domainborder.port_list += pacports[Domainborder.name]
+                    Domainborder.port_set += pacports[Domainborder.name]
 
 
 
@@ -217,7 +217,7 @@ class Parser:
                 thread = DataClass.Threads(child.get("name"),application, child.get("rateGroup"))
                 for second_child in child:
                     port = DataClass.PacPorts(second_child.get("name"), second_child.get("interface"), second_child.get("role"))
-                    thread.port_list.append(port)
+                    thread.port_set.append(port)
                 returnlist.append(thread)
         return returnlist
 
