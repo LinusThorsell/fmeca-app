@@ -1,5 +1,5 @@
 <template>
-  <nav class="nav-background">
+  <nav id="nav-bar-id" class="nav-background">
     <button @click="generatePdf">Generate PDF</button>
     <br> 
     <!-- <label for="project-select">Choose a project:</label> -->
@@ -10,15 +10,15 @@
         <option value="proj2">Project 2</option-->
     </select>
     <button @click="loadProjectFromStore()">Load Selected Project</button>
-    <div class="menu-item"><a href="#">fortnite</a></div>
-    <div class="menu-item"><a href="#">Gripen X(Unreleased)</a></div>
-    <Dropdown title="Change view" :items="services" />
+    <!-- TODO TOG BORT <div class="menu-item"><a href="#">fortnite</a></div> -->
+    <!-- TODO TOG BORT <div class="menu-item"><a href="#">Gripen X(Unreleased)</a></div> -->
+    <!-- TODO TOG BORT <Dropdown title="Change view" :items="services" /> -->
     <!-- <label for="project-select">Choose a project</label> -->
     <!-- <select name ="projects" id="project-select"> -->
       <!-- <option value =""> Please choose a project</option> -->
       <!-- <option v-for="project in getProjects()" value ="project">{{project}}</option> -->
     <!-- </select> -->
-    <div class="menu-item"><a href="#">Adam fan page</a></div>
+    <!-- TODO TOG BORT <div class="menu-item"><a href="#">Adam fan page</a></div>-->
     <!-- sökbar som aktiveras genom enter -->
     <input type="text" @keydown.enter="filteredList(input)" v-model="input" placeholder="Filter..." />
 
@@ -26,20 +26,37 @@
 </template>
 
 <script>
+
+function generatePdf() 
+{
+print()
+}
 //Searchbarfunction
-import {getProjects, loadProjectFromStore} from './VisTable.vue'
+import {getProjects, loadProjectFromStore, selected_project, removeAllColumns, createFilteredTable} from './VisTable.vue'
+import {vis_table_store} from './vis-table-store.js'
 
 function filteredList(input) 
 {  
-//Input är det som skrivs in
-// filterSearch(input);
 console.log(input);
-//localStorage.setItem("columnfilter", input);
+removeAllColumns();
+console.log("removed");
+// console.log(vis_table_store.getArray(selected_project.value))
+let temp_array = vis_table_store.getArray(selected_project.value)
+temp_array.forEach((array_outer, index_x) => {
+  //console.log(array_outer);
+  array_outer.forEach((array_inner, index_y) => {
+  //console.log(array_inner);
+    console.log("under är index");
+    console.log(index_y);
+    createFilteredTable(input, array_inner, index_y, index_x);
+    });
+  });
 
 }
 
 
 import Dropdown from './Dropdown.vue';
+
 
 export default {
   name: 'navbar',
@@ -49,9 +66,15 @@ export default {
   },
   data () {
     return {
+      vis_table_store,
+      selected_project,
+      removeAllColumns,
+      createFilteredTable,
+      filteredList,
+      generatePdf,
       getProjects,
       loadProjectFromStore,
-      services: [
+      /*services: [
         {
           title: 'S',
           link: '#fortnite',
@@ -80,7 +103,7 @@ export default {
               console.log("nörd");
           }
         }
-      ]
+      ]*/
     }
   },
   

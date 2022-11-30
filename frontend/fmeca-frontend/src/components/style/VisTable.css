@@ -20,6 +20,11 @@
 
     display: flex;
 }*/
+
+/* {
+    background-color: darkgray;
+}*/
+
 .vis-row {
 
     display: flex;
@@ -51,7 +56,7 @@
 }
 .vis-textarea {
     height: 100%;
-    width: 100%;
+    width: 80%;
     resize: none;
     
     visibility: show;
@@ -60,6 +65,9 @@
     margin: 0;
 
     border: 0.1px solid black;
+}
+.vis-textarea-comment {
+    width: 20%
 }
 .vis-resizable-row {
     resize: vertical;
@@ -93,4 +101,6 @@
     height: auto;
     width: 100%;
     flex-grow: 5;
+
+    display: flex;
 }
