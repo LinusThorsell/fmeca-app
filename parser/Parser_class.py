@@ -24,7 +24,7 @@ class Parser:
         domainBorder = raw_cpu_data.get("domainBorder")         
         return DataClass.Cpu(name,type,unitid,IOPRef,ACCSSyncMaster,domainBorder)
 
-    def create_partition(self,raw_partition_data,node,cpu):
+    def create_partition(self,Project,raw_partition_data,node,cpu):
         name = raw_partition_data.get("name")
         isLTM = raw_partition_data.get("isLTM")
         partition_id = raw_partition_data.get("id")
@@ -35,13 +35,13 @@ class Parser:
             if children.tag in self.functions:
                 #typ onödig men whatever
                 if children.tag == "Application":
-                    Partition.application_set.append(self.functions[children.tag](children,node,cpu,name))        
+                    #
+                    self.add_info_where_applicaion_instance_is_running()
+                    #Partition.application_set.append(self.functions[children.tag](Project,children,node,cpu,name))        
         return  Partition
 
 
-    def create_application(self, raw_application_data,node, cpu, partition):
-        
-        #<DipsApplication name="PoProvider_Applicationrt_Gateway_1" rampool="0x10000" instanceOf="port_gateway" affinity="0"/>
+    def create_application(self,Project ,raw_application_data,node, cpu, partition):
         name = raw_application_data.get("name")
         rampool = raw_application_data.get("rampool")
         instanceOf = raw_application_data.get("instanceOf")
@@ -49,13 +49,13 @@ class Parser:
         application = DataClass.Application(name, rampool, instanceOf, affinity, node, cpu, partition)
         return application
 
-    def create_partitions_in_cpu(self,raw_partition_data):
+    def create_partitions_in_cpu(self,Project,raw_partition_data):
         partitions = []
         ref = raw_partition_data.get("ref")
         node, cpu = ref.split('.')
         for child in raw_partition_data:
             if child.tag == "Partition":
-                partitions.append(self.create_partition(child, node, cpu))
+                partitions.append(self.create_partition(Project,child, node, cpu))
         return partitions 
     
     def create_applications_in_cpu(self,raw_partition_data):
@@ -182,7 +182,7 @@ class Parser:
     def create_application_instance(self, raw_application_instance_data):
         name = raw_application_instance_data.get('name')
         instanceOf = raw_application_instance_data.get("instanceOf")
-        return DataClass.Application_Instances(name, instanceOf)
+        return DataClass.Application_Instance(name, instanceOf)
 
     def get_connection_list(self, path):
         connectionlist = []
@@ -231,7 +231,19 @@ class Parser:
                 returnlist.append(self.create_connection(child))
             elif child.tag == "TemplateInstantiation":
                 DebugFile.debug_print("Template instantiation in {0}".format(path), DebugFile.WARNING)
-        return returnlist    
+        return returnlist 
+
+
+    def get_all_applications(self, path):
+        application = []
+        application_instances = []
+        if os.path.exists(path + "/application_instances.xml"):
+            if os.path.isfile( path + "/application_instances.xml"):
+                application += self.get_application(ath + "/application_instances.xml")
+                application_instances += self.get_application_instances(path + "/application_instances.xml")
+
+        return application,application_instances
+
 
 
     def get_applications_instances_list(self, path):
@@ -240,6 +252,26 @@ class Parser:
             if os.path.isfile( path + "/application_instances.xml"):
                 application_instances += self.get_application_instances(path + "/application_instances.xml")
         return application_instances
+
+    
+    def get_applications_list(self, path):
+        application = []
+        if os.path.exists(path + "/application_instances.xml"):
+            if os.path.isfile( path + "/application_instances.xml"):
+                application += self.get_applications(path + "/application_instances.xml")
+        return application
+
+    def get_applications(self, path):
+        tree = ET.parse(path)
+        root = tree.getroot()
+        set_of_application_names = set()
+        returnlist = []
+        for child in root:
+            if(child.tag == "ApplicationInstance"):
+                set_of_application_names.add(child.get("instanceOf"))
+        for app in set_of_application_names:
+            returnlist.append(DataClass.Application(app))
+        return returnlist
   
 
     def get_application_instances(self,path):
@@ -263,7 +295,7 @@ class Parser:
         return returnlist        
 
     #retrieve all partions and add to list
-    def get_partitions(self,path):
+    def get_partitions(self,Project,path):
         tree = ET.parse(path)
         root = tree.getroot()
         returnlist = []
@@ -271,7 +303,7 @@ class Parser:
             if partitions.tag in self.functions:
                 if (partitions.tag == "APP" or partitions == "IOP"):
                     #returnlist.append(self.functions[node.tag](partitions))
-                    returnlist += self.create_partitions_in_cpu(partitions)
+                    returnlist += self.create_partitions_in_cpu(Project,partitions)
         return returnlist
 
 
