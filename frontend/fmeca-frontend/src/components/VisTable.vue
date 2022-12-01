@@ -73,19 +73,7 @@ function removeColumn(column) {
   console.log(column);
   colStyles[column - 1].display = "none";
 }
-export function createFilteredTable(input, array_inner, index_x, index_y)
-    {
-        rowStyles[(index_x-1)].display = "flex";
-        // rowStyles[0].display = "flex";
-        /*console.log(input);
-        console.log(array_inner);
 
-        if(/*(input.indexOf(input.split('|')-1)) != -1 || input == array_inner && array_inner != "")
-        {
-            console.log("träff");
-            rowStyles[(index_x-1)].display = "flex";
-        }*/
-    }
 export function removeAllColumns(column) {
   for (
     i = 0;
