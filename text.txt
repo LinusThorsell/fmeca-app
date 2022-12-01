@@ -11,24 +11,24 @@ Project 3/
 PATHS:
 [0m
 [0m
-{'Project 3/message_topology', 'Project 3/ifs/my_ifs', 'Project 3/infrastructure/mc/hw_topology.xml', 'Project 3/interfaces', 'Project 3/infrastructure/functional_topology/mc', 'Project 3/applications/eds_ltm', 'Project 3/infrastructure/domain_border', 'Project 3/infrastructure/fc/hw_topology.xml', 'Project 3/infrastructure/functional_topology/fc', 'Project 3/applications/results', 'Project 3/applications/basic_com_event', 'Project 3/infrastructure/fc/equipments', 'Project 3/infrastructure/mc/equipments', 'Project 3/infrastructure/fc/sw_topology.xml', 'Project 3/infrastructure/mc/sw_topology.xml'}
+{'Project 3/infrastructure/domain_border', 'Project 3/infrastructure/functional_topology/fc', 'Project 3/infrastructure/fc/sw_topology.xml', 'Project 3/message_topology', 'Project 3/infrastructure/fc/equipments', 'Project 3/infrastructure/fc/hw_topology.xml', 'Project 3/applications/eds_ltm', 'Project 3/infrastructure/mc/equipments', 'Project 3/infrastructure/mc/hw_topology.xml', 'Project 3/infrastructure/functional_topology/mc', 'Project 3/infrastructure/mc/sw_topology.xml', 'Project 3/interfaces', 'Project 3/applications/basic_com_event', 'Project 3/applications/results', 'Project 3/ifs/my_ifs'}
 [0m
 Results
 Basic_Com_Event
 EDS_LTM
-Basic_Com_Event
 Results
+Basic_Com_Event
 [94mRunning tests[0m
 [93mOnly 2 of the 3 tests passed[0m
 {
     "name": "Test",
     "application_set": [
         {
-            "name": "Basic_Com_Event",
+            "name": "Results",
             "automated_test_level": null
         },
         {
-            "name": "Results",
+            "name": "Basic_Com_Event",
             "automated_test_level": null
         },
         {
@@ -735,31 +735,6 @@ Results
             ]
         },
         {
-            "name": "Results_60",
-            "application": "Results",
-            "rategroup": "P60",
-            "port_set": [
-                {
-                    "name": "Results",
-                    "interface": "Results.Test_Status_I",
-                    "role": "Provider",
-                    "provider": null
-                },
-                {
-                    "name": "Summary",
-                    "interface": "Results.Test_Status_I",
-                    "role": "Requirer",
-                    "provider": null
-                },
-                {
-                    "name": "Success_Indicator",
-                    "interface": "Results.Summary",
-                    "role": "Provider",
-                    "provider": null
-                }
-            ]
-        },
-        {
             "name": "Event_P60",
             "application": "Basic_Com_Event",
             "rategroup": "P60",
@@ -1336,6 +1311,31 @@ Results
                 {
                     "name": "Receiver_PDI",
                     "interface": "Basic_Com_I.Event.File",
+                    "role": "Provider",
+                    "provider": null
+                }
+            ]
+        },
+        {
+            "name": "Results_60",
+            "application": "Results",
+            "rategroup": "P60",
+            "port_set": [
+                {
+                    "name": "Results",
+                    "interface": "Results.Test_Status_I",
+                    "role": "Provider",
+                    "provider": null
+                },
+                {
+                    "name": "Summary",
+                    "interface": "Results.Test_Status_I",
+                    "role": "Requirer",
+                    "provider": null
+                },
+                {
+                    "name": "Success_Indicator",
+                    "interface": "Results.Summary",
                     "role": "Provider",
                     "provider": null
                 }

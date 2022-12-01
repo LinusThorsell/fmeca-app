@@ -75,8 +75,8 @@ def test_connection_ports(Project):
     else:
         return 1
     # If connection have port from application intance check if intance exists
-def test_connection_application_instances(Project):
-    pass 
+def test_connection_application_instances(Project): 
+        pass
     # found = False
     # failed = False
     # bad_connections =  [] 
@@ -92,9 +92,9 @@ def test_connection_application_instances(Project):
     # self.Requirer_port = Requirer_port
     # self.identity = identity
 
-    # for con in Project.connection_set:
-    #     if(con.Provider_is_domainborder):
-    #         if():
+    # for connection in Project.connection_set:
+    #     if(not connection.Provider_is_domainborder):
+    #         if connection.Provider_owner
             
 
 
