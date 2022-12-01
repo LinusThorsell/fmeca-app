@@ -1,4 +1,4 @@
-[![Continuous Integration](https://github.com/LinusThorsell/fmeca-app/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/LinusThorsell/fmeca-app/actions/workflows/main.yml)
+[![CodeFormat](https://github.com/LinusThorsell/fmeca-app/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/LinusThorsell/fmeca-app/actions/workflows/main.yml)
 
 # FMECA Visualizer
 Project developed under the course TDDI17 at Linköping University for customer SAAB Aeronautics. 
