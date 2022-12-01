@@ -36,13 +36,11 @@ class Encoder:
                 DebugFile.error_print("Error 404, There were no project with the name \"{0}\"".format(project))
             else:
                 DebugFile.error_print("Unhandled statuscode code: {0}".format(response.status_code))
-                #DebugFile.warning_print("The response was:\n + {0}".format(response.text))
         except requests.exceptions.ConnectionError:
             DebugFile.error_print("Was not able to connect to database when trying to remove project \"{0}\"".format(project))
         
     def send_to_database(self,project_segment,folder):
         string = self.get_json(project_segment)
-        #DebugFile.debug_print(string)
         
         DebugFile.debug_print("Sending to: \n\n", self._url + folder)
         response = ""
@@ -61,7 +59,6 @@ class Encoder:
 
             else:
                 DebugFile.warning_print("Unhandled status code {0}".format(response.status_code))
-                #Send a delet
                 exit()
         except requests.exceptions.ConnectionError:
             DebugFile.error_print("Failed to connect to the database/API at " + (self._url + folder))
