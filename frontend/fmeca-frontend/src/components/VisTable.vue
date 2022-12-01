@@ -83,15 +83,8 @@ export function removeAllColumns(column) {
     rowStyles[i].display = "none";
   }
 }
-export function createFilteredTable(input, array_inner, index, index_x) {
-  console.log(input);
-  console.log(array_inner);
-
-  if (input.indexOf(index_x - 1) != -1 && array_inner != "") {
-    console.log(array_inner);
-    console.log("träff");
+export function createFilteredTable(index_x) {
     rowStyles[index_x - 1].display = "flex";
-  }
 }
 function restoreColumns() {
   console.log(vis_table_store.getColumnCount(selected_project.value));

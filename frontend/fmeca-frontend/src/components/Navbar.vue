@@ -48,17 +48,14 @@ temp_array.forEach((array_outer, index_x) => {
   //console.log(array_inner);
     console.log("under är index");
     console.log(index_x + " " + index_y + " input: " + input + " arrayinner: " + array_inner);
-    let temp_ar = [input, index_y];
-    let temp_arr = [array_inner, index_y];
     let fakeinput = input +"";
     let fakeinner = array_inner + "";
-    console.log(temp_arr + " " + temp_ar);
-    if(fakeinner.includes(fakeinput,0) && temp_arr!= "" || input == array_inner && array_inner != "")
+    if(fakeinner.includes(fakeinput,0) && fakeinner!= "" || input == array_inner && array_inner != "")
         {
             console.log("träff");
-            createFilteredTable(input, array_inner, index_x, index_y, temp_array)       
+            createFilteredTable(index_x);       
         }
-    //createFilteredTable(input, array_inner, index_x, index_y, temp_array);
+
     });
   });
 
