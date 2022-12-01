@@ -24,23 +24,19 @@ class Parser:
         domainBorder = raw_cpu_data.get("domainBorder")         
         return DataClass.Cpu(name,type,unitid,IOPRef,ACCSSyncMaster,domainBorder)
 
-    def create_partition(self,Project,raw_partition_data,node,cpu):
-        name = raw_partition_data.get("name")
-        isLTM = raw_partition_data.get("isLTM")
-        partition_id = raw_partition_data.get("id")
-        
-        Partition = DataClass.Partition_Data_Class(name, isLTM, partition_id, node,cpu)
-        
-        for children in raw_partition_data:
-            if children.tag in self.functions:
-                #typ onödig men whatever
-                if children.tag == "Application":
-                    #
-                    self.add_info_where_applicaion_instance_is_running()
-                    #Partition.application_set.append(self.functions[children.tag](Project,children,node,cpu,name))        
-        return  Partition
-
-
+    def add_info_where_applicaion_instance_is_running(self,Project,children,node,cpu,parititon):
+        for instance in Project.application_instance_set:
+            if(instance.name == children.get("name")):
+                instance.rampool = children.get("rampool")
+                instance.instanceOf = children.get("instanceOf")
+                instance.affinity = children.get("affinity")
+                instance.cpuname = cpu
+                instance.nodename = node
+                instance.partitionname = parititon
+                return
+        DebugFile.error_print("Error: Application {0} was schuled but is not defined ".format( children.get("name")))
+                
+                
     def create_application(self,Project ,raw_application_data,node, cpu, partition):
         name = raw_application_data.get("name")
         rampool = raw_application_data.get("rampool")
@@ -58,15 +54,30 @@ class Parser:
                 partitions.append(self.create_partition(Project,child, node, cpu))
         return partitions 
     
-    def create_applications_in_cpu(self,raw_partition_data):
+    def create_applications_in_cpu(self,project,raw_partition_data):
         applications = []
         ref = raw_partition_data.get("ref")
         node, cpu = ref.split('.')
         for child in raw_partition_data:
             if child.tag == "Application":
-                applications.append(self.create_application(child, node, cpu, None))
+                self.add_info_where_applicaion_instance_is_running(project,child, node, cpu, None)
         return applications 
 
+    def create_partition(self,Project,raw_partition_data,node,cpu):
+        name = raw_partition_data.get("name")
+        isLTM = raw_partition_data.get("isLTM")
+        partition_id = raw_partition_data.get("id")
+        
+        Partition = DataClass.Partition_Data_Class(name, isLTM, partition_id, node,cpu)
+        
+        for children in raw_partition_data:
+            if children.tag in self.functions:
+                #typ onödig men whatever
+                if children.tag == "Application":
+                    #
+                    self.add_info_where_applicaion_instance_is_running(Project,children,node,cpu,name)
+                    #Partition.application_set.append(self.functions[children.tag](Project,children,node,cpu,name))        
+        return  Partition
 
     #create a single node, handle cpus related to node
     def create_node(self,raw_node_data):
@@ -113,7 +124,7 @@ class Parser:
                 
                 temp_list.append(child.get('identity'))
                 
-        DebugFile.debug_print(temp_list, DebugFile.OKCYAN)
+        #DebugFile.debug_print(temp_list, DebugFile.OKCYAN)
 
         return DataClass.Connection(*temp_list)
 
@@ -151,7 +162,7 @@ class Parser:
                     #print("Subdir {0}".format(subdir))
                     if(subdir == (path + "/border")):
                         #print("Subidr= {0}".format(subdir))
-                        DebugFile.debug_print(subdir + "/"+file)
+                        #DebugFile.debug_print(subdir + "/"+file)
                         domainborders += self.get_domainborders(os.path.join(subdir,file))
                     elif (subdir == (path + "/config")):
                         tempdict = self.get_domain_border_ports(os.path.join(subdir,file))
@@ -167,13 +178,14 @@ class Parser:
                         pass
                         #pacports += self._parser.get_domain_border_ports(os.path.join(subdir,file))
                     else:
-                        DebugFile.debug_print("Unhandled directories under domain_border",DebugFile.WARNING)
+                        pass
+                        #DebugFile.debug_print("Unhandled directories under domain_border",DebugFile.WARNING)
 
             #{"Domain_border":PacPort, ...}
-            container.domain_border_set += domainborders
+            container += domainborders
             ##Put the ports in domaiborders
             #for key,value in tempdict.items():
-            for Domainborder in container.domain_border_set:
+            for Domainborder in container:
                 if Domainborder.name in pacports:
                     Domainborder.port_set += pacports[Domainborder.name]
 
@@ -190,7 +202,7 @@ class Parser:
             for subdir, dirs, files in os.walk(path+"/connections"):
                 for file in files:
                     if(file == "connections.xml"):
-                        DebugFile.debug_print(subdir + "/"+file)
+                        #DebugFile.debug_print(subdir + "/"+file)
                         connectionlist += self.get_connections(os.path.join(subdir,file))
         return connectionlist
     
@@ -198,9 +210,9 @@ class Parser:
         threads = []
         for subdir, dirs, files in os.walk(path):
             for file in files:
-                DebugFile.debug_print(file)
+                #DebugFile.debug_print(file)
                 if(file == "application.xml"):
-                    DebugFile.debug_print(subdir + "/"+file)
+                    #DebugFile.debug_print(subdir + "/"+file)
                     threads += self.get_thread(os.path.join(subdir,file))
         return threads
 
@@ -230,7 +242,8 @@ class Parser:
             if(child.tag == "Connection"):
                 returnlist.append(self.create_connection(child))
             elif child.tag == "TemplateInstantiation":
-                DebugFile.debug_print("Template instantiation in {0}".format(path), DebugFile.WARNING)
+                pass
+                #DebugFile.debug_print("Template instantiation in {0}".format(path), DebugFile.WARNING)
         return returnlist 
 
 
@@ -239,7 +252,7 @@ class Parser:
         application_instances = []
         if os.path.exists(path + "/application_instances.xml"):
             if os.path.isfile( path + "/application_instances.xml"):
-                application += self.get_application(ath + "/application_instances.xml")
+                application += self.get_application(path + "/application_instances.xml")
                 application_instances += self.get_application_instances(path + "/application_instances.xml")
 
         return application,application_instances
@@ -255,11 +268,11 @@ class Parser:
 
     
     def get_applications_list(self, path):
-        application = []
+        returnlist = []
         if os.path.exists(path + "/application_instances.xml"):
             if os.path.isfile( path + "/application_instances.xml"):
-                application += self.get_applications(path + "/application_instances.xml")
-        return application
+                returnlist = self.get_applications(path + "/application_instances.xml")
+        return returnlist
 
     def get_applications(self, path):
         tree = ET.parse(path)
@@ -269,11 +282,12 @@ class Parser:
         for child in root:
             if(child.tag == "ApplicationInstance"):
                 set_of_application_names.add(child.get("instanceOf"))
+
         for app in set_of_application_names:
-            returnlist.append(DataClass.Application(app))
+           print(app)
+           returnlist.append(DataClass.Application(app))
         return returnlist
   
-
     def get_application_instances(self,path):
         tree = ET.parse(path)
         root = tree.getroot()
@@ -308,7 +322,7 @@ class Parser:
 
 
     
-    def get_cpu_applications(self,path):
+    def get_cpu_applications(self,project,path):
         tree = ET.parse(path)
         root = tree.getroot()
         returnlist = []
@@ -316,7 +330,7 @@ class Parser:
             if cpu.tag in self.functions:
                 if (cpu.tag == "PP"):
                     #returnlist.append(self.functions[node.tag](partitions))
-                    returnlist += self.create_applications_in_cpu(cpu)
+                    returnlist += self.create_applications_in_cpu(project,cpu)
         return returnlist 
     
     def initialisation(self):
