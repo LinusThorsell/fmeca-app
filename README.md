@@ -1,3 +1,5 @@
+[![Continuous Integration](https://github.com/LinusThorsell/fmeca-app/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/LinusThorsell/fmeca-app/actions/workflows/main.yml)
+
 # FMECA Visualizer
 Project developed under the course TDDI17 at Linköping University for customer SAAB Aeronautics. 
 
@@ -18,6 +20,7 @@ Developed with the following stack:
 
 ### - Frontend
 -   Vue.js
+-   ResizeObserver
 
 ## Where To Start?
 Check out README in respective folder:
