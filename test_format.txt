@@ -32,7 +32,7 @@
     "connection_set": []
     "threads": []
     "domain_border": []
-    "applicaiton_instance_set":[]
+    "application_instance_set":[]
 }
 //end transaction
 

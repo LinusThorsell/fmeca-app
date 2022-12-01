@@ -47,25 +47,21 @@ class Encoder:
         DebugFile.debug_print("Sending to: \n\n", self._url + folder)
         response = ""
         try:
-            if self.send_succeded:
-                response = requests.post(self._url + folder,string,headers=self._headers)
-                if response.status_code == 201:
-                    DebugFile.success_print("The project_segment was sucessfully sent to the database at {0}.".format(self._url+folder))
-                elif response.status_code == 400:
-                    if "project with this name already exists" in response.text:
-                        DebugFile.error_print("Error bad request: 400, project with this name already exists!")
-                        DebugFile.error_print("Aborting send to database and exiting program")
-                        exit()                        
-                elif response.status_code == 500:
-                        DebugFile.error_print("Internal server error when sending to {0}".format(self._url+folder))
-                else:
-                    DebugFile.warning_print("Unhandled status code {0}".format(response.status_code))
-                    self.send_succeded = False
-                    #Send a delete
-                    DebugFile.error_print("Will now delete the poject")
-                    self.delete_from_database(self.Project,"projects/")
+            response = requests.post(self._url + folder,string,headers=self._headers)
+            if response.status_code == 201:
+                DebugFile.success_print("The project_segment was sucessfully sent to the database at {0}.".format(self._url+folder))
+            elif response.status_code == 400:
+                if "project with this name already exists" in response.text:
+                    DebugFile.error_print("Error bad request: 400, project with this name already exists!")
+                    DebugFile.error_print("Aborting send to database and exiting program")
+                    exit()                        
+            elif response.status_code == 500:
+                    DebugFile.error_print("Internal server error when sending to {0}".format(self._url+folder))
+                    exit()
+
             else:
-                DebugFile.error_print("Since previous send failed, no more segments will be sent!" + "\n" + "Aborting")
+                DebugFile.warning_print("Unhandled status code {0}".format(response.status_code))
+                #Send a delet
                 exit()
         except requests.exceptions.ConnectionError:
             DebugFile.error_print("Failed to connect to the database/API at " + (self._url + folder))

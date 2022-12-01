@@ -20,11 +20,10 @@ class Cpu:
         self.IOPRef = IOPRef
         self.ACCSSyncMaster = ACCSSyncMaster
         self.domainBorder = domainBorder
-        self.application_set = []
         self.partition_set = []
     def reprJSON(self):
         return {"name":self.name,"type":self.type,"unit_id":self.unitid,"iop_ref":self.IOPRef,
-        "accs_sync_master":self.ACCSSyncMaster,"domain_border":self.domainBorder,"partition_set":self.partition_set,"application_set":self.application_set}
+        "accs_sync_master":self.ACCSSyncMaster,"domain_border":self.domainBorder,"partition_set":self.partition_set}
 
 
 class Partition_Data_Class:
@@ -37,8 +36,7 @@ class Partition_Data_Class:
         self.cpuname = cpu
         
     def reprJSON(self):
-        return {"name":self.name,"is_ltm":self.isLTM,"partition_id":self.partiton_id,
-                "application_set":self.application_set,"fixed_start":self.fixedStartNs}
+        return {"name":self.name,"is_ltm":self.isLTM,"partition_id":self.partiton_id,"fixed_start":self.fixedStartNs}
 
 class Application_Instance:
     def __init__(self,name, application):
@@ -47,26 +45,24 @@ class Application_Instance:
         self.instanceOfApplication = application
 
         # Below attributes are known after parsing sw_topology.xml
-        self.rampool = ""
-        self.instanceOf = ""
-        self.affinity = ""
-        self.nodename = ""
-        self.cpuname = ""
-        self.partitionname = ""
+        self.rampool = None
+        self.instanceOf =  None
+        self.affinity = None
+        self.nodename = None
+        self.cpuname = None
+        self.partitionname = None
 
     def reprJSON(self):
-        return {"name":self.name, "instanceOfApplication":self.instanceOfApplication,"rampool":self.rampool,"instanceOf":self.instanceOf,"affinity":self.affinity,
-        "nodename":self.nodename, "cpuname":self.cpuname,"partitionname":self.partitionname}
+        return {"name":self.name, "instance_of_application":self.instanceOfApplication,"rampool":self.rampool,"instance_of":self.instanceOf,"affinity":self.affinity,
+        "node_name":self.nodename, "cpu_name":self.cpuname,"partition_name":self.partitionname}
 
 class Application:
-    def __init__(self,name):
+    def __init__(self,name, automatedTestLevel = None):
         self.name = name
-    # Application also have thread but those are sent separately to the database  
-        
-    
+        self.automatedTestLevel = automatedTestLevel
     def reprJSON(self):
-        return {"name":self.name}
-    
+        return {"name":self.name, "automated_test_level":self.automatedTestLevel}
+    # Application also have thread but those are sent separately to the database  
 class ApplicationContainer:
     def __init__(self,project):
         self.application_set = []
@@ -155,7 +151,7 @@ class Project_Data_Class:
         self.connection_set = []
         
     def reprJSON(self):
-        return {"name":self.name,"application_set":self.application_set,"node_set":self.node_set,"application_instance_set":self.application_instance_set,
+        return {"name":self.name,"application_set": list(self.application_set),"node_set":self.node_set,"application_instance_set":self.application_instance_set,
                 "thread_set":self.thread_set,"domain_border_set":self.domain_border_set,"connection_set":self.connection_set}
          
     def insert_partitions(self,partition_set):

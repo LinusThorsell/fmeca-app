@@ -21,22 +21,22 @@ slow_mode = False
 
 
 def error_print(string):
-    print(CRED + string + ENDC)
+    print(CRED + str(string) + ENDC)
 
 def warning_print(string):
-    print(WARNING + string + ENDC)
+    print(WARNING + str(string) + ENDC)
 
 def success_print(string):
-    print(OKGREEN + string + ENDC)
+    print(OKGREEN + str(string) + ENDC)
 
 def blue_print(string):
-    print(OKBLUE + string + ENDC)
+    print(OKBLUE + str(string) + ENDC)
 
 def underline_print(string):
-    print(UNDERLINE + string + ENDC)
+    print(UNDERLINE + str(string) + ENDC)
 
 def underline_print(string):
-    print(UNDERLINE + string + ENDC)
+    print(UNDERLINE + str(string) + ENDC)
 
 
 

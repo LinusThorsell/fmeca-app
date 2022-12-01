@@ -173,85 +173,98 @@ class CLI:
             for temppath in runorder:
                 for path in self._Paths._paths:
                     if temppath in path and "fc/hw_topology.xml" in temppath:
+                        DebugFile.error_print(1)
                         self.Project_Type.filter(self._parser.get_nodes(path))
                     elif temppath in path and "mc/hw_topology.xml" in temppath:
+                        DebugFile.error_print(2)
+
                         self.Project_Type.filter(self._parser.get_nodes(path))
                     elif temppath in path and "fc/sw_topology.xml" in temppath:
+                        DebugFile.error_print(3)
+
                         self.Project_Type.insert_partitions(self._parser.get_partitions(self.Project_Type,path))
                     elif temppath in path and "mc/sw_topology.xml" in temppath:
-                        self.Project_Type.insert_applications(self._parser.get_cpu_applications(path))
+
+                        DebugFile.error_print(4)
+                        self.Project_Type.insert_applications(self._parser.get_cpu_applications(self.Project_Type,path))
                     elif temppath in path and "functional_topology/fc" in temppath:
+
+                        DebugFile.error_print(5)
                         self.Project_Type.connection_set += self._parser.get_connection_list(path)
-                        self.Project_Type.application_set +=  self._parser.get_applications_list(path)
-                        self.Project_Type.application_instance_set +=  self._parser.get_applications_instances_list(path)
+                        self.Project_Type.application_set = (self._parser.get_applications_list(path))
+                        self.Project_Type.application_instance_set += self._parser.get_applications_instances_list(path)
                         
 
                         # self.Applications.application_set = self._parser.get_applications_instances_list(path)
                         #self.Connections.connection_set = self._parser.get_connection_list(path)
                     elif temppath in path and "functional_topology/mc" in temppath:
-                        self.Project_Type.application_set +=  self._parser.get_applications_list(path)
+
+                        DebugFile.error_print(6)
                         self.Project_Type.application_instance_set += self._parser.get_applications_instances_list(path)
                         self.Project_Type.connection_set += self._parser.get_connection_list(path)
                         #self.Applications.application_set += self._parser.get_applications_instances_list(path)
                         #self.Connections.connection_set += self._parser.get_connection_list(path)
                     elif temppath in path and "/applications/" in temppath:
+
+                        DebugFile.error_print(7)
                         self.Project_Type.thread_set += self._parser.get_threads(path)
                         #self.Threads.thread_set += self._parser.get_threads(path)
                     elif temppath in path and "/domain_border" in temppath:
+
+                        DebugFile.error_print(8)
                         self._parser.get_all_domains(path,self.Project_Type.domain_border_set)
                         #self._parser.get_all_domains(path,self.DomainBorder)
                         
                 #-----------------------------------------------------------------------------
             
             # Add all scheduled applications to project som we can later check if all are created 
-            for node in self.Project_Type.node_set:
-                for cpu in node.cpus:
-                    for partition in cpu.partition_set:
-                        self.Project_Type.Applications += partition.application_set
-                    self.Project_Type.Applications += cpu.application_set
+            # for node in self.Project_Type.node_set:
+            #     for cpu in node.cpus:
+            #         for partition in cpu.partition_set:
+            #             self.Project_Type.Applications += partition.application_set
+            #         self.Project_Type.Applications += cpu.application_set
             
 
             found = False
-            for instance in self.Applications.application_set:
-                for applications in self.Project_Type.Applications:
-                    if instance.name == applications.name:
+            for instance in self.Project_Type.application_instance_set:
+                for applications in self.Project_Type.application_set:
+                    if instance.instanceOfApplication == applications.name:
                         found = True
                 if(not found):
                     DebugFile.warning_print("Did not find application for instance {0}".format(instance.name))
                     found = False
                     
-
             # Check if all ports in connections exist
 
             found = False
             #bad connections == connections that doesnt have any existing ports
             
             
-            bad_connections =  []
-            for connection in self.Connections.connection_set:
-                if connection.Provider_thread != None:
-                    for thread in self.Threads.thread_set:
-                        for port in thread.port_set:
-                            if connection.Provider_port == port.name:
-                                found = True
+            # bad_connections =  []
+            # for connection in self.Connections.connection_set:
+            #     if connection.Provider_thread != None:
+            #         for thread in self.Threads.thread_set:
+            #             for port in thread.port_set:
+            #                 if connection.Provider_port == port.name:
+            #                     found = True
                             
-                else:
-                    for domain_border in self.DomainBorder.domain_border_set:
-                        for port in domain_border.port_set:
-                            if connection.Provider_port == port.name:
-                                found = True
+            #     else:
+            #         for domain_border in self.DomainBorder.domain_border_set:
+            #             for port in domain_border.port_set:
+            #                 if connection.Provider_port == port.name:
+            #                     found = True
                 
-                if(not found):
-                    DebugFile.debug_print("{0} port not found, removing connections".format(connection.Provider_port),DebugFile.WARNING)
-                    bad_connections.append(connection)
-                else:
-                    found = False
+            #     if(not found):
+            #         DebugFile.debug_print("{0} port not found, removing connections".format(connection.Provider_port),DebugFile.WARNING)
+            #         bad_connections.append(connection)
+            #     else:
+            #         found = False
                 
-            for connection in bad_connections:
-                self.Connections.connectionlist.remove(connection)
+            # for connection in bad_connections:
+            #     self.Connections.connectionlist.remove(connection)
 
 
-            self.Applications.add_project_name(self._project_name)
+            # self.Applications.add_project_name(self._project_name)
             
 
     def get_arguments(self):
@@ -275,22 +288,29 @@ class CLI:
             self._encoder.delete_from_database(self._project_name, "projects/")
         elif (self._add and self._add_path != None and self._project_name != ""):      
             self.parsing()
-            self._encoder.Project = self._project_name
-            self._encoder.send_to_database(self.Project_Type,"projects/")
-            self._encoder.send_to_database(self.Connections,"connections/")
-            self._encoder.send_to_database(self.Applications,"applications/")
-            self._encoder.send_to_database(self.Threads,"threads/")
-            self._encoder.send_to_database(self.DomainBorder,"domain_border/")
+            
+
+
+            # self._encoder.Project = self._project_name
+            # self._encoder.send_to_database(self.Project_Type,"projects/")
+            # self._encoder.send_to_database(self.Connections,"connections/")
+            # self._encoder.send_to_database(self.Applications,"applications/")
+            # self._encoder.send_to_database(self.Threads,"threads/")
+            # self._encoder.send_to_database(self.DomainBorder,"domain_border/")
         
         elif self.PRINT:
             self.debug()
             self.parsing()
+
+            #print(self.Project_Type.application_set)
+            #self._encoder.print_project(list(self.Project_Type.application_set))
+            #self._encoder.print_project(self.Project_Type.application_instance_set)
             self._encoder.Project = self._project_name
             self._encoder.print_project(self.Project_Type)
-            self._encoder.print_project(self.Connections)
-            self._encoder.print_project(self.Applications)
-            self._encoder.print_project(self.Threads)
-            self._encoder.print_project(self.DomainBorder)
+            # self._encoder.print_project(self.Connections)
+            # self._encoder.print_project(self.Applications)
+            # self._encoder.print_project(self.Threads)
+            # self._encoder.print_project(self.DomainBorder)
         else:
             DebugFile.error_print("bad")
             exit()
