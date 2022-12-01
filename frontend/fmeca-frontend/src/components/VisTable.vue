@@ -109,18 +109,18 @@ import { vis_table_store } from './vis-table-store.js'
             rowStyles[i].display = "none";
         }
     }
-    export function createFilteredTable(input, array_inner, index, index_x)
+    export function createFilteredTable(input, array_inner, index_x, index_y)
     {
+        rowStyles[(index_x-1)].display = "flex";
         // rowStyles[0].display = "flex";
-        console.log(input);
+        /*console.log(input);
         console.log(array_inner);
 
-        if((input.indexOf(index_x-1)) != -1 && array_inner != "")
+        if(/*(input.indexOf(input.split('|')-1)) != -1 || input == array_inner && array_inner != "")
         {
-            console.log(array_inner);
             console.log("träff");
             rowStyles[(index_x-1)].display = "flex";
-        }
+        }*/
     }
     function restoreColumns() {
         console.log(vis_table_store.getColumnCount(selected_project.value))
