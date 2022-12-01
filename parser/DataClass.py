@@ -34,12 +34,15 @@ class Partition_Data_Class:
         self.partiton_id = id
         self.nodename = node
         self.cpuname = cpu  
+    
+    
     def reprJSON(self):
         return {"name":self.name,"is_ltm":self.isLTM,"partition_id":self.partiton_id,"fixed_start":self.fixedStartNs}
 
 class Application_Instance:
     def __init__(self,name, application):
         # Retrieved when parsing application_instances.xml for either mc or fc
+    
         self.name = name
         self.instanceOfApplication = application
         # Below attributes are known after parsing sw_topology.xml
@@ -49,6 +52,15 @@ class Application_Instance:
         self.nodename = None
         self.cpuname = None
         self.partitionname = None
+    
+    def __eq__(self, other):
+        if(isinstance(other, str)):
+            return self.name == other 
+        elif(isinstance(other, Application_Instance)):
+            return self.name == other.name
+        else:
+            return False
+
     def reprJSON(self):
         return {"name":self.name, "instance_of_application":self.instanceOfApplication,"rampool":self.rampool,"instance_of":self.instanceOf,"affinity":self.affinity,
         "node_name":self.nodename, "cpu_name":self.cpuname,"partition_name":self.partitionname}
@@ -119,7 +131,6 @@ class Project_Data_Class:
         self.thread_set = []
         self.domain_border_set = []
         self.connection_set = []
-
     def reprJSON(self):
         return {"name":self.name,"application_set": self.application_set,"application_instance_set":self.application_instance_set,"node_set":self.node_set,
                 "thread_set":self.thread_set,"domain_border_set":self.domain_border_set,"connection_set":self.connection_set}

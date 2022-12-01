@@ -11,14 +11,13 @@ Project 3/
 PATHS:
 [0m
 [0m
-{'Project 3/infrastructure/domain_border', 'Project 3/infrastructure/functional_topology/fc', 'Project 3/infrastructure/fc/sw_topology.xml', 'Project 3/message_topology', 'Project 3/infrastructure/fc/equipments', 'Project 3/infrastructure/fc/hw_topology.xml', 'Project 3/applications/eds_ltm', 'Project 3/infrastructure/mc/equipments', 'Project 3/infrastructure/mc/hw_topology.xml', 'Project 3/infrastructure/functional_topology/mc', 'Project 3/infrastructure/mc/sw_topology.xml', 'Project 3/interfaces', 'Project 3/applications/basic_com_event', 'Project 3/applications/results', 'Project 3/ifs/my_ifs'}
+{'Project 3/message_topology', 'Project 3/infrastructure/fc/sw_topology.xml', 'Project 3/infrastructure/functional_topology/fc', 'Project 3/infrastructure/mc/equipments', 'Project 3/infrastructure/fc/equipments', 'Project 3/infrastructure/fc/hw_topology.xml', 'Project 3/applications/results', 'Project 3/infrastructure/functional_topology/mc', 'Project 3/infrastructure/mc/sw_topology.xml', 'Project 3/infrastructure/domain_border', 'Project 3/interfaces', 'Project 3/infrastructure/mc/hw_topology.xml', 'Project 3/ifs/my_ifs', 'Project 3/applications/basic_com_event', 'Project 3/applications/eds_ltm'}
 [0m
-Results
-Basic_Com_Event
-EDS_LTM
-Results
-Basic_Com_Event
 [94mRunning tests[0m
+[93mDid not found application_instance TMC22_Results that a connection refers to[0m
+[93mDid not found application_instance FMC_Results that a connection refers to[0m
+[93mDid not found application_instance TMC21_Results that a connection refers to[0m
+[93mDid not found application_instance FMC_Results that a connection  refers to[0m
 [93mOnly 2 of the 3 tests passed[0m
 {
     "name": "Test",
@@ -716,20 +715,26 @@ Basic_Com_Event
     ],
     "thread_set": [
         {
-            "name": "EDS_LTM_60",
-            "application": "EDS_LTM",
+            "name": "Results_60",
+            "application": "Results",
             "rategroup": "P60",
             "port_set": [
                 {
-                    "name": "Test_Results",
+                    "name": "Results",
+                    "interface": "Results.Test_Status_I",
+                    "role": "Provider",
+                    "provider": null
+                },
+                {
+                    "name": "Summary",
                     "interface": "Results.Test_Status_I",
                     "role": "Requirer",
                     "provider": null
                 },
                 {
-                    "name": "DCM_Results",
-                    "interface": "ACCS_I.HM.TMC.DCM_Results",
-                    "role": "Requirer",
+                    "name": "Success_Indicator",
+                    "interface": "Results.Summary",
+                    "role": "Provider",
                     "provider": null
                 }
             ]
@@ -1317,26 +1322,20 @@ Basic_Com_Event
             ]
         },
         {
-            "name": "Results_60",
-            "application": "Results",
+            "name": "EDS_LTM_60",
+            "application": "EDS_LTM",
             "rategroup": "P60",
             "port_set": [
                 {
-                    "name": "Results",
-                    "interface": "Results.Test_Status_I",
-                    "role": "Provider",
-                    "provider": null
-                },
-                {
-                    "name": "Summary",
+                    "name": "Test_Results",
                     "interface": "Results.Test_Status_I",
                     "role": "Requirer",
                     "provider": null
                 },
                 {
-                    "name": "Success_Indicator",
-                    "interface": "Results.Summary",
-                    "role": "Provider",
+                    "name": "DCM_Results",
+                    "interface": "ACCS_I.HM.TMC.DCM_Results",
+                    "role": "Requirer",
                     "provider": null
                 }
             ]

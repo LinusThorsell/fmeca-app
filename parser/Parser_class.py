@@ -245,7 +245,6 @@ class Parser:
                 set_of_application_names.add(child.get("instanceOf"))
 
         for app in set_of_application_names:
-           print(app)
            returnlist.append(DataClass.Application(app))
         return returnlist
   
