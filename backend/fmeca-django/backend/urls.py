@@ -20,7 +20,6 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register(r'projects', ProjectViewSet)
-router.register(r'post-projects', ProjectPostViewSet)
 router.register(r'nodes', NodeViewSet)
 router.register(r'proccessors', CPUViewSet)
 router.register(r'partitions', PartitionViewSet)

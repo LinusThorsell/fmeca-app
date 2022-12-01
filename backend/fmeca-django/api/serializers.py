@@ -14,7 +14,7 @@ class DomainBorderSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ThreadSerializer(serializers.ModelSerializer):
-    pacport_set = PacPortSerializer(many=True)
+    # pacport_set = PacPortSerializer(many=True)
 
     class Meta:
         model = Thread
@@ -43,31 +43,37 @@ class ApplicationSerializer(serializers.ModelSerializer):
         pass
 
 class PartitionSerializer(serializers.ModelSerializer):
-    application_set = ApplicationSerializer(many=True)
+    # application_set = ApplicationSerializer(many=True)
 
     class Meta:
         model = Partition
         fields = '__all__'
 
 class CPUSerializer(serializers.ModelSerializer):
-    partition_set = PartitionSerializer(many=True)
-    application_set = ApplicationSerializer(many=True)
+    # partition_set = PartitionSerializer(many=True)
+    # application_set = ApplicationSerializer(many=True)
 
     class Meta:
         model = CPU
         fields = '__all__'
 
 class NodeSerializer(serializers.ModelSerializer):
-    cpu_set = CPUSerializer(many=True)
+    # cpu_set = CPUSerializer(many=True)
 
     class Meta:
         model = Node
         fields = '__all__'
 
 class ProjectSerializer(serializers.ModelSerializer):
+    # node_set = NodeSerializer(many=True)
+
     class Meta:
         model = Project
         fields = '__all__'
+
+    # def create(self, validated_data):
+    #     validated_data.pop('node_set')
+    #     return Project.objects.get(**validated_data)
 
 # class ProjectSerializer(serializers.ModelSerializer):
 #     node_set = NodeSerializer(many=True)
