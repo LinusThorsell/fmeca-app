@@ -103,8 +103,7 @@ class Connection:
         self.Requirer_owner = Requirer_owner
         self.Requirer_thread =  Requirer_thread
         self.Requirer_port = Requirer_port
-        self.identity = identity
-        
+        self.identity = identity        
     def reprJSON(self):
         return {"provider_owner":self.Provider_owner,"provider_thread":self.Provider_thread,
                 "provider_port":self.Provider_port,"provider_is_domainborder":self.Provider_is_domainborder,
