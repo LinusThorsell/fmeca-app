@@ -44,6 +44,7 @@ class Partition(models.Model):
 
 class Application(models.Model):
     name = models.CharField(max_length=30, blank=True, null=True)
+    automated_test_level = models.CharField(max_length=50, blank=True, null=True)
     # ForeignKeys
     project = models.ForeignKey(Project, on_delete=models.CASCADE, blank=True, null=True)
 
@@ -53,10 +54,11 @@ class ApplicationInstance(models.Model):
     rampool = models.CharField(max_length=50, blank=True, null=True)
     affinity = models.CharField(max_length=50, blank=True, null=True)
     # ForeignKeys
-    project = models.ForeignKey(Project, related_name="app_project_set", on_delete=models.CASCADE, blank=True, null=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, blank=True, null=True)
     instance_of = models.ForeignKey(Application, on_delete=models.CASCADE, blank=True, null=True)
-    partition = models.ForeignKey(Partition, on_delete=models.CASCADE, blank=True, null=True)
-    cpu = models.ForeignKey(CPU, on_delete=models.CASCADE, blank=True, null=True)
+    partition = models.ForeignKey(Partition, on_delete=models.CASCADE, related_name="application_instance_set", blank=True, null=True)
+    node = models.ForeignKey(Node, on_delete=models.CASCADE, blank=True, null=True)
+    cpu = models.ForeignKey(CPU, on_delete=models.CASCADE, related_name="application_instance_set", blank=True, null=True)
 
 class DomainBorder(models.Model):
     name = models.CharField(max_length=30, blank=True, null=True)

@@ -30,10 +30,30 @@ class ApplicationInstanceSerializer(serializers.ModelSerializer):
         model = ApplicationInstance
         fields = '__all__'
 
+
+class PartitionSerializer(serializers.ModelSerializer):
+    application_instance_set = ApplicationInstanceSerializer(many=True)
+
+    class Meta:
+        model = Partition
+        fields = '__all__'
+
+class CPUSerializer(serializers.ModelSerializer):
+    partition_set = PartitionSerializer(many=True)
+    application_instance_set = ApplicationInstanceSerializer(many=True)
+
+    class Meta:
+        model = CPU
+        fields = '__all__'
+
+class NodeSerializer(serializers.ModelSerializer):
+    cpu_set = CPUSerializer(many=True)
+
+    class Meta:
+        model = Node
+        fields = '__all__'
+
 class ApplicationSerializer(serializers.ModelSerializer):
-    # reciver_set = ConnectionSerializer(many=True)
-    # provider_set = ConnectionSerializer(many=True)
-    # thread_set = ThreadSerializer(many=True)
 
     class Meta:
         model = Application
@@ -42,66 +62,13 @@ class ApplicationSerializer(serializers.ModelSerializer):
     def update(self, **validated_data):
         pass
 
-class PartitionSerializer(serializers.ModelSerializer):
-    # application_set = ApplicationSerializer(many=True)
-
-    class Meta:
-        model = Partition
-        fields = '__all__'
-
-class CPUSerializer(serializers.ModelSerializer):
-    # partition_set = PartitionSerializer(many=True)
-    # application_set = ApplicationSerializer(many=True)
-
-    class Meta:
-        model = CPU
-        fields = '__all__'
-
-class NodeSerializer(serializers.ModelSerializer):
-    # cpu_set = CPUSerializer(many=True)
-
-    class Meta:
-        model = Node
-        fields = '__all__'
-
 class ProjectSerializer(serializers.ModelSerializer):
-    # node_set = NodeSerializer(many=True)
+    node_set = NodeSerializer(many=True)
+    application_set = ApplicationSerializer(many=True)
 
     class Meta:
         model = Project
         fields = '__all__'
-
-    # def create(self, validated_data):
-    #     validated_data.pop('node_set')
-    #     return Project.objects.get(**validated_data)
-
-# class ProjectSerializer(serializers.ModelSerializer):
-#     node_set = NodeSerializer(many=True)
-
-#     class Meta:
-#         model = Project
-#         fields = '__all__'
-
-#     # def create(self, validated_data):
-#     #     node_set = validated_data.pop('node_set')
-#     #     project_instance, created = Project.objects.update_or_create(**validated_data)
-#     #     for node in node_set:
-#     #         cpu_set = node.pop('cpu_set')
-#     #         node_instance, created = Node.objects.update_or_create(project=project_instance, **node)
-#     #         for cpu in cpu_set:
-#     #             part_set = cpu.pop('partition_set')
-#     #             app_set = cpu.pop('application_set')
-#     #             cpu_instance, created = CPU.objects.update_or_create(node=node_instance, **cpu)
-#     #             for application in app_set:
-#     #                 application.pop('cpu')
-#     #                 Application.objects.update_or_create(cpu=cpu_instance, project=project_instance, **application)
-#     #             for partition in part_set:
-#     #                 app2_set = partition.pop('application_set')
-#     #                 Partition.objects.update_or_create(cpu=cpu_instance, **partition)
-#     #                 for application in app2_set:
-#     #                     application.pop('cpu')
-#     #                     Application.objects.update_or_create(cpu=cpu_instance, project=project_instance, **application)
-#     #     return project_instance
 
 #---------------------------------------------------------------------
 
