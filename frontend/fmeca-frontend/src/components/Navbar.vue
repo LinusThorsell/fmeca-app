@@ -21,6 +21,8 @@
     <!-- TODO TOG BORT <div class="menu-item"><a href="#">Adam fan page</a></div>-->
     <!-- sökbar som aktiveras genom enter -->
     <input type="text" @keydown.enter="filteredList(input)" v-model="input" placeholder="Filter..." />
+    
+    <button @click="renderJSONTree(vis_table_store.getArray(selected_project)[0][0])">Show JSON Visualization</button>
 
   </nav>
 </template>
@@ -34,6 +36,7 @@ print()
 //Searchbarfunction
 import {getProjects, loadProjectFromStore, selected_project, removeAllColumns, createFilteredTable} from './VisTable.vue'
 import {vis_table_store} from './vis-table-store.js'
+import {renderJSONTree} from './JSONTreeViewer.vue'
 
 function filteredList(input) 
 {  
@@ -81,6 +84,7 @@ export default {
       generatePdf,
       getProjects,
       loadProjectFromStore,
+      renderJSONTree,
       /*services: [
         {
           title: 'S',

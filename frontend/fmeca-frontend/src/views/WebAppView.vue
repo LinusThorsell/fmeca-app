@@ -1,6 +1,7 @@
 <script setup>
 import VisTable from "../components/VisTable.vue";
 import Navbar from "../components/Navbar.vue";
+import JSONTreeViewer from "../components/JSONTreeViewer.vue";
 // import Dropdown from "../components/Dropdown.vue";
 </script>
 
@@ -8,6 +9,7 @@ import Navbar from "../components/Navbar.vue";
   <main>
     <Navbar />
     <VisTable />
+    <JSONTreeViewer />
     <!-- <Dropdown /> -->
   </main>
 </template>
