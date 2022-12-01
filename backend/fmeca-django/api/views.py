@@ -11,6 +11,108 @@ from . import serializers
 
 permission = '__all__'
 
+class ProjectPostViewSet(viewsets.ModelViewSet):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+    permissions = permission
+
+    def create(self, request):
+        request_data             = request.data
+        project_name             = request_data.pop('project_name')
+        node_set                 = request_data.pop('node_set')
+        application_set          = request_data.pop('application_set')
+        application_instance_set = request_data.pop('application_instance_set')
+        threads                  = request_data.pop('threads')
+        domain_borders           = request_data.pop('domain_border')
+        connection_set           = request_data.pop('connection_set')
+
+        
+        project_object, created = Project.objects.update_or_create(name=project_name)
+        serializer = ProjectSerializer(project_object)
+        serializer.is_valid(raise_exception=True)
+        if not created:
+            return Response(serializer.data)
+
+        # node_set
+        for node in node_set:
+            cpu_set = node.pop('cpu_set')
+            node_object, created = Node.objects.create(**node, project=project_object)           
+            for cpu in cpu_set:
+                partition_set = cpu.pop('partition_set')
+                cpu_object = CPU.objects.create(**cpu, node=node_object)
+                for partition in partition_set:
+                    partition_object = Partition.objects.create(**partition, cpu=cpu_object)
+
+        # application_set
+        for application in application_set:
+            Application.objects.create(**application, project=project_object)
+
+        # application_instance_set
+        for application_instance in application_instance_set:
+            node_name        = application_instance.pop('node_name')
+            cpu_name         = application_instance.pop('cpu_name')
+            partition_name   = application_instance.pop('partition')
+            node_object      = get_object_or_404(Node.objects.all(), name=node_name, project=project_object)
+            cpu_object       = get_object_or_404(CPU.objects.all(), name=cpu_name, node=node_object)
+            partition_object = None
+
+            if partition_name != None:
+                partition_object = Partition.objects.get(name=partition_name, cpu=cpu_object)
+            ApplicationInstance.objects.create(**application_instance, cpu=cpu_object, node=node_object, partition=partition_object, project=project_object)
+
+        # threads
+        for thread in threads:
+            application_name   = thread.pop('application')
+            port_set           = thread.pop('port_list')
+            application_object = get_object_or_404(Application.objects.all(), name=application_name, project=project_object)
+            thread_object = Thread.objects.create(**thread, application=application_object, project=project_object)
+            for port in port_set:
+                PacPort.objects.create(**port, thread=thread_object, domain_border=None)
+        
+        # domain_borders
+        for domain_border in domain_borders:
+            port_set = domain_border.pop('port_list')
+            domain_border_object = DomainBorder.objects.create(**domain_border, project=project_object)
+            for port in port_set:
+                PacPort.objects.create(**port, thread=None, domain_border=domain_border_object)
+
+        # connection_set
+        for connection in connection_set:
+            provider_owner = connection.pop('provider_owner')
+            provider_thread = connection.pop('provider_thread')
+            provider_port = connection.pop('provider_port')
+            requirer_owner = connection.pop('requirer_owner')
+            requirer_thread = connection.pop('requirer_thread')
+            requirer_port = connection.pop('requirer_port')
+
+            provider_is_db = connection.pop('provider_is_domain_border')
+            requirer_is_db = connection.pop('requirer_is_domain_border')
+
+            # provider
+            provider_port_object = get_object_or_404(PacPort.objects.all(), name=provider_port, project=project_object)
+            if provider_is_db:
+                db_object = get_object_or_404(DomainBorder.objects.all(), name=provider_owner, project=project_object)
+                Connection.objects.create(**connection, provider_owner=db_object, provider_port=provider_port_object, project=project_object)
+            else:
+                thread_object = get_object_or_404(Thread.objects.all(), name=provider_thread, project=project_object)
+                app_instance_object = get_object_or_404(ApplicationInstance.objects.all(), )
+                Connection.objects.create(**connection, provider_owner=app_instance_object, 
+                                    provider_thread=thread_object, provider_port=provider_port_object, project=project_object)
+
+            # requirer
+            requirer_port_object = get_object_or_404(PacPort.objects.all(), name=requirer_port, project=project_object)
+            if provider_is_db:
+                db_object = get_object_or_404(DomainBorder.objects.all(), name=requirer_owner, project=project_object)
+                Connection.objects.create(**connection, requirer_owner=db_object, requirer_port=requirer_port_object, project=project_object)
+            else:
+                thread_object = get_object_or_404(Thread.objects.all(), name=requirer_thread, project=project_object)
+                app_instance_object = get_object_or_404(ApplicationInstance.objects.all(), )
+                Connection.objects.create(**connection, provider_owner=app_instance_object, 
+                                    requirer_thread=thread_object, requirer_port=requirer_port_object, project=project_object)
+        
+
+        return Response(serializer.data)
+
 class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
@@ -45,16 +147,19 @@ class ApplicationInstanceViewSet(viewsets.ModelViewSet):
 
     def create(self, request):
         request_data = request.data
-        application_name = request_data.pop('application_name')
+        to_send = []
+
         project_name = request_data.pop('project_name')
         project_instance = get_object_or_404(Project.objects.all(), name=project_name)
-        application_instance = get_object_or_404(Application.objects.all(), name=application_name, project=project_instance)
-        application_id = getattr(application_instance, 'id')
+        application_set = request_data.pop('application_set')
+
+        for application_instance in application_set:
+            application_object = get_object_or_404(Application.objects.all(), name=application_instance['instanceof'], project=project_instance)
+            created_app = ApplicationInstance.objects.create(name=application_instance['name'], instance_of=application_object)
+            to_send.append(created_app)
         
-        request_data['application'] = application_id
-        serializer = self.get_serializer(data=request_data)
+        serializer = ApplicationInstanceSerializer(to_send, many=True)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
         return Response(serializer.data)
 
 class ConnectionViewSet(viewsets.ModelViewSet):
@@ -83,16 +188,30 @@ class ThreadViewSet(viewsets.ModelViewSet):
         self.perform_create(serializer)
         return Response(serializer.data)
 
-class PacPortViewSet(viewsets.ModelViewSet):
-    queryset = PacPort.objects.all()
-    serializer_class = PacPortSerializer
+
+
+class DomainBorderViewSet(viewsets.ModelViewSet):
+    queryset = DomainBorder.objects.all()
+    serializer_class = DomainBorderSerializer
     permissions = permission
 
-# {
-#     "name": "",
-#     "application_name": "LTM_FMC",
-#     "project_name": "linus1"
-# }
+    def create(self, request):
+        request_data = request.data
+
+        project_name = request_data.pop('project_name')
+        project_instance = get_object_or_404(Project.objects.all(), name=project_name)
+        domain_border_set = request_data.pop('domain_border_set')
+
+        for domain_border in domain_border_set:
+            DomainBorder.objects.all().create(name=domain_border['name'], project=project_instance)
+            port_set = domain_border['port_set']
+            for port in port_set:
+                PacPort.objects.all().create(**port)
+        
+        serializer = self.get_serializer(data=request_data)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data)
+
 
 #------------------------------------------------
 
@@ -106,10 +225,12 @@ class CommentsViewSet(viewsets.ModelViewSet):
         comments_dict = request_data.pop('comments')
         request_data['comments'] = []
 
+        # todo fix update defaults
         project_instance = get_object_or_404(Project.objects.all(), name=request_data['project'])
-        container_instance = CommentsContainer.objects.create(project=project_instance)
-        for key, value in comments_dict.items():
-            KeyVal.objects.create(key=key, comment=value, container=container_instance)
+        container_instance, created = CommentsContainer.objects.update_or_create(project=project_instance)
+        if created:
+            for key, value in comments_dict.items():
+                KeyVal.objects.create(key=key, comment=value, container=container_instance)
 
         serializer =  serializer = self.get_serializer(data=request_data)
         serializer.is_valid(raise_exception=True)
