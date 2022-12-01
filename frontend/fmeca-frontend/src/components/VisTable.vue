@@ -91,6 +91,10 @@ function restoreColumns() {
   for (i = 0; i < vis_table_store.getColumnCount(selected_project.value); i++) {
     colStyles[i].display = "flex";
   }
+  console.log(vis_table_store.getRowCount(selected_project.value));
+  for (i = 0; i < vis_table_store.getRowCount(selected_project.value); i++) {
+    rowStyles[i].display = "flex";
+  }
 }
 
 function getClass(column, row) {
