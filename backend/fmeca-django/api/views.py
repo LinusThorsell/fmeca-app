@@ -97,17 +97,21 @@ class PacPortViewSet(viewsets.ModelViewSet):
 #------------------------------------------------
 
 class CommentsViewSet(viewsets.ModelViewSet):
-    queryset = CommentsDict.objects.all()
-    serializer_class = DictSerializer
+    queryset = CommentsContainer.objects.all()
+    serializer_class = CommentsContainerSerializer
     permissions = permission
 
     def create(self, request):
         request_data = request.data
-        project_name = request_data.pop('project')
-        project_instance = get_object_or_404(Project.objects.all(), name=project_name)
-        
-        request_data['project'] = project_instance
-        serializer = self.get_serializer(data=request_data)
+        comments_dict = request_data.pop('comments')
+        request_data['comments'] = []
+
+        project_instance = get_object_or_404(Project.objects.all(), name=request_data['project'])
+        container_instance = CommentsContainer.objects.create(project=project_instance)
+        for key, value in comments_dict.items():
+            KeyVal.objects.create(key=key, comment=value, container=container_instance)
+
+        serializer =  serializer = self.get_serializer(data=request_data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+
         return Response(serializer.data)
