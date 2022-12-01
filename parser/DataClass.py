@@ -33,8 +33,7 @@ class Partition_Data_Class:
         self.fixedStartNs = None
         self.partiton_id = id
         self.nodename = node
-        self.cpuname = cpu
-        
+        self.cpuname = cpu  
     def reprJSON(self):
         return {"name":self.name,"is_ltm":self.isLTM,"partition_id":self.partiton_id,"fixed_start":self.fixedStartNs}
 
@@ -43,7 +42,6 @@ class Application_Instance:
         # Retrieved when parsing application_instances.xml for either mc or fc
         self.name = name
         self.instanceOfApplication = application
-
         # Below attributes are known after parsing sw_topology.xml
         self.rampool = None
         self.instanceOf =  None
@@ -51,7 +49,6 @@ class Application_Instance:
         self.nodename = None
         self.cpuname = None
         self.partitionname = None
-
     def reprJSON(self):
         return {"name":self.name, "instance_of_application":self.instanceOfApplication,"rampool":self.rampool,"instance_of":self.instanceOf,"affinity":self.affinity,
         "node_name":self.nodename, "cpu_name":self.cpuname,"partition_name":self.partitionname}
@@ -60,16 +57,12 @@ class Application:
     def __init__(self,name, automatedTestLevel = None):
         self.name = name
         self.automatedTestLevel = automatedTestLevel
-    
     def __eq__(self, other):
         return self.name == other.name 
-    
     def __hash__(self):
         return hash(self.name)
-
     def __repr__(self):
         return self.name
-    
     def reprJSON(self):
         return {"name":self.name, "automated_test_level":self.automatedTestLevel}
     # Application also have thread but those are sent separately to the database  
@@ -99,7 +92,6 @@ class PacPorts:
         return {"name":self.name,"interface":self.interface,"role":self.role, "provider":self.provider}
 
 class Connection:
-    
     def __init__(self, Provider_owner, Provider_thread, Provider_port,provider_is_domainborder,
         Requirer_owner, Requirer_thread, Requirer_port,requirer_is_domainborder, identity):
         self.Provider_owner = Provider_owner
