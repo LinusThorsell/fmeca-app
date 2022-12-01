@@ -5,6 +5,7 @@ from Encoder_Class import *
 import DataClass
 import Paths
 import DebugFile
+import Tests
 import platform
 import xml.etree.ElementTree as ET
 import fileinput
@@ -25,8 +26,6 @@ class CLI:
         self._encoder = Encoder()
         self._Paths = Paths.Paths()
         self._parser = Parser()
-        self._parser.initialisation()
-        #self.delete_argument = ""
         self._add_path = None
         self._meta_path = None
         self._project_name = ""
@@ -37,14 +36,14 @@ class CLI:
         self.Connections = ""
         self.Threads = ""
         self.DomainBorder = ""
+    
     def remove(self):
-        ##Tell the database to delete the project
-       # self.delete_argument = project
+        #Tell the database to delete the given projec
         self._remove = True
         self._functions = self._remove_functions
 
     def add(self):
-        ##Add this project given by the path to the database
+        #Add this project given by the path to the database
         self._add = True
         self._functions = self._add_functions
         
@@ -98,11 +97,8 @@ class CLI:
         fileinput.close()
 
     def analyse_cli(self):
-        #previous_was_two_part_argument = False
-        #for i in range(self._nr_arguments):
         i = 0
-        while i < self._nr_arguments: #or self._keep_alive:
-            #argument_list = []
+        while i < self._nr_arguments:
             temp_argument = self._arguments[i].lower()
             if (temp_argument in self._flags):
                 nr_arguments = self._flags[temp_argument]
@@ -112,11 +108,6 @@ class CLI:
                 else:
                     self._functions[temp_argument](*argument_list)
                 i+=nr_arguments + 1
-                """ if(not(i < self._nr_arguments) and self._keep_alive): 
-                    self._arguments = input("parser: ")
-                    self._arguments = self._arguments.split(" ")
-                    self._nr_arguments = len(self._arguments)
-                    i = 0 """
             else:
                 print("The flag(s) you used is not valid!")
                 print("The valid flags are:")
@@ -125,10 +116,10 @@ class CLI:
                 print("If the flag requires a path, you put the path right after the flag\n-flag -path")
                 exit()
 
-    ##If you want to add more flags and corresponding functions you simply
-    ##add the flag and function to the dictionary below
-    ##in self._flags we should have the flag and how many arguments we should
-    ## have after that
+    #If you want to add more flags and corresponding functions you simply
+    #add the flag and function to the dictionary below
+    #in self._flags we should have the flag and how many arguments we should
+    # have after that
     def initialize(self):
         self._flags = {"debug":0,"add":0,"remove":0,"-c":1, "-path":1, "-meta":1, "-tag":1,"print":0}
         self._functions = {"add":self.add,"remove":self.remove,"print":self.print_f}
@@ -138,134 +129,62 @@ class CLI:
         DebugFile.windows = False 
         if platform.system() == "windows":
             DebugFile.windows = True 
+    
+
    
     def parsing(self):
-            #Call function that posts to database
-            DebugFile.debug_print("Call function: ADD to database")
-            DebugFile.debug_print(self._add_path)
-            self.get_paths()
-            DebugFile.debug_print("PATHS:")
-            DebugFile.debug_print(self._Paths._paths)
+        #Call function that posts to database
+        DebugFile.debug_print("Call function: ADD to database")
+        DebugFile.debug_print(self._add_path)
+        self.get_paths()
+        DebugFile.debug_print("PATHS:")
+        DebugFile.debug_print(self._Paths._paths)
 
 
-            # The order we want to parse the files in
-            runorder = []
-            runorder += ["functional_topology/fc","functional_topology/mc"]
-            runorder += ["fc/hw_topology.xml", "mc/hw_topology.xml","fc/sw_topology.xml","mc/sw_topology.xml"]
-            runorder += [ "/applications/", "/domain_border"]
-            
-            
-            # If no tag was specified use name from folder
-            if(self._project_name == ""): 
-                self._project_name = self._parser.get_project_name(self._add_path) 
-            
-            
-            # Init containers
-            self.Project_Type = DataClass.Project_Data_Class(self._project_name)
-            #self.Connections = DataClass.ConnectionContainer(self._project_name)
-            #self.Applications = DataClass.ApplicationContainer(self._project_name)
-            #self.Threads = DataClass.ThreadContainer(self._project_name)
-            #self.DomainBorder = DataClass.DomainBorders(self._project_name)
-            #self.Applications = []
-            #self.Applications_Instances = []
+        # The order we want to parse the files in
+        runorder = []
+        runorder += ["functional_topology/fc","functional_topology/mc"]
+        runorder += ["fc/hw_topology.xml", "mc/hw_topology.xml","fc/sw_topology.xml","mc/sw_topology.xml"]
+        runorder += [ "/applications/", "/domain_border"]
+        
+        
+        # If no tag was specified use name from folder
+        if(self._project_name == ""): 
+            self._project_name = self._parser.get_project_name(self._add_path) 
+        
+        # Init containers
+        self.Project_Type = DataClass.Project_Data_Class(self._project_name)
 
-            # Parse files by order specified by runorder list
-            for temppath in runorder:
-                for path in self._Paths._paths:
-                    if temppath in path and "fc/hw_topology.xml" in temppath:
-                        DebugFile.error_print(1)
-                        self.Project_Type.filter(self._parser.get_nodes(path))
-                    elif temppath in path and "mc/hw_topology.xml" in temppath:
-                        DebugFile.error_print(2)
+        # Parse files by order specified by runorder list
+        for temppath in runorder:
+            for path in self._Paths._paths:
+                if temppath in path and "fc/hw_topology.xml" in temppath:
+                    self.Project_Type.filter(self._parser.get_nodes(path))
+                elif temppath in path and "mc/hw_topology.xml" in temppath:
+                    self.Project_Type.filter(self._parser.get_nodes(path))
+                elif temppath in path and "fc/sw_topology.xml" in temppath:
+                    self.Project_Type.insert_partitions(self._parser.get_partitions(self.Project_Type,path))
+                elif temppath in path and "mc/sw_topology.xml" in temppath:
+                    self.Project_Type.insert_applications(self._parser.get_cpu_applications(self.Project_Type,path))
+                elif temppath in path and "functional_topology/fc" in temppath:
+                    self.Project_Type.connection_set += self._parser.get_connection_list(path)
+                    self.Project_Type.application_set += self._parser.get_applications_list(path)
+                    self.Project_Type.application_instance_set += self._parser.get_applications_instances_list(path)
+                elif temppath in path and "functional_topology/mc" in temppath:
+                    self.Project_Type.application_set += self._parser.get_applications_list(path)
+                    self.Project_Type.application_instance_set += self._parser.get_applications_instances_list(path)
+                    self.Project_Type.connection_set += self._parser.get_connection_list(path)
+                elif temppath in path and "/applications/" in temppath:
+                    self.Project_Type.thread_set += self._parser.get_threads(path)
+                    #self.Threads.thread_set += self._parser.get_threads(path)
+                elif temppath in path and "/domain_border" in temppath:
+                    self._parser.get_all_domains(path,self.Project_Type.domain_border_set)
+                    #self._parser.get_all_domains(path,self.DomainBorder)
 
-                        self.Project_Type.filter(self._parser.get_nodes(path))
-                    elif temppath in path and "fc/sw_topology.xml" in temppath:
-                        DebugFile.error_print(3)
-
-                        self.Project_Type.insert_partitions(self._parser.get_partitions(self.Project_Type,path))
-                    elif temppath in path and "mc/sw_topology.xml" in temppath:
-
-                        DebugFile.error_print(4)
-                        self.Project_Type.insert_applications(self._parser.get_cpu_applications(self.Project_Type,path))
-                    elif temppath in path and "functional_topology/fc" in temppath:
-
-                        DebugFile.error_print(5)
-                        self.Project_Type.connection_set += self._parser.get_connection_list(path)
-                        self.Project_Type.application_set = (self._parser.get_applications_list(path))
-                        self.Project_Type.application_instance_set += self._parser.get_applications_instances_list(path)
-                        
-
-                        # self.Applications.application_set = self._parser.get_applications_instances_list(path)
-                        #self.Connections.connection_set = self._parser.get_connection_list(path)
-                    elif temppath in path and "functional_topology/mc" in temppath:
-
-                        DebugFile.error_print(6)
-                        self.Project_Type.application_instance_set += self._parser.get_applications_instances_list(path)
-                        self.Project_Type.connection_set += self._parser.get_connection_list(path)
-                        #self.Applications.application_set += self._parser.get_applications_instances_list(path)
-                        #self.Connections.connection_set += self._parser.get_connection_list(path)
-                    elif temppath in path and "/applications/" in temppath:
-
-                        DebugFile.error_print(7)
-                        self.Project_Type.thread_set += self._parser.get_threads(path)
-                        #self.Threads.thread_set += self._parser.get_threads(path)
-                    elif temppath in path and "/domain_border" in temppath:
-
-                        DebugFile.error_print(8)
-                        self._parser.get_all_domains(path,self.Project_Type.domain_border_set)
-                        #self._parser.get_all_domains(path,self.DomainBorder)
-                        
-                #-----------------------------------------------------------------------------
-            
-            # Add all scheduled applications to project som we can later check if all are created 
-            # for node in self.Project_Type.node_set:
-            #     for cpu in node.cpus:
-            #         for partition in cpu.partition_set:
-            #             self.Project_Type.Applications += partition.application_set
-            #         self.Project_Type.Applications += cpu.application_set
-            
-
-            found = False
-            for instance in self.Project_Type.application_instance_set:
-                for applications in self.Project_Type.application_set:
-                    if instance.instanceOfApplication == applications.name:
-                        found = True
-                if(not found):
-                    DebugFile.warning_print("Did not find application for instance {0}".format(instance.name))
-                    found = False
+         #-----------------------------------------------------------------------------
                     
-            # Check if all ports in connections exist
-
-            found = False
-            #bad connections == connections that doesnt have any existing ports
-            
-            
-            # bad_connections =  []
-            # for connection in self.Connections.connection_set:
-            #     if connection.Provider_thread != None:
-            #         for thread in self.Threads.thread_set:
-            #             for port in thread.port_set:
-            #                 if connection.Provider_port == port.name:
-            #                     found = True
-                            
-            #     else:
-            #         for domain_border in self.DomainBorder.domain_border_set:
-            #             for port in domain_border.port_set:
-            #                 if connection.Provider_port == port.name:
-            #                     found = True
-                
-            #     if(not found):
-            #         DebugFile.debug_print("{0} port not found, removing connections".format(connection.Provider_port),DebugFile.WARNING)
-            #         bad_connections.append(connection)
-            #     else:
-            #         found = False
-                
-            # for connection in bad_connections:
-            #     self.Connections.connectionlist.remove(connection)
-
-
-            # self.Applications.add_project_name(self._project_name)
-            
+        self.Project_Type.application_set = list(set(self.Project_Type.application_set))
+        Tests.run_all(self.Project_Type)
 
     def get_arguments(self):
         nrarguments = len(sys.argv)

@@ -35,31 +35,6 @@ def blue_print(string):
 def underline_print(string):
     print(UNDERLINE + str(string) + ENDC)
 
-def underline_print(string):
-    print(UNDERLINE + str(string) + ENDC)
-
-
-
-#def test_print(string):
-    #print(testblink+ "hrj" + ENDC)
-    #while True:
-         #print("hej")
-    #     sys.stdout.write('\033[2K\033[1G')
-    #     print("Hello world", end =" ")
-         #time.sleep(1)
-
-def rainbow_print(string):
-    lines = string.split("\n")
-    colors = [YELLOW, OKBLUE, OKGREEN, CRED, MAGENTA]
-    for i in range(0, len(lines)):
-        print(colors[i % len(colors)] + lines[i] + ENDC)
-
-def rainbow_rainbow_print(string):
-    colors = [YELLOW, OKBLUE, OKGREEN, CRED, MAGENTA]
-    for i in range(0, len(string)):
-        print(colors[i % len(colors)] + string[i] + ENDC, end = "")
-
-
 def debug_print(object_to_be_printed, color = ENDC):
     global debug
     if(debug == True):
@@ -79,3 +54,17 @@ def debug_print_list(object_to_be_printed, color = ENDC):
             
         except Exception:
             error_print("Couldnt print the object in debug_print")
+
+def underline_print(string):
+    print(UNDERLINE + str(string) + ENDC)
+
+def rainbow_print(string):
+    lines = string.split("\n")
+    colors = [YELLOW, OKBLUE, OKGREEN, CRED, MAGENTA]
+    for i in range(0, len(lines)):
+        print(colors[i % len(colors)] + lines[i] + ENDC)
+
+def rainbow_rainbow_print(string):
+    colors = [YELLOW, OKBLUE, OKGREEN, CRED, MAGENTA]
+    for i in range(0, len(string)):
+        print(colors[i % len(colors)] + string[i] + ENDC, end = "")

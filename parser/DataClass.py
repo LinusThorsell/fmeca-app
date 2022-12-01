@@ -60,24 +60,19 @@ class Application:
     def __init__(self,name, automatedTestLevel = None):
         self.name = name
         self.automatedTestLevel = automatedTestLevel
+    
+    def __eq__(self, other):
+        return self.name == other.name 
+    
+    def __hash__(self):
+        return hash(self.name)
+
+    def __repr__(self):
+        return self.name
+    
     def reprJSON(self):
         return {"name":self.name, "automated_test_level":self.automatedTestLevel}
     # Application also have thread but those are sent separately to the database  
-class ApplicationContainer:
-    def __init__(self,project):
-        self.application_set = []
-        self.project_name = project
-    def add_project_name(self,name):
-        self.project_name = name
-    def reprJSON(self):
-        return {"project_name":self.project_name,"application_set":self.application_set}
-
-class ThreadContainer:
-    def __init__(self,project):
-        self.project = project
-        self.thread_set = []
-    def reprJSON(self):
-        return {"project_name":self.project,"thread_set":self.thread_set}
 class Threads:
     def __init__(self,name,application, rategroup):
         self.name = name
@@ -86,13 +81,6 @@ class Threads:
         self.port_set = []
     def reprJSON(self):
         return {"name":self.name,"application":self.application, "rategroup":self.rategroup,"port_set":self.port_set}
-
-class DomainBorders:
-    def __init__(self, project):
-        self.project_name = project
-        self.domain_border_set = []
-    def reprJSON(self):
-        return {"project_name":self.project_name,"domain_border_set":self.domain_border_set}
 
 class DomainBorder:
     def __init__(self, name):
@@ -131,15 +119,6 @@ class Connection:
                 "requirer_owner":self.Requirer_owner,"requirer_thread":self.Requirer_thread,
                 "requirer_port":self.Requirer_port,"requirer_is_domainborder":self.Requirer_is_domainborder,
                 "identity":self.identity} 
-
-class ConnectionContainer:
-    def __init__(self,projectname):
-        self.project_name = projectname
-        self.connection_set = []
-    
-    def reprJSON(self):
-        return {"project_name":self.project_name,"connection_set":self.connection_set}
-
 class Project_Data_Class:
     def __init__(self,name):
         self.name = name
@@ -149,9 +128,9 @@ class Project_Data_Class:
         self.thread_set = []
         self.domain_border_set = []
         self.connection_set = []
-        
+
     def reprJSON(self):
-        return {"name":self.name,"application_set": list(self.application_set),"node_set":self.node_set,"application_instance_set":self.application_instance_set,
+        return {"name":self.name,"application_set": self.application_set,"application_instance_set":self.application_instance_set,"node_set":self.node_set,
                 "thread_set":self.thread_set,"domain_border_set":self.domain_border_set,"connection_set":self.connection_set}
          
     def insert_partitions(self,partition_set):
@@ -173,7 +152,6 @@ class Project_Data_Class:
                                 self.Applications.append(application)
     
     def filter(self,objectlist):
-        
         for objecttype in objectlist:
             #if isinstance(object,Cpu):
             #    self.Cpu.append(object)
