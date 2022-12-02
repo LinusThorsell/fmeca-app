@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<idb:Connections xmlns:idb="http://www.saabgroup.com/aeronautics/gripen/mg61-01/idb/connections" domain="MissionCritical">
+  <Connection>
+    <ProviderPort name="PDCM21_Results.Results_60.Results"/>
+    <RequirerPort name="Event_Res_MC.Results_60.Summary" identity="Event_Res_MC"/>
+  </Connection>
+</idb:Connections>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<idb:Connections xmlns:idb="Test1234">
+
+  <Connection>
+    <ProviderPort name="Separation_1.PDCM11_Results"/>
+    <RequirerPort name="PDCM11_Results.Results_60.Summary"/>
+  </Connection>
+
+  <Connection>
+    <ProviderPort name="Separation_1.PDCM12_Results"/>
+    <RequirerPort name="PDCM12_Results.Results_60.Summary"/>
+  </Connection>
+
+  <Connection>
+    <ProviderPort name="Separation_1.PDCM21_Results"/>
+    <RequirerPort name="PDCM21_Results.Results_60.Summary"/>
+  </Connection>
+
+  <Connection>
+    <ProviderPort name="Separation_1.PDCM22_Results"/>
+    <RequirerPort name="PDCM22_Results.Results_60.Summary"/>
+  </Connection>
+
+</idb:Connections>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
-<idb:Application xmlns:idb=""
+<idb:Application xmlns:idb="Test1234"
      name="Basic_Com_Event" automatedTestLevel="E">
 
 

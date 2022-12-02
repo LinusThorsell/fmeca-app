@@ -1,0 +1,9 @@
+<?xml version='1.0' ?>
+<Linus_DB>
+    <ENGINE name="django.db.backends.mysql"/>
+    <NAME name="fmeca_db"/>
+    <USER name="saab_user"/>
+    <PASSWORD name='EKJNF"UIH"/"((/RSHFJK'/>
+    <HOST name="178.79.181.100"/>
+    <PORT name="3306"/>
+</Linus_DB>
