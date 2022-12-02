@@ -17,31 +17,46 @@ HEADER = '\033[95m'
 OKCYAN = '\033[96m'
 
 debug = False
+slow_mode = False
+
 
 def error_print(string):
-    print(CRED + string + ENDC)
+    print(CRED + str(string) + ENDC)
 
 def warning_print(string):
-    print(WARNING + string + ENDC)
+    print(WARNING + str(string) + ENDC)
 
 def success_print(string):
-    print(OKGREEN + string + ENDC)
+    print(OKGREEN + str(string) + ENDC)
 
 def blue_print(string):
-    print(OKBLUE + string + ENDC)
+    print(OKBLUE + str(string) + ENDC)
 
 def underline_print(string):
-    print(UNDERLINE + string + ENDC)
+    print(UNDERLINE + str(string) + ENDC)
 
+def debug_print(object_to_be_printed, color = ENDC):
+    global debug
+    if(debug == True):
+        print(color)
+        print(object_to_be_printed)
+        print(ENDC)
+            
+def debug_print_list(object_to_be_printed, color = ENDC):
+    global debug
+    if(debug == True):
+        try:
+            #if color != ENDC:
+            for args in object_to_be_printed:
+                string = color + str(args)
+                print(string)
+            print(ENDC)
+            
+        except Exception:
+            error_print("Couldnt print the object in debug_print")
 
-
-#def test_print(string):
-    #print(testblink+ "hrj" + ENDC)
-    #while True:
-         #print("hej")
-    #     sys.stdout.write('\033[2K\033[1G')
-    #     print("Hello world", end =" ")
-         #time.sleep(1)
+def underline_print(string):
+    print(UNDERLINE + str(string) + ENDC)
 
 def rainbow_print(string):
     lines = string.split("\n")
@@ -53,14 +68,3 @@ def rainbow_rainbow_print(string):
     colors = [YELLOW, OKBLUE, OKGREEN, CRED, MAGENTA]
     for i in range(0, len(string)):
         print(colors[i % len(colors)] + string[i] + ENDC, end = "")
-
-
-def debug_print(*object_to_be_printed, color = ENDC):
-    global debug
-    if(debug == True):
-        print(color)
-        try:
-            print(*object_to_be_printed) 
-        except Exception:
-            error_print("Couldnt print the object in debug_print")
-        print(ENDC)

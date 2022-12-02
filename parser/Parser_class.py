@@ -1,81 +1,73 @@
 import xml.etree.ElementTree as ET
 from os import path as OSPATH
+import os
 import DataClass
-
 import DebugFile
+
 class Parser:
     def __init__(self):
-        self.functions = {}
-            
+        pass
+    
     #Retrieves the project name from the path
     def get_project_name(self,path):
         temp = path.split("/")
         name = temp[0]
         return name
 
-    #creates a cpu datatype
+    #Creates a cpu datatype
     def cpu(self,raw_cpu_data):
-    
         type = raw_cpu_data.tag
         name = raw_cpu_data.get("name")
         unitid = raw_cpu_data.get("unitId")
         IOPRef = raw_cpu_data.get("IOPRef")
         ACCSSyncMaster = raw_cpu_data.get("ACCSSyncMaster")
-        domainBorder = raw_cpu_data.get("domainBorder")
-        
-        # for children in raw_cpu_data:
-        #     print("\t\t" + children.tag)
-        #     if children.tag in self.functions:
-        #         returnlist += self.functions[children.tag](children)
-                
+        domainBorder = raw_cpu_data.get("domainBorder")         
         return DataClass.Cpu(name,type,unitid,IOPRef,ACCSSyncMaster,domainBorder)
 
-    def create_partition(self,raw_partition_data,node,cpu):
-        name = raw_partition_data.get("name")
-        isLTM = raw_partition_data.get("isLTM")
-        partition_id = raw_partition_data.get("id")
-        
-        Partition = DataClass.Partition_Data_Class(name, isLTM, partition_id, node,cpu)
-        
-        for children in raw_partition_data:
-            if children.tag in self.functions:
-                #typ onödig men whatever
-                if children.tag == "Application":
-                    Partition.applications.append(self.functions[children.tag](children,node,cpu,name))        
-        return  Partition
+    #Adds rampool,instanceOf, affinity, cpuname, nodename, partitionname attributes to application instances that has them
+    def add_info_where_application_instance_is_running(self,Project,children,node,cpu,partition):
+        for instance in Project.application_instance_set:
+            if(instance.name == children.get("name")):
+                instance.rampool = children.get("rampool")
+                instance.instanceOf = children.get("instanceOf")
+                instance.affinity = children.get("affinity")
+                instance.cpuname = cpu
+                instance.nodename = node
+                instance.partitionname = partition             
 
-
-    def create_application(self, raw_application_data,node, cpu, partition):
-        
-        #<DipsApplication name="PoProvider_Applicationrt_Gateway_1" rampool="0x10000" instanceOf="port_gateway" affinity="0"/>
-        name = raw_application_data.get("name")
-        rampool = raw_application_data.get("rampool")
-        instanceOf = raw_application_data.get("instanceOf")
-        affinity = raw_application_data.get("affinity")
-
-        return DataClass.Application(name, rampool, instanceOf, affinity, node, cpu, partition)
-
-    def create_partitions_in_cpu(self,raw_partition_data):
+    #Create partition_set in CPU
+    def create_partitions_in_cpu(self,Project,raw_partition_data):
         partitions = []
         ref = raw_partition_data.get("ref")
         node, cpu = ref.split('.')
+        
         for child in raw_partition_data:
             if child.tag == "Partition":
-                partitions.append(self.create_partition(child, node, cpu))
+                partitions.append(self.create_partition(Project,child, node, cpu))
         return partitions 
     
-    def create_applications_in_cpu(self,raw_partition_data):
+    def create_applications_in_cpu(self,project,raw_partition_data):
         applications = []
         ref = raw_partition_data.get("ref")
         node, cpu = ref.split('.')
         for child in raw_partition_data:
             if child.tag == "Application":
-                applications.append(self.create_application(child, node, cpu, None))
+                self.add_info_where_application_instance_is_running(project,child, node, cpu, None)
         return applications 
 
+    def create_partition(self,Project,raw_partition_data,node,cpu):
+        name = raw_partition_data.get("name")
+        isLTM = raw_partition_data.get("isLTM")
+        partition_id = raw_partition_data.get("id")
+        
+        Partition = DataClass.Partition_Data_Class(name, isLTM, partition_id, node,cpu)
     
+        for children in raw_partition_data:
+            if children.tag == "Application":
+                self.add_info_where_application_instance_is_running(Project,children,node,cpu,name)        
+        return  Partition
 
-    #create a single node, handle cpus related to node
+    #Create a single node, handle cpus related to node
     def create_node(self,raw_node_data):
             name = raw_node_data.get('name')
             loadsetTypeRef = raw_node_data.get("loadsetTypeRef")
@@ -91,42 +83,172 @@ class Parser:
             node = DataClass.Node(type,name,loadsetTypeRef,redundant,platformRef,syncLostBehavior)
         
             for cpu in raw_node_data:
-                if cpu.tag in self.functions:
-                    if cpu.tag == "APP" or cpu.tag == "IOP" or cpu.tag == "PP":
-                        node.cpus.append(self.functions[cpu.tag](cpu)) 
+                if cpu.tag == "APP" or cpu.tag == "IOP" or cpu.tag == "PP":
+                    node.cpus.append(self.cpu(cpu))
             return node
     
-
-    
     def create_connection(self, raw_connection_data):
+        temp_list = []
         for child in raw_connection_data:
             if(child.tag == "ProviderPort"):
-                Provider_name = child.get('name')
-                Provider_Application = Provider_name.split('.')[0]
+                providerport_list = child.get('name').split(".")
+                temp_list += providerport_list
+                if(len(providerport_list) == 3):
+                    temp_list.append(False) ## Is not domainborder
+                elif(len(providerport_list) == 2):
+                    temp_list.insert(1,None) # Thread parmeter is not valid
+                    temp_list.append(True) ## Is domainborder
+                
             elif(child.tag == "RequirerPort"):
-                Requirer_name = child.get('name')
-                Requirer_Application = Requirer_name.split('.')[0]
+                requirerport_list = child.get('name').split(".")
+                temp_list += requirerport_list
+                if(len(requirerport_list) == 3):
+                    temp_list.append(False)
+                elif(len(requirerport_list) == 2):
+                    temp_list.insert(5,None) # Thread parmeter is not valid
+                    temp_list.append(True) # Is domainborder
+                
+                temp_list.append(child.get('identity'))
 
-        return DataClass.Connection(Provider_name, Provider_Application, Requirer_name, Requirer_Application)
+        return DataClass.Connection(*temp_list)
 
+    def get_domainborders(self, path):
+        tree = ET.parse(path)
+        root = tree.getroot()
+        domain_borders = []
+        if("domainborder" in root.tag.lower()):
+            domain_borders.append(DataClass.DomainBorder(root.get("name")))
+        return domain_borders
+
+    def get_domain_border_ports(self, path):
+        tree = ET.parse(path)
+        root = tree.getroot()
+        port_dict = {}
+        for child in root:
+            if(child.tag == "PacPort"):
+                port = DataClass.PacPorts(child.get("name"), child.get("interface"),child.get("role"),child.get("provider"))
+                if child.get("domainBorder") in port_dict:
+                    port_dict[child.get("domainBorder")].append(port)
+                else:
+                    port_dict[child.get("domainBorder")] = [port]
+                     
+        return port_dict
+
+    def get_all_domains(self, path, container):
+        domainborders = []
+        pacports = {}
+        if os.path.exists(path):
+            for subdir, dirs, files in os.walk(path):
+                for file in files:
+                    if(subdir == (path + "/border")):
+                        domainborders += self.get_domainborders(os.path.join(subdir,file))
+                    elif (subdir == (path + "/config")):
+                        tempdict = self.get_domain_border_ports(os.path.join(subdir,file))
+                        for key,value in tempdict.items():
+                            if key in pacports:
+                                pacports[key] += value
+                            else:
+                                pacports[key] = value
+                    elif (subdir == (path + "/continous_contracts")):
+                        pass
+                    elif (subdir == (path + "/event_contracts")):
+                        pass
+                    else:
+                        pass
+
+            container += domainborders
+            #Put the ports in domainborders
+            for Domainborder in container:
+                if Domainborder.name in pacports:
+                    Domainborder.port_set += pacports[Domainborder.name]
 
     def create_application_instance(self, raw_application_instance_data):
         name = raw_application_instance_data.get('name')
         instanceOf = raw_application_instance_data.get("instanceOf")
-        return DataClass.Application_Instances(name, instanceOf)
+        return DataClass.Application_Instance(name, instanceOf)
 
-
+    def get_connection_list(self, path):
+        connectionlist = []
+        if os.path.exists(path+"/connections"):
+            for subdir, dirs, files in os.walk(path+"/connections"):
+                for file in files:
+                    if(file == "connections.xml"):
+                        connectionlist += self.get_connections(os.path.join(subdir,file))
+        return connectionlist
     
+    def get_threads(self, path):
+        threads = []
+        for subdir, dirs, files in os.walk(path):
+            for file in files:
+                if(file == "application.xml"):
+                    threads += self.get_thread(os.path.join(subdir,file))
+        return threads
+
+    def get_thread(self, path):
+        tree = ET.parse(path)
+        root = tree.getroot()
+        application = "unknown"
+        returnlist = []
+        application = root.get("name")
+        for child in root:
+            if(child.tag == "PeriodicThread"):
+                thread = DataClass.Threads(child.get("name"),application, child.get("rateGroup"))
+                for second_child in child:
+                    port = DataClass.PacPorts(second_child.get("name"), second_child.get("interface"), second_child.get("role"))
+                    thread.port_set.append(port)
+                returnlist.append(thread)
+        return returnlist
+
+    #Return all connections in path
     def get_connections(self, path):
-        # Return all connections in path
         tree = ET.parse(path)
         root = tree.getroot()
         returnlist = []
         for child in root:
             if(child.tag == "Connection"):
                 returnlist.append(self.create_connection(child))
-        return returnlist      
+            elif child.tag == "TemplateInstantiation":
+                pass
+        return returnlist 
 
+    def get_all_applications(self, path):
+        application = []
+        application_instances = []
+        if os.path.exists(path + "/application_instances.xml"):
+            if os.path.isfile( path + "/application_instances.xml"):
+                application += self.get_application(path + "/application_instances.xml")
+                application_instances += self.get_application_instances(path + "/application_instances.xml")
+
+        return application,application_instances
+
+    def get_applications_instances_list(self, path):
+        application_instances = []
+        if os.path.exists(path + "/application_instances.xml"):
+            if os.path.isfile( path + "/application_instances.xml"):
+                application_instances += self.get_application_instances(path + "/application_instances.xml")
+        return application_instances
+    
+    def get_applications_list(self, path):
+        returnlist = []
+        if os.path.exists(path + "/application_instances.xml"):
+            if os.path.isfile( path + "/application_instances.xml"):
+                returnlist = self.get_applications(path + "/application_instances.xml")
+        return returnlist
+
+    def get_applications(self, path):
+        tree = ET.parse(path)
+        root = tree.getroot()
+        set_of_application_names = set()
+        returnlist = []
+        for child in root:
+            if(child.tag == "ApplicationInstance"):
+                set_of_application_names.add(child.get("instanceOf"))
+
+        for app in set_of_application_names:
+           print(app)
+           returnlist.append(DataClass.Application(app))
+        return returnlist
+  
     def get_application_instances(self,path):
         tree = ET.parse(path)
         root = tree.getroot()
@@ -136,44 +258,39 @@ class Parser:
                 returnlist.append(self.create_application_instance(child))
         return returnlist  
 
-
-            
-            
-    #retrieves all nodes(and cpus) from fc/hw_topology
+    #Retrieves all nodes(and cpus) from fc/hw_topology
     def get_nodes(self,path):
         tree = ET.parse(path)
         root = tree.getroot()
         returnlist = []
         for node in root:
-            if node.tag in self.functions:
-                if(node.tag == "DCM" or node.tag == "PDCM"):
-                    returnlist.append(self.functions[node.tag](node))
+            if(node.tag == "DCM" or node.tag == "PDCM"):
+                returnlist.append(self.create_node(node))
         return returnlist        
 
-    #retrieve all partions and add to list
-    def get_partitions(self,path):
+    #Retrieve all partions and add to list
+    def get_partitions(self,Project,path):
         tree = ET.parse(path)
         root = tree.getroot()
         returnlist = []
         for partitions in root:
-            if partitions.tag in self.functions:
-                if (partitions.tag == "APP" or partitions == "IOP"):
-                    #returnlist.append(self.functions[node.tag](partitions))
-                    returnlist += self.create_partitions_in_cpu(partitions)
+            if (partitions.tag == "APP" or partitions == "IOP"):
+                returnlist += self.create_partitions_in_cpu(Project,partitions)
         return returnlist
-    
-    def get_cpu_applications(self,path):
+
+    def get_cpu_applications(self,project,path):
         tree = ET.parse(path)
         root = tree.getroot()
         returnlist = []
         for cpu in root:
-            if cpu.tag in self.functions:
-                if (cpu.tag == "PP"):
-                    #returnlist.append(self.functions[node.tag](partitions))
-                    returnlist += self.create_applications_in_cpu(cpu)
+            if (cpu.tag == "PP"):
+                returnlist += self.create_applications_in_cpu(project,cpu)
         return returnlist 
+<<<<<<< HEAD
     
     def initialisation(self):
         self.functions = {"PP":self.cpu,"PDCM":self.create_node,"DCM":self.create_node,"APP":self.cpu,"IOP":self.cpu,"Application":self.create_application}
     
     
+=======
+>>>>>>> ced22dc8fd1c3a3c5b76f62587839e3865e237c4

@@ -47,8 +47,15 @@ temp_array.forEach((array_outer, index_x) => {
   array_outer.forEach((array_inner, index_y) => {
   //console.log(array_inner);
     console.log("under är index");
-    console.log(index_y);
-    createFilteredTable(input, array_inner, index_y, index_x);
+    console.log(index_x + " " + index_y + " input: " + input + " arrayinner: " + array_inner);
+    let fakeinput = input +"";
+    let fakeinner = array_inner + "";
+    if(fakeinner.includes(fakeinput,0) && fakeinner!= "" || input == array_inner && array_inner != "")
+        {
+            console.log("träff");
+            createFilteredTable(index_x);       
+        }
+
     });
   });
 

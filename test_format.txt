@@ -1,0 +1,181 @@
+//Hur det är nu
+
+{
+    project_name:"Test1",
+    node_set: []
+}
+{
+    project_name:"Test1",
+    appliation_set: []
+}
+{
+    project_name:"Test1",
+    connection_set: []
+}
+{
+    project_name:"Test1",
+    threads: []
+}
+{
+    project_name:"Test1",
+    domain_border: []
+}
+
+
+//----- hur vi vill att det ska va 
+
+//transaction
+{
+    "project_name":"Test1",
+    "node_set": []
+    "application_set": []
+    "connection_set": []
+    "threads": []
+    "domain_border": []
+    "application_instance_set":[]
+}
+//end transaction
+
+
+Example of node set
+{
+    "node_set": [
+        {
+            "name": "FMC",
+            "load_set_type": "FMC",
+            "redundant": "true",
+            "platform": "fgst_v3",
+            "sync_loss": "EQ-SPECIFIC",
+            "cpu_set": 
+            [
+                {
+                    {
+                        "name": "APP",
+                        "type": "APP",
+                        "unit_id": "1",
+                        "iop_ref": "IOP",
+                        "accs_sync_master": null,
+                        "domain_border": null,
+                        "partition_set": 
+                        [
+                            {
+                                "name": "PART_LTM_FMC",
+                                "is_ltm": "true",
+                                "partition_id": "3",
+                                "fixed_start": null
+                            }
+                        ]
+                    }
+                }
+        }   ]
+}
+
+//Example of application set
+{
+    "application_set": 
+    [
+        {
+            "name":"the_name"
+        }
+    ]
+}
+
+//Example of application instaces set
+{
+    "application_instances_set": 
+    [
+        {
+            "name": "LTM_FMC",
+            "instanceof": "EDS_LTM",
+            "rampool": "something"
+            "instanceOf": "something",
+            "affinity": "something",
+            "nodename": "something",
+            "cpuname": "something",
+            "partitionname": "something"
+            
+        }
+    ]
+}
+
+//Example of connection_set
+
+{
+  "connection_set": 
+    [
+        {
+            "provider_owner": "TMC22_Results",
+            "provider_thread": "Results_60",
+            "provider_port": "Results",
+            "provider_is_domainborder": false,
+            "requirer_owner": "LTM_TMC2_APP2",
+            "requirer_thread": "EDS_LTM_60",
+            "requirer_port": "Test_Results",
+            "requirer_is_domainborder": false,
+            "identity": "LTM_TMC2_APP2"
+        }
+    ]
+}
+
+//Example of threads
+{
+    "threads": 
+    [    
+        {
+            "name": "Results_60",
+            "application": "Results",
+            "rategroup": "P60",
+            "port_list": [
+                {
+                    "name": "Results",
+                    "interface": "Results.Test_Status_I",
+                    "role": "Provider",
+                    "provider": null
+                },
+                {
+                    "name": "Summary",
+                    "interface": "Results.Test_Status_I",
+                    "role": "Requirer",
+                    "provider": null
+                },
+                {
+                    "name": "Success_Indicator",
+                    "interface": "Results.Summary",
+                    "role": "Provider",
+                    "provider": null
+                }
+            ]
+        }
+    ]
+ }
+
+
+//Example of domain_border
+{
+    "domain_border": 
+    [ 
+        {
+            "name": "DB_T12",
+            "port_list": [
+                {
+                    "name": "FP_Test_PDCM_A",
+                    "interface": "FP_I.Float_Test",
+                    "role": null,
+                    "provider": "FlightCritical"
+                },
+                {
+                    "name": "FP_Test_DCM_A",
+                    "interface": "FP_I.Float_Test",
+                    "role": null,
+                    "provider": "MissionCritical"
+                },
+                {
+                    "name": "PDCM12_Results",
+                    "interface": "Results.Test_Status_I",
+                    "role": null,
+                    "provider": "FlightCritical"
+                }
+            ]
+        }
+    ]
+}

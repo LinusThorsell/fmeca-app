@@ -9,6 +9,18 @@ from rest_framework.response import Response
 from . import serializers
 # Create your views here.
 
+# {
+#     "name":"dummy1",
+#     "node_set":[{
+#         "name":"testnode",
+#         "cpu_set":[{
+#             "name":"testcpu",
+#             "application_set":[],
+#             "partition_set":[]
+#         }]
+#     }]
+# }
+
 permission = '__all__'
 
 class ProjectViewSet(viewsets.ModelViewSet):

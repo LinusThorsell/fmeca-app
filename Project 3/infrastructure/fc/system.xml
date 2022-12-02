@@ -33,7 +33,7 @@
 
   <!-- Applications -->
   <appl_config name="results"    src="[applications_dir]/results"    config="[applications_dir]/results/config"    default_use="REAL"/>
-  <appl_config name="ltm"  src="[applications_dir]/ltm"  config="[applications_dir]/ltm/config" default_use="REAL"/>
+  <appl_config name="eds_ltm"  src="[applications_dir]/eds_ltm"  config="[applications_dir]/eds_ltm/config" default_use="REAL"/>
   <appl_config name="basic_com_event" src="[applications_dir]/basic_com_event"  config="[applications_dir]/basic_com_event/config"  default_use="REAL"/>
 
   <!-- IFS's -->

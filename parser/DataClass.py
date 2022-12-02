@@ -20,106 +20,138 @@ class Cpu:
         self.IOPRef = IOPRef
         self.ACCSSyncMaster = ACCSSyncMaster
         self.domainBorder = domainBorder
-        self.applications = []
-        self.partitions = []
+        self.partition_set = []
     def reprJSON(self):
         return {"name":self.name,"type":self.type,"unit_id":self.unitid,"iop_ref":self.IOPRef,
-        "accs_sync_master":self.ACCSSyncMaster,"domain_border":self.domainBorder,"partition_set":self.partitions,"application_set":self.applications}
+        "accs_sync_master":self.ACCSSyncMaster,"domain_border":self.domainBorder,"partition_set":self.partition_set}
 
 
 class Partition_Data_Class:
     def __init__(self,name,ltmbool,id, node,cpu):
         self.name = name
         self.isLTM = ltmbool
-        #Denna va med i project 1... lol?
         self.fixedStartNs = None
         self.partiton_id = id
         self.nodename = node
         self.cpuname = cpu
-        self.applications = []
-    def reprJSON(self):
-        return {"name":self.name,"is_ltm":self.isLTM,"partition_id":self.partiton_id,
-                "application_set":self.applications,"fixed_start":self.fixedStartNs}
-
-class Application:
-    #<DipsApplication name="Port_Gateway_1" rampool="0x10000" instanceOf="port_gateway" affinity="0"/>
-    def __init__(self,name, rampool, instanceOf, affinity,node,cpu,partition):
-        self.name = name
-        self.rampool = rampool
-        self.instanceOf = instanceOf
-        self.affinity = affinity
-        self.nodename = node
-        self.cpuname = cpu
-        self.partitionname = partition
-
-    def reprJSON(self):
-        return {"name":self.name,"cpu":None} #,"rampool":self.rampool,"instanceOf":self.instanceOf,"affinity":self.affinity}
-
-class Application_Instances:
-    def __init__(self,name, instanceOf):
-        self.name = name
-        self.instanceOf = instanceOf
-    
-    def reprJSON(self):
-        return {"name":self.name}
-    
-class ApplicationContainer:
-    def __init__(self,name):
-        self.name = name
-        self.applicationlist = []
-    
-    def reprJSON(self):
-        return {"name":self.name,"applicaitonlist":self.applicationlist}
-class Connection:
-    
-    def __init__(self, Provider_name, Provider_Application, Requirer_name, Requirer_Application):
-        self.Provider_name = Provider_name
-        self.Requirer_name = Requirer_name
-        self.Provider_Application = Provider_Application
-        self.Requirer_Application = Requirer_Application
         
     def reprJSON(self):
-        return {"Provider_name":self.Provider_name,"Provider_Application":self.Provider_Application,
-        "Requirer_name":self.Requirer_name, "Requirer_Application":self.Requirer_Application} 
+        return {"name":self.name,"is_ltm":self.isLTM,"partition_id":self.partiton_id,"fixed_start":self.fixedStartNs}
 
-class ConnectionContainer:
-    def __init__(self,projectname):
-        self.project_name = projectname
-        self.connectionlist = []
+class Application_Instance:
+    def __init__(self,name, application):
+        # Retrieved when parsing application_instances.xml for either mc or fc
+        self.name = name
+        self.instanceOfApplication = application
+
+        # Below attributes are known after parsing sw_topology.xml
+        self.rampool = None
+        self.instanceOf =  None
+        self.affinity = None
+        self.nodename = None
+        self.cpuname = None
+        self.partitionname = None
+
+    def reprJSON(self):
+        return {"name":self.name, "instance_of_application":self.instanceOfApplication,"rampool":self.rampool,"instance_of":self.instanceOf,"affinity":self.affinity,
+        "node_name":self.nodename, "cpu_name":self.cpuname,"partition_name":self.partitionname}
+
+class Application:
+    def __init__(self,name, automatedTestLevel = None):
+        self.name = name
+        self.automatedTestLevel = automatedTestLevel
+    
+    def __eq__(self, other):
+        return self.name == other.name 
+    
+    def __hash__(self):
+        return hash(self.name)
+
+    def __repr__(self):
+        return self.name
     
     def reprJSON(self):
-        return {"project_name":self.project_name,"connectionlist":self.connectionlist}
+        return {"name":self.name, "automated_test_level":self.automatedTestLevel}
+    # Application also have thread but those are sent separately to the database  
+class Threads:
+    def __init__(self,name,application, rategroup):
+        self.name = name
+        self.application = application
+        self.rategroup = rategroup
+        self.port_set = []
+    def reprJSON(self):
+        return {"name":self.name,"application":self.application, "rategroup":self.rategroup,"port_set":self.port_set}
 
-#The lists should contain Objects of the Objects
+class DomainBorder:
+    def __init__(self, name):
+        self.name = name 
+        self.port_set = []
+    def reprJSON(self):
+        return {"name":self.name,"port_set":self.port_set}
+    
+class PacPorts:
+    def __init__(self,name, interface, role, provider = None):
+        self.name = name
+        self.interface = interface
+        self.role = role
+        self.provider = provider
+    def reprJSON(self):
+        return {"name":self.name,"interface":self.interface,"role":self.role, "provider":self.provider}
 
+class Connection:
+    
+    def __init__(self, Provider_owner, Provider_thread, Provider_port,provider_is_domainborder,
+        Requirer_owner, Requirer_thread, Requirer_port,requirer_is_domainborder, identity):
+        self.Provider_owner = Provider_owner
+        self.Provider_thread = Provider_thread
+        self.Provider_port = Provider_port
+        self.Provider_is_domainborder = provider_is_domainborder
+
+        self.Requirer_is_domainborder = requirer_is_domainborder
+        self.Requirer_owner = Requirer_owner
+        self.Requirer_thread =  Requirer_thread
+        self.Requirer_port = Requirer_port
+        self.identity = identity
+        
+    def reprJSON(self):
+        return {"provider_owner":self.Provider_owner,"provider_thread":self.Provider_thread,
+                "provider_port":self.Provider_port,"provider_is_domainborder":self.Provider_is_domainborder,
+                "requirer_owner":self.Requirer_owner,"requirer_thread":self.Requirer_thread,
+                "requirer_port":self.Requirer_port,"requirer_is_domainborder":self.Requirer_is_domainborder,
+                "identity":self.identity} 
 class Project_Data_Class:
     def __init__(self,name):
         self.name = name
+        self.application_set =  []
+        self.application_instance_set = []
         self.node_set = []
+        self.thread_set = []
+        self.domain_border_set = []
+        self.connection_set = []
+
     def reprJSON(self):
-        return {"name":self.name,"node_set":self.node_set}
+        return {"name":self.name,"application_set": self.application_set,"application_instance_set":self.application_instance_set,"node_set":self.node_set,
+                "thread_set":self.thread_set,"domain_border_set":self.domain_border_set,"connection_set":self.connection_set}
          
-    def insert_partitions(self,partitionlist):
-        for partition in partitionlist:
+    def insert_partitions(self,partition_set):
+        for partition in partition_set:
             for node in self.node_set:
                 if partition.nodename == node.name:
                     for cpu in node.cpus:
                         if partition.cpuname == cpu.name:
-                            cpu.partitions.append(partition)   
+                            cpu.partition_set.append(partition)   
     
-    def insert_applications(self,applicationlist):
-        
-        for application in applicationlist:
+    def insert_applications(self,application_set):
+        for application in application_set:
             for node in self.node_set:
                 if application.nodename == node.name:
                     for cpu in node.cpus:
                         if application.cpuname == cpu.name:
                             if(application.partitionname == None):
-                                cpu.applications.append(application)
-                            #cpu.partitions.append(partition)  
+                                cpu.application_set.append(application)
+                                self.Applications.append(application)
     
     def filter(self,objectlist):
-        
         for objecttype in objectlist:
             #if isinstance(object,Cpu):
             #    self.Cpu.append(object)
