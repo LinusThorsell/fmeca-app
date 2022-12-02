@@ -286,3 +286,11 @@ class Parser:
             if (cpu.tag == "PP"):
                 returnlist += self.create_applications_in_cpu(project,cpu)
         return returnlist 
+<<<<<<< HEAD
+    
+    def initialisation(self):
+        self.functions = {"PP":self.cpu,"PDCM":self.create_node,"DCM":self.create_node,"APP":self.cpu,"IOP":self.cpu,"Application":self.create_application}
+    
+    
+=======
+>>>>>>> ced22dc8fd1c3a3c5b76f62587839e3865e237c4
