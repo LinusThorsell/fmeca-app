@@ -32,8 +32,7 @@ class Encoder:
         string = json.dumps(object,cls=ComplexEncoder,indent=4)
         return string
         
-    def loading_screen(self,string):
-    #print("Press enter to stop the loading")    
+    def loading_screen(self,string,color = DebugFile.ENDC):
         many_steps = len(self.steps)
         counter = 0
         while True:
@@ -42,10 +41,8 @@ class Encoder:
                 self.finished_request_lock.release()
                 break
             self.finished_request_lock.release()
-            #print(steps[counter % many_steps], end="" ,flush=True)
-            sys.stdout.write("\r"+string + " {0}".format(self.steps[counter % many_steps]))
-            sys.stdout.flush()        
-            time.sleep(0.5)
+            print(("\r" + string + color + " {0}" + DebugFile.ENDC).format(self.steps[counter % many_steps]), end="" ,flush=True)
+            time.sleep(0.33333)
             counter += 1
         self.sema.release()
 
@@ -58,18 +55,15 @@ class Encoder:
     def delete_from_database(self,project,folder):
         
         try:
-            self.thread = threading.Thread(target=self.loading_screen,args=("Deleting from database",))
+            self.thread = threading.Thread(target=self.loading_screen,args=("Deleting from database",DebugFile.CRED))
             self.thread.start()
             response = requests.delete(self._url + folder + project)
+            self.set_finished_request_and_wait_for_thread(True)
             if response.status_code == 204:
-                self.set_finished_request_and_wait_for_thread(True)
                 DebugFile.success_print("\rThe project \"{0}\" was succesfully removed at {1}".format(project,self._url + folder + project))
             elif response.status_code == 404:
-                self.set_finished_request_and_wait_for_thread(True)
-
                 DebugFile.error_print("\rError 404, There were no project with the name \"{0}\"".format(project))
             else:
-                self.set_finished_request_and_wait_for_thread(True)
                 DebugFile.error_print("\rUnhandled statuscode code: {0}".format(response.status_code))
         except requests.exceptions.ConnectionError:
             self.set_finished_request_and_wait_for_thread(True)
@@ -81,25 +75,21 @@ class Encoder:
         DebugFile.debug_print("Sending to: \n\n", self._url + folder)
         response = ""
         try:
-            self.thread = threading.Thread(target=self.loading_screen,args=("Sending to database",))
+            self.thread = threading.Thread(target=self.loading_screen,args=("Sending to database",DebugFile.OKGREEN))
             self.thread.start()
             response = requests.post(self._url + folder,string,headers=self._headers)
-            print("Hej")
+            self.set_finished_request_and_wait_for_thread(True)
             if response.status_code == 201:
-                self.set_finished_request_and_wait_for_thread(True)
                 DebugFile.success_print("\rThe project_segment was sucessfully sent to the database at {0}.".format(self._url+folder))
             elif response.status_code == 400:
-                self.set_finished_request_and_wait_for_thread(True)
                 if "project with this name already exists" in response.text:
                     DebugFile.error_print("\rError bad request: 400, project with this name already exists!")
                     DebugFile.error_print("Aborting send to database and exiting program")
                     exit()                        
             elif response.status_code == 500:
-                    self.set_finished_request_and_wait_for_thread(True)
                     DebugFile.error_print("\rInternal server error when sending to {0}".format(self._url+folder))
                     exit()
             else:
-                self.set_finished_request_and_wait_for_thread(True)
                 DebugFile.warning_print("\rUnhandled status code {0}".format(response.status_code))
                 exit()
         except requests.exceptions.ConnectionError:

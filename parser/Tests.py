@@ -36,67 +36,106 @@ def test_threads_refer_to_application(Project):
             found = False
     return success
 
+
     # Check if all ports in connections exist and removes bad connections
-# def test_connection_ports(Project):     
-#     found = False
-#     success = True
-#     bad_connections =  [] #bad connections == connections that doesnt have any existing ports
-
-        # self.Provider_owner = Provider_owner
-        # self.Provider_thread = Provider_thread
-        # self.Provider_port = Provider_port
-        # self.Provider_is_domainborder = provider_is_domainborder
-
-        # self.Requirer_is_domainborder = requirer_is_domainborder
-        # self.Requirer_owner = Requirer_owner
-        # self.Requirer_thread =  Requirer_thread
-        # self.Requirer_port = Requirer_port
-        # self.identity = identity       
-
-    # for connection in Project.connection_set:
-    #     if connection.Provider_is_domainborder:
-    #         for domain_border in Project.domain_border_set:
-    #             if domain_border.name == connection.
-    #             for port in domain_border.port_set:
-    #                 if connection.Provider_port == port.name:
-    #                     found = True
-
-    #     else:
-    #         for thread in Project.thread_set:
-    #             for port in thread.port_set:
-    #                 if connection.Provider_port == port.name:
-    #                     found = True     
-            
-        
-    #     if(not found):
-    #         success = False
-    #         DebugFile.warning_print("{0} port not found, removing connections".format(connection.Provider_port))
-    #         bad_connections.append(connection)
-    #     else:
-    #         found = False
-        
-    # for connection in bad_connections:
-    #     Project.connection_set.remove(connection)
-
-    # return success
-    
-    # If connection have port from application intance check if intance exists
-def test_connection_application_instances(Project): 
+def test_connection_ports(Project):     
     success = True
-    bad_connections =  [] 
+    bad_connections =  [] #bad connections = connections that doesnt have any existing ports   
 
     for connection in Project.connection_set:
-        if(not connection.Provider_is_domainborder):
-            if not connection.Provider_owner in Project.application_instance_set:
-                success = False
-                DebugFile.warning_print("Did not found application_instance {0} that a connection refers to".format(connection.Provider_owner)) 
-        if(not connection.Requirer_is_domainborder):
-            if not connection.Requirer_owner in Project.application_instance_set:
-                success = False
-                DebugFile.warning_print("Did not found application_instance {0} that a connection  refers to".format(connection.Requirer_owner))       
-    return success
+        owner_found = False
+        port_found = False
 
-tests = [test_application_instances,test_threads_refer_to_application, test_connection_application_instances]         
+        # Provider
+        if connection.Provider_is_domainborder:
+            for domain_border in Project.domain_border_set:
+                if domain_border.name == connection.Provider_owner:
+                    owner_found = True
+                    for port in domain_border.port_set:
+                        if connection.Provider_port == port.name:
+                            port_found = True
+            if(not owner_found):
+                DebugFile.warning_print("{0} domain_border not found, removing connection".format(connection.Provider_owner))
+            elif(not port_found):
+                DebugFile.warning_print("{0} port not found, removing connection".format(connection.Provider_port))
+
+        else:
+
+            if connection.Provider_owner in Project.application_instance_set:
+                owner_found = True
+
+            for thread in Project.thread_set:
+                for port in thread.port_set:
+                    if connection.Provider_port == port.name:
+                        port_found = True  
+            
+            if(not owner_found):
+                DebugFile.warning_print("{0} application instance not found, removing connection".format(connection.Provider_owner))
+            elif(not port_found):
+                DebugFile.warning_print("{0} port not found, removing connection".format(connection.Provider_port))
+        
+        if(not owner_found or not port_found):
+            success = False
+            bad_connections.append(connection)
+
+        owner_found = False
+        port_found = False
+
+        # Requirer
+        if connection.Requirer_is_domainborder:
+            for domain_border in Project.domain_border_set:
+                if domain_border.name == connection.Requirer_owner:
+                    owner_found = True
+                    for port in domain_border.port_set:
+                        if connection.Requirer_port == port.name:
+                            port_found = True
+            if(not owner_found):
+                DebugFile.warning_print("{0} domain_border not found, removing connection".format(connection.Requirer_owner))
+            elif(not port_found):
+                DebugFile.warning_print("{0} port not found, removing connection".format(connection.Requirer_port))
+
+        else:
+
+            if connection.Requirer_owner in Project.application_instance_set:
+                owner_found = True
+
+            for thread in Project.thread_set:
+                for port in thread.port_set:
+                    if connection.Requirer_port == port.name:
+                        port_found = True  
+            
+            if(not owner_found):
+                DebugFile.warning_print("{0} application instance not found, removing connection".format(connection.Requirer_owner))
+            elif(not port_found):
+                DebugFile.warning_print("{0} port not found, removing connection".format(connection.Requirer_port))
+        
+        if(not owner_found or not port_found):
+            success = False
+            if(connection not in bad_connections):
+                bad_connections.append(connection)
+
+    for connection in bad_connections:
+        Project.connection_set.remove(connection)
+
+    return success
+    
+#     # If connection have port from application intance check if intance exists
+# def test_connection_application_instances(Project): 
+#     success = True
+#     bad_connections =  [] 
+
+#     for connection in Project.connection_set:
+#         if(not connection.Provider_is_domainborder):
+#             if not connection.Provider_owner in Project.application_instance_set:
+#                 success = False
+#                 DebugFile.warning_print("Did not found application_instance {0} that a connection refers to".format(connection.Provider_owner)) 
+#         if(not connection.Requirer_is_domainborder):
+#             if not connection.Requirer_owner in Project.application_instance_set:
+#                 success = False
+#                 DebugFile.warning_print("Did not found application_instance {0} that a connection  refers to".format(connection.Requirer_owner))       
+#     return success
+
+tests = [test_application_instances,test_threads_refer_to_application,test_connection_ports]         
         
 def run_all(Project):
     DebugFile.blue_print("Running tests")

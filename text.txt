@@ -11,27 +11,31 @@ Project 3/
 PATHS:
 [0m
 [0m
-{'Project 3/message_topology', 'Project 3/infrastructure/fc/sw_topology.xml', 'Project 3/infrastructure/functional_topology/fc', 'Project 3/infrastructure/mc/equipments', 'Project 3/infrastructure/fc/equipments', 'Project 3/infrastructure/fc/hw_topology.xml', 'Project 3/applications/results', 'Project 3/infrastructure/functional_topology/mc', 'Project 3/infrastructure/mc/sw_topology.xml', 'Project 3/infrastructure/domain_border', 'Project 3/interfaces', 'Project 3/infrastructure/mc/hw_topology.xml', 'Project 3/ifs/my_ifs', 'Project 3/applications/basic_com_event', 'Project 3/applications/eds_ltm'}
+{'Project 3/infrastructure/fc/equipments', 'Project 3/applications/results', 'Project 3/message_topology', 'Project 3/infrastructure/mc/sw_topology.xml', 'Project 3/infrastructure/functional_topology/fc', 'Project 3/infrastructure/mc/equipments', 'Project 3/infrastructure/fc/hw_topology.xml', 'Project 3/infrastructure/domain_border', 'Project 3/applications/basic_com_event', 'Project 3/applications/eds_ltm', 'Project 3/ifs/my_ifs', 'Project 3/interfaces', 'Project 3/infrastructure/fc/sw_topology.xml', 'Project 3/infrastructure/functional_topology/mc', 'Project 3/infrastructure/mc/hw_topology.xml'}
 [0m
 [94mRunning tests[0m
-[93mDid not found application_instance TMC22_Results that a connection refers to[0m
-[93mDid not found application_instance FMC_Results that a connection refers to[0m
-[93mDid not found application_instance TMC21_Results that a connection refers to[0m
-[93mDid not found application_instance FMC_Results that a connection  refers to[0m
+[93mTMC22_Results application instance not found, removing connection[0m
+[93mFMC_Results application instance not found, removing connection[0m
+[93mTMC21_Results application instance not found, removing connection[0m
+[93mFMC_Results application instance not found, removing connection[0m
+[93mSeparation_1 domain_border not found, removing connection[0m
+[93mSeparation_1 domain_border not found, removing connection[0m
+[93mSeparation_1 domain_border not found, removing connection[0m
+[93mSeparation_1 domain_border not found, removing connection[0m
 [93mOnly 2 of the 3 tests passed[0m
 {
-    "name": "Test",
+    "name": "Test1234",
     "application_set": [
         {
             "name": "Results",
             "automated_test_level": null
         },
         {
-            "name": "Basic_Com_Event",
+            "name": "EDS_LTM",
             "automated_test_level": null
         },
         {
-            "name": "EDS_LTM",
+            "name": "Basic_Com_Event",
             "automated_test_level": null
         }
     ],
@@ -696,6 +700,24 @@ PATHS:
         },
         {
             "name": "TMC1_PDCM2",
+            "load_set_type": "PDCM",
+            "redundant": null,
+            "platform": "pdcm_v3",
+            "sync_loss": null,
+            "cpu_set": [
+                {
+                    "name": "PP",
+                    "type": "PP",
+                    "unit_id": null,
+                    "iop_ref": null,
+                    "accs_sync_master": null,
+                    "domain_border": "DB_T12",
+                    "partition_set": []
+                }
+            ]
+        },
+        {
+            "name": "TMC2_PDCM1",
             "load_set_type": "PDCM",
             "redundant": null,
             "platform": "pdcm_v3",
@@ -2097,39 +2119,6 @@ PATHS:
     ],
     "connection_set": [
         {
-            "provider_owner": "TMC22_Results",
-            "provider_thread": "Results_60",
-            "provider_port": "Results",
-            "provider_is_domainborder": false,
-            "requirer_owner": "LTM_TMC2_APP2",
-            "requirer_thread": "EDS_LTM_60",
-            "requirer_port": "Test_Results",
-            "requirer_is_domainborder": false,
-            "identity": "LTM_TMC2_APP2"
-        },
-        {
-            "provider_owner": "FMC_Results",
-            "provider_thread": "Results_60",
-            "provider_port": "Results",
-            "provider_is_domainborder": false,
-            "requirer_owner": "LTM_FMC",
-            "requirer_thread": "EDS_LTM_60",
-            "requirer_port": "Test_Results",
-            "requirer_is_domainborder": false,
-            "identity": "LTM_FMC"
-        },
-        {
-            "provider_owner": "TMC21_Results",
-            "provider_thread": "Results_60",
-            "provider_port": "Results",
-            "provider_is_domainborder": false,
-            "requirer_owner": "LTM_TMC2_APP1",
-            "requirer_thread": "EDS_LTM_60",
-            "requirer_port": "Test_Results",
-            "requirer_is_domainborder": false,
-            "identity": "LTM_TMC2_APP1"
-        },
-        {
             "provider_owner": "TMC12_Results",
             "provider_thread": "Results_60",
             "provider_port": "Results",
@@ -2139,17 +2128,6 @@ PATHS:
             "requirer_port": "Test_Results",
             "requirer_is_domainborder": false,
             "identity": "LTM_TMC1_APP2"
-        },
-        {
-            "provider_owner": "Results",
-            "provider_thread": "Results_60",
-            "provider_port": "Results",
-            "provider_is_domainborder": false,
-            "requirer_owner": "FMC_Results",
-            "requirer_thread": "Results_60",
-            "requirer_port": "Summary",
-            "requirer_is_domainborder": false,
-            "identity": "FMC"
         },
         {
             "provider_owner": "TMC11_Results",
@@ -2183,50 +2161,6 @@ PATHS:
             "requirer_port": "Summary",
             "requirer_is_domainborder": false,
             "identity": "Event_Res_Pdcm"
-        },
-        {
-            "provider_owner": "Separation_1",
-            "provider_thread": null,
-            "provider_port": "PDCM11_Results",
-            "provider_is_domainborder": true,
-            "requirer_owner": "PDCM11_Results",
-            "requirer_thread": "Results_60",
-            "requirer_port": "Summary",
-            "requirer_is_domainborder": false,
-            "identity": null
-        },
-        {
-            "provider_owner": "Separation_1",
-            "provider_thread": null,
-            "provider_port": "PDCM12_Results",
-            "provider_is_domainborder": true,
-            "requirer_owner": "PDCM12_Results",
-            "requirer_thread": "Results_60",
-            "requirer_port": "Summary",
-            "requirer_is_domainborder": false,
-            "identity": null
-        },
-        {
-            "provider_owner": "Separation_1",
-            "provider_thread": null,
-            "provider_port": "PDCM21_Results",
-            "provider_is_domainborder": true,
-            "requirer_owner": "PDCM21_Results",
-            "requirer_thread": "Results_60",
-            "requirer_port": "Summary",
-            "requirer_is_domainborder": false,
-            "identity": null
-        },
-        {
-            "provider_owner": "Separation_1",
-            "provider_thread": null,
-            "provider_port": "PDCM22_Results",
-            "provider_is_domainborder": true,
-            "requirer_owner": "PDCM22_Results",
-            "requirer_thread": "Results_60",
-            "requirer_port": "Summary",
-            "requirer_is_domainborder": false,
-            "identity": null
         }
     ]
 }
