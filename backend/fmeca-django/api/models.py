@@ -77,7 +77,9 @@ class PacPort(models.Model):
     role = models.CharField(max_length=50, blank=True, null=True)
     provider = models.CharField(max_length=50, blank=True, null=True)
     #ForeignKeys
+    domain_border = models.ForeignKey(DomainBorder, on_delete=models.CASCADE, blank=True, null=True)
     thread = models.ForeignKey(Thread, on_delete=models.CASCADE, blank=True, null=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, blank=True, null=True)
 
 class Connection(models.Model):
     identity = models.CharField(max_length=50, blank=True, null=True)

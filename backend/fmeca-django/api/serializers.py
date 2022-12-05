@@ -14,7 +14,7 @@ class DomainBorderSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ThreadSerializer(serializers.ModelSerializer):
-    # pacport_set = PacPortSerializer(many=True)
+    # pacposrt_set = PacPortSerializer(many=True)
 
     class Meta:
         model = Thread
