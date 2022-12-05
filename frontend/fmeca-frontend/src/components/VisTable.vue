@@ -1,11 +1,13 @@
 <script>
 import { ref } from "vue";
+import ColumnHead from "./ColumnHead.vue";
+import RowHead from "./RowHead.vue";
+import TableTitle from "./TableTitle.vue";
 import { vis_table_store } from "./vis-table-store.js";
 export default {
   mounted() {
     generateCustomStylesheet();
   },
-
   data() {
     return {
       removeColumn,
@@ -15,7 +17,6 @@ export default {
       getRow,
       getColumn,
       getClass,
-      getRowClass,
       handleResize,
       getTableFromBackend,
       vis_table_store,
@@ -24,6 +25,7 @@ export default {
       loadProjectFromStore,
       sendCommentsToBackend,
       notes: [{}],
+      getColumnTitle,
     };
   },
   methods: {
@@ -31,19 +33,16 @@ export default {
       while (this.notes.length <= selected_project.value) {
         this.notes.push({});
       }
-
       console.log("edit comment");
       console.log(target);
-
       let on = target.parentElement.childNodes[0].innerHTML;
-
       console.log(on);
       console.log(comment);
       this.notes[selected_project.value][on] = comment;
-
       target.value = this.notes[selected_project.value][on];
     },
   },
+  components: { ColumnHead, RowHead, TableTitle },
 };
 var selector,
   rule,
@@ -84,7 +83,7 @@ export function removeAllColumns(column) {
   }
 }
 export function createFilteredTable(index_x) {
-    rowStyles[index_x - 1].display = "flex";
+  rowStyles[index_x - 1].display = "flex";
 }
 function restoreColumns() {
   console.log(vis_table_store.getColumnCount(selected_project.value));
@@ -101,9 +100,6 @@ function getClass(column, row) {
   return "vis-column-" + column + " vis-row-" + row;
 }
 
-function getRowClass(row) {
-  return "vis-row-" + row;
-}
 
 // Calculates with of a row, to resize table container element to fit all content.
 function calculateWidthOfRows() {
@@ -346,25 +342,6 @@ function getXYFromClassName(element) {
 
   return [x, y];
 }
-function getParentClassName(element) {
-  console.log(element);
-  console.log(element.parentElement);
-  console.log(element.parentElement.parentElement);
-
-  let vector2d_x_y_position = getXYFromClassName(
-    element.parentElement.parentElement.classList
-  );
-  console.log(vector2d_x_y_position);
-  console.log("get location in array");
-  let className = vis_table_store.get(
-    selected_project.value,
-    vector2d_x_y_position[1],
-    vector2d_x_y_position[0]
-  );
-  console.log(className);
-
-  return className;
-}
 
 function sendCommentsToBackend() {
   console.log("Sending comments to backend");
@@ -388,11 +365,19 @@ function sendCommentsToBackend() {
 
   console.log(JSON.stringify(data));
 }
+
+let columnTitles = ["Padding", "Node", "CPU", "Partitions"];
+function getColumnTitle(column) {
+  if (column < columnTitles.length) {
+    return columnTitles[column];
+  } else {
+    return "Column";
+  }
+}
 </script>
 
 <template>
   {{ $log("Rerender") }}
-  <!--{{ setupTable() }} -->
   {{ getTableFromBackend() }}
 
   <div id="vis-table">
@@ -400,29 +385,11 @@ function sendCommentsToBackend() {
       v-for="row in vis_table_store.getRowCount(selected_project)"
       class="vis-row"
     >
-      <div v-if="row - 1 !== 0">
-        <div
-          class="vis-columnbox vis-resizable-row"
-          :class="getRowClass(row - 2)"
-        >
-          Resizable Row
-        </div>
-      </div>
-      <div
-        v-if="row - 1 === 0"
-        class="vis-columnbox"
-        style="
-          border: 1px solid black;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        "
-      >
-        <p style="margin: 0; padding: 0; font-size: 20px; color: gray">
-          FMECA<br />Analys<br />
-          <button @click="restoreColumns()">Restore Table</button>
-        </p>
-      </div>
+
+      <!-- Only gets drawn on row 0, column 0 in the table -->
+      <TableTitle @restoreColumns="restoreColumns" :row="row" />
+      <!-- Gets drawn on the rest of column 0 -->
+      <RowHead :row="row" />
 
       <div
         v-if="row - 1 === 0"
@@ -431,10 +398,11 @@ function sendCommentsToBackend() {
         :class="getClass(column - 1, row - 2)"
         v-resize="handleResize"
       >
-        Resizable Column
-        <button @click="removeColumn(column)">Hide {{ column }}</button>
-
-        <div class="chrome_is_messy_fix">Loading...</div>
+        <ColumnHead
+          @removeColumn="removeColumn"
+          :column="column"
+          :text="getColumnTitle(column)"
+        />
       </div>
 
       <div
