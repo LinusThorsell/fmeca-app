@@ -75,15 +75,23 @@ class PacPort(models.Model):
     name = models.CharField(max_length=50, blank=True, null=True)
     interface = models.CharField(max_length=255, blank=True, null=True)
     role = models.CharField(max_length=50, blank=True, null=True)
+    DomainBorderConfig = models.CharField(max_length=50, blank=True, null=True)
     provider = models.CharField(max_length=50, blank=True, null=True)
     #ForeignKeys
+    domain_border = models.ForeignKey(DomainBorder, on_delete=models.CASCADE, blank=True, null=True)
     thread = models.ForeignKey(Thread, on_delete=models.CASCADE, blank=True, null=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, blank=True, null=True)
 
 class Connection(models.Model):
     identity = models.CharField(max_length=50, blank=True, null=True)
     # ForeignKeys
-    requirer_port = models.ForeignKey(PacPort, related_name="requirer_set", on_delete=models.CASCADE, blank=True, null=True)
+    provider_app = models.ForeignKey(ApplicationInstance, related_name="provider_set", on_delete=models.CASCADE, blank=True, null=True)
+    # provider_thread = models.ForeignKey(Thread, related_name="provider_set", on_delete=models.CASCADE, blank=True, null=True)
     provider_port = models.ForeignKey(PacPort, related_name="provider_set", on_delete=models.CASCADE, blank=True, null=True)
+    requirer_app = models.ForeignKey(ApplicationInstance, related_name="requirer_set", on_delete=models.CASCADE, blank=True, null=True)
+    # requirer_thread = models.ForeignKey(Thread, related_name="requirer_set", on_delete=models.CASCADE, blank=True, null=True)
+    requirer_port = models.ForeignKey(PacPort, related_name="requirer_set", on_delete=models.CASCADE, blank=True, null=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, blank=True, null=True)
     
 
 #----------------------------------------------------------------
