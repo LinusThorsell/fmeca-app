@@ -11,7 +11,7 @@ Project 3/
 PATHS:
 [0m
 [0m
-{'Project 3/message_topology', 'Project 3/ifs/my_ifs', 'Project 3/infrastructure/domain_border', 'Project 3/infrastructure/mc/sw_topology.xml', 'Project 3/infrastructure/fc/equipments', 'Project 3/infrastructure/mc/equipments', 'Project 3/infrastructure/fc/hw_topology.xml', 'Project 3/infrastructure/mc/hw_topology.xml', 'Project 3/applications/results', 'Project 3/interfaces', 'Project 3/infrastructure/functional_topology/mc', 'Project 3/applications/basic_com_event', 'Project 3/infrastructure/fc/sw_topology.xml', 'Project 3/applications/eds_ltm', 'Project 3/infrastructure/functional_topology/fc'}
+{'Project 3/infrastructure/domain_border', 'Project 3/infrastructure/mc/hw_topology.xml', 'Project 3/infrastructure/fc/sw_topology.xml', 'Project 3/message_topology', 'Project 3/infrastructure/fc/equipments', 'Project 3/infrastructure/functional_topology/fc', 'Project 3/infrastructure/fc/hw_topology.xml', 'Project 3/applications/eds_ltm', 'Project 3/infrastructure/mc/equipments', 'Project 3/infrastructure/functional_topology/mc', 'Project 3/ifs/my_ifs', 'Project 3/interfaces', 'Project 3/infrastructure/mc/sw_topology.xml', 'Project 3/applications/results', 'Project 3/applications/basic_com_event'}
 [0m
 [94mRunning tests[0m
 [93mTMC22_Results application instance not found, removing connection[0m
@@ -20,18 +20,18 @@ PATHS:
 [93mFMC_Results application instance not found, removing connection[0m
 [93mOnly 2 of the 3 tests passed[0m
 {
-    "name": "Test1234",
+    "name": "test",
     "application_set": [
-        {
-            "name": "EDS_LTM",
-            "automated_test_level": null
-        },
         {
             "name": "Basic_Com_Event",
             "automated_test_level": null
         },
         {
             "name": "Results",
+            "automated_test_level": null
+        },
+        {
+            "name": "EDS_LTM",
             "automated_test_level": null
         }
     ],
@@ -733,6 +733,27 @@ PATHS:
     ],
     "thread_set": [
         {
+            "name": "EDS_LTM_60",
+            "application": "EDS_LTM",
+            "rategroup": "P60",
+            "port_set": [
+                {
+                    "name": "Test_Results",
+                    "interface": "Results.Test_Status_I",
+                    "role": "Requirer",
+                    "provider": null,
+                    "DomainBorderConfiguration": null
+                },
+                {
+                    "name": "DCM_Results",
+                    "interface": "ACCS_I.HM.TMC.DCM_Results",
+                    "role": "Requirer",
+                    "provider": null,
+                    "DomainBorderConfiguration": null
+                }
+            ]
+        },
+        {
             "name": "Results_60",
             "application": "Results",
             "rategroup": "P60",
@@ -1427,27 +1448,6 @@ PATHS:
                     "name": "Receiver_PDI",
                     "interface": "Basic_Com_I.Event.File",
                     "role": "Provider",
-                    "provider": null,
-                    "DomainBorderConfiguration": null
-                }
-            ]
-        },
-        {
-            "name": "EDS_LTM_60",
-            "application": "EDS_LTM",
-            "rategroup": "P60",
-            "port_set": [
-                {
-                    "name": "Test_Results",
-                    "interface": "Results.Test_Status_I",
-                    "role": "Requirer",
-                    "provider": null,
-                    "DomainBorderConfiguration": null
-                },
-                {
-                    "name": "DCM_Results",
-                    "interface": "ACCS_I.HM.TMC.DCM_Results",
-                    "role": "Requirer",
                     "provider": null,
                     "DomainBorderConfiguration": null
                 }

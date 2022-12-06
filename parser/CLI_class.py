@@ -25,18 +25,11 @@ class CLI:
         self._parser = Parser()
         self._encoder = Encoder()
         self._Paths = Paths.Paths()
-        self._parser = Parser()
         self._add_path = None
         self._meta_path = None
         self._project_name = ""
         self.PRINT = False
         
-        self.Project_Type = ""
-        self.Applications = ""
-        self.Connections = ""
-        self.Threads = ""
-        self.DomainBorder = ""
-    
     def remove(self):
         #Tell the database to delete the given projec
         self._remove = True
@@ -211,7 +204,7 @@ class CLI:
 
 
             self._encoder.Project = self._project_name
-            self._encoder.send_to_database(self.Project_Type,"post-projects/")
+            self._encoder.send_to_database(self.Project_Type,"projects/")
         
         elif self.PRINT:
             self.debug()
