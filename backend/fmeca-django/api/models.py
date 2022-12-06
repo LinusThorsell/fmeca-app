@@ -43,40 +43,62 @@ class Partition(models.Model):
     cpu = models.ForeignKey(CPU, on_delete=models.CASCADE, blank=True, null=True)
 
 class Application(models.Model):
-    name = models.CharField(max_length=50, blank=True, null=True)
-    partition = models.ForeignKey(Partition, on_delete=models.CASCADE, blank=True, null=True)
+    name = models.CharField(max_length=30, blank=True, null=True)
+    automated_test_level = models.CharField(max_length=50, blank=True, null=True)
     # ForeignKeys
-    project = models.ForeignKey(Project, related_name="app_project_set", on_delete=models.CASCADE, blank=True, null=True)
-    cpu = models.ForeignKey(CPU, on_delete=models.CASCADE, blank=True, null=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, blank=True, null=True)
 
 class ApplicationInstance(models.Model):
-    name = models.CharField(max_length=30, blank=True, null=True)
+    name = models.CharField(max_length=50, blank=True, null=True)
+    instance_of_application = models.CharField(max_length=50, blank=True, null=True)
+    rampool = models.CharField(max_length=50, blank=True, null=True)
+    affinity = models.CharField(max_length=50, blank=True, null=True)
     # ForeignKeys
-    application = models.ForeignKey(Application, on_delete=models.CASCADE, blank=True, null=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, blank=True, null=True)
+    instance_of = models.ForeignKey(Application, on_delete=models.CASCADE, blank=True, null=True)
+    partition = models.ForeignKey(Partition, on_delete=models.CASCADE, related_name="application_instance_set", blank=True, null=True)
+    node = models.ForeignKey(Node, on_delete=models.CASCADE, blank=True, null=True)
+    cpu = models.ForeignKey(CPU, on_delete=models.CASCADE, related_name="application_instance_set", blank=True, null=True)
 
-class Connection(models.Model):
-    # ForeignKeys
-    requirer = models.ForeignKey(Application, related_name="requirer_set", on_delete=models.CASCADE, blank=True, null=True)
-    provider = models.ForeignKey(Application, related_name="provider_set", on_delete=models.CASCADE, blank=True, null=True)
+class DomainBorder(models.Model):
+    name = models.CharField(max_length=30, blank=True, null=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, blank=True, null=True)
 
 class Thread(models.Model):
     name = models.CharField(max_length=50, blank=True, null=True)
     rategroup = models.CharField(max_length=20, blank=True, null=True)
     #ForeignKeys
     application = models.ForeignKey(Application, on_delete=models.CASCADE, blank=True, null=True)
-    
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, blank=True, null=True)
+
 class PacPort(models.Model):
     name = models.CharField(max_length=50, blank=True, null=True)
     interface = models.CharField(max_length=255, blank=True, null=True)
     role = models.CharField(max_length=50, blank=True, null=True)
+    DomainBorderConfig = models.CharField(max_length=50, blank=True, null=True)
+    provider = models.CharField(max_length=50, blank=True, null=True)
     #ForeignKeys
+    domain_border = models.ForeignKey(DomainBorder, on_delete=models.CASCADE, blank=True, null=True)
     thread = models.ForeignKey(Thread, on_delete=models.CASCADE, blank=True, null=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, blank=True, null=True)
+
+class Connection(models.Model):
+    identity = models.CharField(max_length=50, blank=True, null=True)
+    # ForeignKeys
+    provider_app = models.ForeignKey(ApplicationInstance, related_name="provider_set", on_delete=models.CASCADE, blank=True, null=True)
+    # provider_thread = models.ForeignKey(Thread, related_name="provider_set", on_delete=models.CASCADE, blank=True, null=True)
+    provider_port = models.ForeignKey(PacPort, related_name="provider_set", on_delete=models.CASCADE, blank=True, null=True)
+    requirer_app = models.ForeignKey(ApplicationInstance, related_name="requirer_set", on_delete=models.CASCADE, blank=True, null=True)
+    # requirer_thread = models.ForeignKey(Thread, related_name="requirer_set", on_delete=models.CASCADE, blank=True, null=True)
+    requirer_port = models.ForeignKey(PacPort, related_name="requirer_set", on_delete=models.CASCADE, blank=True, null=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, blank=True, null=True)
+    
 
 #----------------------------------------------------------------
 
 class CommentsContainer(models.Model):
     # ForeignKeys
-    project = models.OneToOneField(Project, primary_key=True, on_delete=models.CASCADE,  default="")
+    project = models.OneToOneField(Project, primary_key=True, on_delete=models.CASCADE, default="")
 
 class KeyVal(models.Model):
     key = models.CharField(max_length=100, blank=True, null=True)

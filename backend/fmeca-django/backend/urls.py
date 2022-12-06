@@ -20,13 +20,13 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register(r'projects', ProjectViewSet)
+router.register(r'applications', ApplicationViewSet)
 router.register(r'nodes', NodeViewSet)
 router.register(r'proccessors', CPUViewSet)
 router.register(r'partitions', PartitionViewSet)
-router.register(r'applications', ApplicationViewSet)
 router.register(r'application-instances', ApplicationInstanceViewSet)
 router.register(r'connections', ConnectionViewSet)
 router.register(r'threads', ThreadViewSet)
-router.register(r'pac-ports', PacPortViewSet)
+router.register(r'domain-borders', DomainBorderViewSet)
 router.register(r'comments', CommentsViewSet)
 urlpatterns = router.urls
