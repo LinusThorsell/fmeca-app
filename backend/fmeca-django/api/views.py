@@ -28,8 +28,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     serializer_class = ProjectSerializer
     permissions = permission
 
-    def create(self, request):
-        
+    def create(self, request):     
         request_data             = request.data
         project_name             = request_data['name']
         node_set                 = request_data.pop('node_set')
@@ -39,11 +38,9 @@ class ProjectViewSet(viewsets.ModelViewSet):
         domain_border_set        = request_data.pop('domain_border_set')
         connection_set           = request_data.pop('connection_set')
         
-        project_object, created = Project.objects.update_or_create(name=project_name)
-        # serializer = ProjectSerializer(data=request_data)
-        # serializer.is_valid(raise_exception=True)
-        # if not created:
-        #     return Response(serializer.data)
+        project_object = Project.objects.create(name=project_name)
+
+        print("<--- PROJECT CREATED --->")
 
         # node_set
         for node in node_set:
@@ -53,14 +50,15 @@ class ProjectViewSet(viewsets.ModelViewSet):
                 partition_set = cpu.pop('partition_set')
                 cpu_object = CPU.objects.create(**cpu, node=node_object)
                 for partition in partition_set:
-                    partition_object = Partition.objects.create(**partition, cpu=cpu_object)
-        
+                    partition_object = Partition.objects.create(**partition, cpu=cpu_object)       
+
+        print("<--- NODES CREATED --->")
 
         # application_set
         for application in application_set:
             Application.objects.create(**application, project=project_object)
 
-        cnt = 0
+        print("<--- APPLICATIONS CREATED --->")
 
         # application_instance_set
         for application_instance in application_instance_set:  
@@ -86,7 +84,9 @@ class ProjectViewSet(viewsets.ModelViewSet):
             
             ApplicationInstance.objects.create(**application_instance, instance_of=instanceof_object, cpu=cpu_object, node=node_object, partition=partition_object, project=project_object)
 
-        # threads
+        print("<--- APPLICATION INSTANCES CREATED --->")
+
+        # thread_set
         for thread in thread_set:
             application_name   = thread.pop('application')
             port_set           = thread.pop('port_set')
@@ -95,12 +95,16 @@ class ProjectViewSet(viewsets.ModelViewSet):
             for port in port_set:
                 PacPort.objects.create(**port, thread=thread_object, domain_border=None, project=project_object)
         
+        print("<--- THREADS CREATED --->")
+
         # domain_borders
         for domain_border in domain_border_set:
             port_set = domain_border.pop('port_set')
             domain_border_object = DomainBorder.objects.create(**domain_border, project=project_object)
             for port in port_set:
                 PacPort.objects.create(**port, thread=None, domain_border=domain_border_object, project=project_object)
+
+        print("<--- DOMAIN BORDERS CREATED --->")
 
         # connection_set
         for connection in connection_set:
@@ -113,35 +117,38 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
             provider_is_db = connection.pop('provider_is_domainborder')
             requirer_is_db = connection.pop('requirer_is_domainborder')
+            provider_thread_object = get_object_or_404(Thread.objects.all(), name=provider_thread, project=project_object)
+            requirer_thread_object = get_object_or_404(Thread.objects.all(), name=requirer_thread, project=project_object)
 
-            # provider
-            provider_port_object = get_object_or_404(PacPort.objects.all(), name=provider_port, project=project_object)
+            provider_port_object = get_object_or_404(PacPort.objects.all(), 
+                                        name=provider_port, thread=provider_thread_object, project=project_object)
+            requirer_port_object = get_object_or_404(PacPort.objects.all(), 
+                                        name=requirer_port, thread=requirer_thread_object, project=project_object)
+            
             if provider_is_db:
-                db_object = get_object_or_404(DomainBorder.objects.all(), name=provider_owner, project=project_object)
-                Connection.objects.create(**connection, provider_owner=db_object, provider_port=provider_port_object, project=project_object)
+                provider_owner = None
+            else:      
+                application_object = getattr(thread_object, 'application')
+                application_name = getattr(application_object, 'name')
+                provider_owner = get_object_or_404(ApplicationInstance.objects.all(), name=application_name, project=project_object)
+            
+            if requirer_is_db:
+                requirer_owner = None
             else:
-                thread_object = get_object_or_404(Thread.objects.all(), name=provider_thread, project=project_object)
-                
-                application_name = thread_object['application']
-                app_object = get_object_or_404(ApplicationInstance.objects.all(), name=application_name, project=project_object)
-                Connection.objects.create(**connection, provider_owner=app_object, 
-                                    provider_thread=thread_object, provider_port=provider_port_object, project=project_object)
+                application_object = getattr(thread_object, 'application')
+                application_name = getattr(application_object, 'name')
+                requirer_owner = get_object_or_404(ApplicationInstance.objects.all(), name=application_name, project=project_object)
 
-            # requirer
-            requirer_port_object = get_object_or_404(PacPort.objects.all(), name=requirer_port, project=project_object)
-            if provider_is_db:
-                db_object = get_object_or_404(DomainBorder.objects.all(), name=requirer_owner, project=project_object)
-                Connection.objects.create(**connection, requirer_owner=db_object, requirer_port=requirer_port_object, project=project_object)
-            else:
-                thread_object = get_object_or_404(Thread.objects.all(), name=requirer_thread, project=project_object)
-                app_object = get_object_or_404(ApplicationInstance.objects.all(), name=application_name, project=project_object)
-                Connection.objects.create(**connection, provider_owner=app_object, 
-                                    requirer_thread=thread_object, requirer_port=requirer_port_object, project=project_object)
+            Connection.objects.create(**connection, provider_app=provider_owner, provider_port=provider_port_object, 
+                                    requirer_app=requirer_owner, requirer_port=requirer_port_object, project=project_object)
+
         
-        serializer = ProjectSerializer(data=request_data)
-        serializer.is_valid(raise_exception=True)
-        # return Response({'name':project_name})
-        return Response(serializer.data)
+        print("<--- CONNECTIONS CREATED --->")
+
+        # serializer = ProjectSerializer(data=request_data)
+        # serializer.is_valid(raise_exception=True)
+        return Response({'name':project_name})
+        # return Response(serializer.data)
 
 # class ProjectViewSet(viewsets.ModelViewSet):
 #     queryset = Project.objects.all()
