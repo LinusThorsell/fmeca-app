@@ -9,12 +9,13 @@ class PacPortSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class DomainBorderSerializer(serializers.ModelSerializer):
+    pacport_set = PacPortSerializer(many=True)
     class Meta:
         model = DomainBorder
         fields = '__all__'
 
 class ThreadSerializer(serializers.ModelSerializer):
-    # pacposrt_set = PacPortSerializer(many=True)
+    pacport_set = PacPortSerializer(many=True)
 
     class Meta:
         model = Thread
