@@ -1,11 +1,14 @@
 <script>
 import { ref } from "vue";
+import ColumnHead from "./ColumnHead.vue";
+import RowHead from "./RowHead.vue";
+import TableTitle from "./TableTitle.vue";
+import ContentColumnBox from "./ContentColumnBox.vue";
 import { vis_table_store } from "./vis-table-store.js";
 export default {
   mounted() {
     generateCustomStylesheet();
   },
-
   data() {
     return {
       removeColumn,
@@ -15,7 +18,6 @@ export default {
       getRow,
       getColumn,
       getClass,
-      getRowClass,
       handleResize,
       getTableFromBackend,
       vis_table_store,
@@ -24,6 +26,8 @@ export default {
       loadProjectFromStore,
       sendCommentsToBackend,
       notes: [{}],
+      getColumnTitle,
+      getColumnBoxContent,
     };
   },
   methods: {
@@ -31,19 +35,16 @@ export default {
       while (this.notes.length <= selected_project.value) {
         this.notes.push({});
       }
-
       console.log("edit comment");
       console.log(target);
-
       let on = target.parentElement.childNodes[0].innerHTML;
-
       console.log(on);
       console.log(comment);
       this.notes[selected_project.value][on] = comment;
-
       target.value = this.notes[selected_project.value][on];
     },
   },
+  components: { ColumnHead, RowHead, TableTitle, ContentColumnBox },
 };
 var selector,
   rule,
@@ -51,8 +52,8 @@ var selector,
   rowStyles = [],
   colStyles = [];
 
-const array_columns = 6;
-const array_rows = 6;
+export const array_columns = 6;
+export const array_rows = 6;
 const default_column_width = 100;
 export var selected_project = ref(0);
 
@@ -84,7 +85,7 @@ export function removeAllColumns(column) {
   }
 }
 export function createFilteredTable(index_x) {
-    rowStyles[index_x - 1].display = "flex";
+  rowStyles[index_x - 1].display = "flex";
 }
 function restoreColumns() {
   console.log(vis_table_store.getColumnCount(selected_project.value));
@@ -99,10 +100,6 @@ function restoreColumns() {
 
 function getClass(column, row) {
   return "vis-column-" + column + " vis-row-" + row;
-}
-
-function getRowClass(row) {
-  return "vis-row-" + row;
 }
 
 // Calculates with of a row, to resize table container element to fit all content.
@@ -158,18 +155,8 @@ function generateCustomStylesheet() {
     colStyles[i] = sheet.cssRules[0].style;
   }
 }
-function stringifyPartitions(obj) {
-  console.log("To stringify into partitions");
-  console.log(obj);
-  let build_partition_string = "";
-  obj.forEach((partitions) => {
-    build_partition_string += partitions.name + "\n";
-  });
-  console.log("returning: " + build_partition_string);
-  return build_partition_string;
-}
 
-function onFetched() {
+export function onFetched() {
   console.log("Fetched data...");
 
   /*
@@ -268,61 +255,6 @@ function onFetched() {
   });
 }
 
-var have_fetched = false;
-var debug = false;
-function getTableFromBackend() {
-  // Simple GET request using fetch
-  if (!have_fetched && debug) {
-    for (let r = 0; r < 5; r++) {
-      for (let c = 0; c < 5; c++) {
-        vis_table_store.set(
-          selected_project,
-          r,
-          c,
-          "row: " + r + " column: " + c
-        );
-      }
-    }
-    have_fetched = true;
-    vis_table_store.set(selected_project, 1, 2, "yeay|hey|baeee");
-  }
-  if (!have_fetched && !debug) {
-    fetch("http://localhost:8000/projects/")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        data.forEach((project, index) => {
-          console.log(index);
-          console.log(project.name);
-          vis_table_store.generateEmpty(index, array_rows, array_columns);
-          vis_table_store.set(index, 0, 0, project);
-
-          project.node_set.forEach((node, n_index) => {
-            vis_table_store.set(index, n_index + 1, 1, node.name);
-            let cpu_string = "";
-            let cpu_partition_string = "";
-            node.cpu_set.forEach((cpu) => {
-              cpu_string += cpu.name + "|";
-
-              cpu_partition_string +=
-                stringifyPartitions(cpu.partition_set) + "|";
-            });
-            cpu_string = cpu_string.slice(0, -1);
-            cpu_partition_string = cpu_partition_string.slice(0, -1);
-            console.log(cpu_string);
-            console.log(cpu_partition_string);
-
-            vis_table_store.set(index, n_index + 1, 2, cpu_string);
-            vis_table_store.set(index, n_index + 1, 3, cpu_partition_string);
-          });
-        });
-      })
-      .then(() => {
-        onFetched();
-      });
-    have_fetched = true;
-  }
-}
 export function getProjects() {
   let projects = [];
   projects = vis_table_store.getProjectNames();
@@ -345,25 +277,6 @@ function getXYFromClassName(element) {
   y = parseInt(y) + 2;
 
   return [x, y];
-}
-function getParentClassName(element) {
-  console.log(element);
-  console.log(element.parentElement);
-  console.log(element.parentElement.parentElement);
-
-  let vector2d_x_y_position = getXYFromClassName(
-    element.parentElement.parentElement.classList
-  );
-  console.log(vector2d_x_y_position);
-  console.log("get location in array");
-  let className = vis_table_store.get(
-    selected_project.value,
-    vector2d_x_y_position[1],
-    vector2d_x_y_position[0]
-  );
-  console.log(className);
-
-  return className;
 }
 
 function sendCommentsToBackend() {
@@ -388,41 +301,34 @@ function sendCommentsToBackend() {
 
   console.log(JSON.stringify(data));
 }
+
+let columnTitles = ["Padding", "Node", "CPU", "Partitions"];
+function getColumnTitle(column) {
+  if (column < columnTitles.length) {
+    return columnTitles[column];
+  } else {
+    return "Column";
+  }
+}
+
+function getColumnBoxContent(row, column) {
+  return vis_table_store.get(selected_project.value, row, column);
+}
 </script>
 
 <template>
   {{ $log("Rerender") }}
-  <!--{{ setupTable() }} -->
-  {{ getTableFromBackend() }}
+  {{ vis_table_store.getTableFromBackend() }}
 
   <div id="vis-table">
     <div
       v-for="row in vis_table_store.getRowCount(selected_project)"
       class="vis-row"
     >
-      <div v-if="row - 1 !== 0">
-        <div
-          class="vis-columnbox vis-resizable-row"
-          :class="getRowClass(row - 2)"
-        >
-          Resizable Row
-        </div>
-      </div>
-      <div
-        v-if="row - 1 === 0"
-        class="vis-columnbox"
-        style="
-          border: 1px solid black;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        "
-      >
-        <p style="margin: 0; padding: 0; font-size: 20px; color: gray">
-          FMECA<br />Analys<br />
-          <button @click="restoreColumns()">Restore Table</button>
-        </p>
-      </div>
+      <!-- Only gets drawn on row 0, column 0 in the table -->
+      <TableTitle @restoreColumns="restoreColumns" :row="row" />
+      <!-- Gets drawn on the rest of column 0 -->
+      <RowHead :row="row" />
 
       <div
         v-if="row - 1 === 0"
@@ -431,10 +337,11 @@ function sendCommentsToBackend() {
         :class="getClass(column - 1, row - 2)"
         v-resize="handleResize"
       >
-        Resizable Column
-        <button @click="removeColumn(column)">Hide {{ column }}</button>
-
-        <div class="chrome_is_messy_fix">Loading...</div>
+        <ColumnHead
+          @removeColumn="removeColumn"
+          :column="column"
+          :text="getColumnTitle(column)"
+        />
       </div>
 
       <div
@@ -443,23 +350,13 @@ function sendCommentsToBackend() {
         class="vis-columnbox"
         :class="getClass(column - 1, row - 2)"
       >
-        <div
-          class="vis-textarea-container"
-          v-for="item in vis_table_store.get(selected_project, row, column)"
-        >
-          <textarea
-            class="vis-textarea"
-            onfocus="this.parentElement.children[1].className = 'vis-comment vis-textarea vis-textarea-comment'; 
-                        this.className = 'vis-textarea'"
-            >{{ item }}</textarea
-          >
-          <textarea
-            class="vis-comment vis-textarea vis-textarea-comment"
-            onfocus="this.parentElement.children[0].className = 'vis-textarea vis-textarea-comment'; 
-                        this.className = 'vis-textarea'"
-            @input="editComment($event.target, $event.target.value)"
-          ></textarea>
-        </div>
+        <ContentColumnBox
+          :row="row"
+          :column="column"
+          :store="vis_table_store"
+          :selected_project="selected_project"
+          @editComment="editComment"
+        />
       </div>
     </div>
   </div>
