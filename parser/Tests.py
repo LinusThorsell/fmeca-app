@@ -48,12 +48,11 @@ def test_connection_ports(Project):
 
         # Provider
         if connection.Provider_is_domainborder:
+            owner_found = True
             for domain_border in Project.domain_border_set:
-                if domain_border.name == connection.Provider_owner:
-                    owner_found = True
-                    for port in domain_border.port_set:
-                        if connection.Provider_port == port.name:
-                            port_found = True
+                for port in domain_border.port_set:
+                    if connection.Provider_port == port.name:
+                        port_found = True
             if(not owner_found):
                 DebugFile.warning_print("{0} domain_border not found, removing connection".format(connection.Provider_owner))
             elif(not port_found):
@@ -84,11 +83,11 @@ def test_connection_ports(Project):
         # Requirer
         if connection.Requirer_is_domainborder:
             for domain_border in Project.domain_border_set:
-                if domain_border.name == connection.Requirer_owner:
-                    owner_found = True
-                    for port in domain_border.port_set:
-                        if connection.Requirer_port == port.name:
-                            port_found = True
+                owner_found = True
+                for port in domain_border.port_set:
+                    if connection.Requirer_port == port.name:
+                        port_found = True
+
             if(not owner_found):
                 DebugFile.warning_print("{0} domain_border not found, removing connection".format(connection.Requirer_owner))
             elif(not port_found):

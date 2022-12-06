@@ -11,31 +11,27 @@ Project 3/
 PATHS:
 [0m
 [0m
-{'Project 3/infrastructure/fc/equipments', 'Project 3/applications/results', 'Project 3/message_topology', 'Project 3/infrastructure/mc/sw_topology.xml', 'Project 3/infrastructure/functional_topology/fc', 'Project 3/infrastructure/mc/equipments', 'Project 3/infrastructure/fc/hw_topology.xml', 'Project 3/infrastructure/domain_border', 'Project 3/applications/basic_com_event', 'Project 3/applications/eds_ltm', 'Project 3/ifs/my_ifs', 'Project 3/interfaces', 'Project 3/infrastructure/fc/sw_topology.xml', 'Project 3/infrastructure/functional_topology/mc', 'Project 3/infrastructure/mc/hw_topology.xml'}
+{'Project 3/message_topology', 'Project 3/ifs/my_ifs', 'Project 3/infrastructure/domain_border', 'Project 3/infrastructure/mc/sw_topology.xml', 'Project 3/infrastructure/fc/equipments', 'Project 3/infrastructure/mc/equipments', 'Project 3/infrastructure/fc/hw_topology.xml', 'Project 3/infrastructure/mc/hw_topology.xml', 'Project 3/applications/results', 'Project 3/interfaces', 'Project 3/infrastructure/functional_topology/mc', 'Project 3/applications/basic_com_event', 'Project 3/infrastructure/fc/sw_topology.xml', 'Project 3/applications/eds_ltm', 'Project 3/infrastructure/functional_topology/fc'}
 [0m
 [94mRunning tests[0m
 [93mTMC22_Results application instance not found, removing connection[0m
 [93mFMC_Results application instance not found, removing connection[0m
 [93mTMC21_Results application instance not found, removing connection[0m
 [93mFMC_Results application instance not found, removing connection[0m
-[93mSeparation_1 domain_border not found, removing connection[0m
-[93mSeparation_1 domain_border not found, removing connection[0m
-[93mSeparation_1 domain_border not found, removing connection[0m
-[93mSeparation_1 domain_border not found, removing connection[0m
 [93mOnly 2 of the 3 tests passed[0m
 {
     "name": "Test1234",
     "application_set": [
-        {
-            "name": "Results",
-            "automated_test_level": null
-        },
         {
             "name": "EDS_LTM",
             "automated_test_level": null
         },
         {
             "name": "Basic_Com_Event",
+            "automated_test_level": null
+        },
+        {
+            "name": "Results",
             "automated_test_level": null
         }
     ],
@@ -745,19 +741,22 @@ PATHS:
                     "name": "Results",
                     "interface": "Results.Test_Status_I",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "Summary",
                     "interface": "Results.Test_Status_I",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "Success_Indicator",
                     "interface": "Results.Summary",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 }
             ]
         },
@@ -770,91 +769,106 @@ PATHS:
                     "name": "Test_Results",
                     "interface": "Results.Test_Status_I",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P30",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P15",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P8",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P4",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P1",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P30",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P15",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P8",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P4",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P1",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "Sender_PDI",
                     "interface": "Basic_Com_I.Event.File",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "Receiver_PDI",
                     "interface": "Basic_Com_I.Event.File",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 }
             ]
         },
@@ -867,91 +881,106 @@ PATHS:
                     "name": "Test_Results",
                     "interface": "Results.Test_Status_I",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P30",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P15",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P8",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P4",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P1",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P30",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P15",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P8",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P4",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P1",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "Sender_PDI",
                     "interface": "Basic_Com_I.Event.File",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "Receiver_PDI",
                     "interface": "Basic_Com_I.Event.File",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 }
             ]
         },
@@ -964,91 +993,106 @@ PATHS:
                     "name": "Test_Results",
                     "interface": "Results.Test_Status_I",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P30",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P15",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P8",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P4",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P1",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P30",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P15",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P8",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P4",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P1",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "Sender_PDI",
                     "interface": "Basic_Com_I.Event.File",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "Receiver_PDI",
                     "interface": "Basic_Com_I.Event.File",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 }
             ]
         },
@@ -1061,91 +1105,106 @@ PATHS:
                     "name": "Test_Results",
                     "interface": "Results.Test_Status_I",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P30",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P15",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P8",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P4",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P1",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P30",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P15",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P8",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P4",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P1",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "Sender_PDI",
                     "interface": "Basic_Com_I.Event.File",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "Receiver_PDI",
                     "interface": "Basic_Com_I.Event.File",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 }
             ]
         },
@@ -1158,91 +1217,106 @@ PATHS:
                     "name": "Test_Results",
                     "interface": "Results.Test_Status_I",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P30",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P15",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P8",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P4",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P1",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P30",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P15",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P8",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P4",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P1",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "Sender_PDI",
                     "interface": "Basic_Com_I.Event.File",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "Receiver_PDI",
                     "interface": "Basic_Com_I.Event.File",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 }
             ]
         },
@@ -1255,91 +1329,106 @@ PATHS:
                     "name": "Test_Results",
                     "interface": "Results.Test_Status_I",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P30",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P15",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P8",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P4",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "To_P1",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P30",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P15",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P8",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P4",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "From_P1",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "Sender_PDI",
                     "interface": "Basic_Com_I.Event.File",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "Receiver_PDI",
                     "interface": "Basic_Com_I.Event.File",
                     "role": "Provider",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 }
             ]
         },
@@ -1352,13 +1441,15 @@ PATHS:
                     "name": "Test_Results",
                     "interface": "Results.Test_Status_I",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 },
                 {
                     "name": "DCM_Results",
                     "interface": "ACCS_I.HM.TMC.DCM_Results",
                     "role": "Requirer",
-                    "provider": null
+                    "provider": null,
+                    "DomainBorderConfiguration": null
                 }
             ]
         }
@@ -1371,19 +1462,22 @@ PATHS:
                     "name": "FP_Test_PDCM_A",
                     "interface": "FP_I.Float_Test",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "Separation_FP"
                 },
                 {
                     "name": "FP_Test_DCM_A",
                     "interface": "FP_I.Float_Test",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "Separation_FP"
                 },
                 {
                     "name": "PDCM12_Results",
                     "interface": "Results.Test_Status_I",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "Separation_1"
                 }
             ]
         },
@@ -1394,691 +1488,806 @@ PATHS:
                     "name": "FC_P60_To_MC_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "MC_P60_To_FC_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "FC_P60_To_MC_P30",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "MC_P60_To_FC_P30",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "FC_P60_To_MC_P15",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "MC_P60_To_FC_P15",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "FC_P60_To_MC_P8",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "MC_P60_To_FC_P8",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "FC_P60_To_MC_P4",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "MC_P60_To_FC_P4",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "FC_P60_To_MC_P1",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "MC_P60_To_FC_P1",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "FC_P30_To_MC_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "MC_P30_To_FC_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "FC_P30_To_MC_P30",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "MC_P30_To_FC_P30",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "FC_P15_To_MC_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "MC_P15_To_FC_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "FC_P15_To_MC_P15",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "MC_P15_To_FC_P15",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "FC_P8_To_MC_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "MC_P8_To_FC_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "FC_P8_To_MC_P8",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "MC_P8_To_FC_P8",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "FC_P4_To_MC_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "MC_P4_To_FC_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "FC_P4_To_MC_P4",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "MC_P4_To_FC_P4",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "FC_P1_To_MC_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "MC_P1_To_FC_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "FC_P1_To_MC_P1",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "MC_P1_To_FC_P1",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
                 },
                 {
                     "name": "port_3",
                     "interface": "ifc3",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "Separation_1"
                 },
                 {
                     "name": "port_1",
                     "interface": "ifc1",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "Separation_1"
                 },
                 {
                     "name": "Rx_Continuous",
                     "interface": "ifc3",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "Separation_1"
                 },
                 {
                     "name": "Tx_Continuous",
                     "interface": "ifc3",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "Separation_1"
                 },
                 {
                     "name": "Ack_Event",
                     "interface": "events.ack_from_prov",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "Separation_1"
                 },
                 {
                     "name": "No_Id_Event",
                     "interface": "events.noid_event",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "Separation_1"
                 },
                 {
                     "name": "Simple_To_App_1",
                     "interface": "mydir.my_simple_event",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "Separation_1"
                 },
                 {
                     "name": "Simple_From_App_1",
                     "interface": "mydir.my_simple_event",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "Separation_1"
                 },
                 {
                     "name": "LReader_1",
                     "interface": "mydir.my_simple_event",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "Separation_1"
                 },
                 {
                     "name": "LReader_2",
                     "interface": "mydir.my_simple_event",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "Separation_1"
                 },
                 {
                     "name": "LReader_3",
                     "interface": "mydir.my_simple_event",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "Separation_1"
                 },
                 {
                     "name": "PDCM21_Results",
                     "interface": "Results.Test_Status_I",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "Separation_1"
                 },
                 {
                     "name": "TMC2_PDCM1_Discretes",
                     "interface": "tmc_pdcm_asap.analog_discrete_i",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "Separation_1"
                 },
                 {
                     "name": "FC_P60_To_MC_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P60_To_FC_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P60_To_MC_P30",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P60_To_FC_P30",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P60_To_MC_P15",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P60_To_FC_P15",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P60_To_MC_P8",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P60_To_FC_P8",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P60_To_MC_P4",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P60_To_FC_P4",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P60_To_MC_P1",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P60_To_FC_P1",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P30_To_MC_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P30_To_FC_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P30_To_MC_P30",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P30_To_FC_P30",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P30_To_MC_P15",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P30_To_FC_P15",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P30_To_MC_P8",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P30_To_FC_P8",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P30_To_MC_P4",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P30_To_FC_P4",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P30_To_MC_P1",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P30_To_FC_P1",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P15_To_MC_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P15_To_FC_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P15_To_MC_P30",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P15_To_FC_P30",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P15_To_MC_P15",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P15_To_FC_P15",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P15_To_MC_P8",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P15_To_FC_P8",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P15_To_MC_P4",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P15_To_FC_P4",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P15_To_MC_P1",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P15_To_FC_P1",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P8_To_MC_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P8_To_FC_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P8_To_MC_P30",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P8_To_FC_P30",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P8_To_MC_P15",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P8_To_FC_P15",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P8_To_MC_P8",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P8_To_FC_P8",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P8_To_MC_P4",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P8_To_FC_P4",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P8_To_MC_P1",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P8_To_FC_P1",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P4_To_MC_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P4_To_FC_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P4_To_MC_P30",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P4_To_FC_P30",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P4_To_MC_P15",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P4_To_FC_P15",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P4_To_MC_P8",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P4_To_FC_P8",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P4_To_MC_P4",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P4_To_FC_P4",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P4_To_MC_P1",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P4_To_FC_P1",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P1_To_MC_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P1_To_FC_P60",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P1_To_MC_P30",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P1_To_FC_P30",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P1_To_MC_P15",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P1_To_FC_P15",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P1_To_MC_P8",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P1_To_FC_P8",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "FC_P1_To_MC_P4",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 },
                 {
                     "name": "MC_P1_To_FC_P4",
                     "interface": "Basic_Com_I.Event.Pac",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "DB_Basic_Com_Event_Std"
                 }
             ]
         },
@@ -2089,19 +2298,22 @@ PATHS:
                     "name": "FP_Test_PDCM_B",
                     "interface": "FP_I.Float_Test",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "Separation_FP"
                 },
                 {
                     "name": "FP_Test_DCM_B",
                     "interface": "FP_I.Float_Test",
                     "role": null,
-                    "provider": "MissionCritical"
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "Separation_FP"
                 },
                 {
                     "name": "PDCM22_Results",
                     "interface": "Results.Test_Status_I",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "Separation_1"
                 }
             ]
         },
@@ -2112,7 +2324,8 @@ PATHS:
                     "name": "PDCM11_Results",
                     "interface": "Results.Test_Status_I",
                     "role": null,
-                    "provider": "FlightCritical"
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "Separation_1"
                 }
             ]
         }
@@ -2161,6 +2374,50 @@ PATHS:
             "requirer_port": "Summary",
             "requirer_is_domainborder": false,
             "identity": "Event_Res_Pdcm"
+        },
+        {
+            "provider_owner": "Separation_1",
+            "provider_thread": null,
+            "provider_port": "PDCM11_Results",
+            "provider_is_domainborder": true,
+            "requirer_owner": "PDCM11_Results",
+            "requirer_thread": "Results_60",
+            "requirer_port": "Summary",
+            "requirer_is_domainborder": false,
+            "identity": null
+        },
+        {
+            "provider_owner": "Separation_1",
+            "provider_thread": null,
+            "provider_port": "PDCM12_Results",
+            "provider_is_domainborder": true,
+            "requirer_owner": "PDCM12_Results",
+            "requirer_thread": "Results_60",
+            "requirer_port": "Summary",
+            "requirer_is_domainborder": false,
+            "identity": null
+        },
+        {
+            "provider_owner": "Separation_1",
+            "provider_thread": null,
+            "provider_port": "PDCM21_Results",
+            "provider_is_domainborder": true,
+            "requirer_owner": "PDCM21_Results",
+            "requirer_thread": "Results_60",
+            "requirer_port": "Summary",
+            "requirer_is_domainborder": false,
+            "identity": null
+        },
+        {
+            "provider_owner": "Separation_1",
+            "provider_thread": null,
+            "provider_port": "PDCM22_Results",
+            "provider_is_domainborder": true,
+            "requirer_owner": "PDCM22_Results",
+            "requirer_thread": "Results_60",
+            "requirer_port": "Summary",
+            "requirer_is_domainborder": false,
+            "identity": null
         }
     ]
 }

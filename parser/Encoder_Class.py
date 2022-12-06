@@ -46,11 +46,10 @@ class Encoder:
             counter += 1
         self.sema.release()
 
-    def set_finished_request_and_wait_for_thread(self,boolean):
+    def set_finished_request(self,boolean : bool):
         self.finished_request_lock.acquire()
         self.finished_request = boolean
         self.finished_request_lock.release()
-        self.sema.acquire()
 
     def delete_from_database(self,project,folder):
         
@@ -58,7 +57,8 @@ class Encoder:
             self.thread = threading.Thread(target=self.loading_screen,args=("Deleting from database",DebugFile.CRED))
             self.thread.start()
             response = requests.delete(self._url + folder + project)
-            self.set_finished_request_and_wait_for_thread(True)
+            self.set_finished_request(True)
+            self.sema.acquire()
             if response.status_code == 204:
                 DebugFile.success_print("\rThe project \"{0}\" was succesfully removed at {1}".format(project,self._url + folder + project))
             elif response.status_code == 404:
@@ -66,7 +66,8 @@ class Encoder:
             else:
                 DebugFile.error_print("\rUnhandled statuscode code: {0}".format(response.status_code))
         except requests.exceptions.ConnectionError:
-            self.set_finished_request_and_wait_for_thread(True)
+            self.set_finished_request(True)
+            self.sema.acquire()
             DebugFile.error_print("\rWas not able to connect to database when trying to remove project \"{0}\"".format(project))
         
     def send_to_database(self,project_segment,folder):
@@ -78,7 +79,8 @@ class Encoder:
             self.thread = threading.Thread(target=self.loading_screen,args=("Sending to database",DebugFile.OKGREEN))
             self.thread.start()
             response = requests.post(self._url + folder,string,headers=self._headers)
-            self.set_finished_request_and_wait_for_thread(True)
+            self.set_finished_request(True)
+            self.sema.acquire()
             if response.status_code == 201:
                 DebugFile.success_print("\rThe project_segment was sucessfully sent to the database at {0}.".format(self._url+folder))
             elif response.status_code == 400:
@@ -93,11 +95,13 @@ class Encoder:
                 DebugFile.warning_print("\rUnhandled status code {0}".format(response.status_code))
                 exit()
         except requests.exceptions.ConnectionError:
-            self.set_finished_request_and_wait_for_thread(True)
+            self.set_finished_request(True)
+            self.sema.acquire()
             DebugFile.error_print("\rFailed to connect to the database/API at " + (self._url + folder))
 
         except Exception as e: 
-            self.set_finished_request_and_wait_for_thread(True)
+            self.set_finished_request(True)
+            self.sema.acquire()
             DebugFile.error_print("\rSomething went wrong: {0}".format(e))
 
     def print_project(self,project_segment):

@@ -95,13 +95,15 @@ class DomainBorder:
         return {"name":self.name,"port_set":self.port_set}
     
 class PacPorts:
-    def __init__(self,name, interface, role, provider = None):
+    def __init__(self,name, interface, role, provider = None, DomainBorderConfiguration = None):
         self.name = name
         self.interface = interface
         self.role = role
         self.provider = provider
+        self.DomainBorderConfiguration = DomainBorderConfiguration
     def reprJSON(self):
-        return {"name":self.name,"interface":self.interface,"role":self.role, "provider":self.provider}
+        return {"name":self.name,"interface":self.interface,"role":self.role, "provider":self.provider, 
+            "DomainBorderConfiguration":self.DomainBorderConfiguration}
 
 class Connection:
     def __init__(self, Provider_owner, Provider_thread, Provider_port,provider_is_domainborder,
