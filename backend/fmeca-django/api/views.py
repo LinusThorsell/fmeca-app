@@ -5,21 +5,8 @@ from .serializers import *
 from rest_framework import viewsets
 # from rest_framework.decorators import api_view
 from rest_framework.response import Response
-
 from . import serializers
 # Create your views here.
-
-# {
-#     "name":"dummy1",
-#     "node_set":[{
-#         "name":"testnode",
-#         "cpu_set":[{
-#             "name":"testcpu",
-#             "application_set":[],
-#             "partition_set":[]
-#         }]
-#     }]
-# }
 
 permission = '__all__'
 
@@ -82,7 +69,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
             if partition_name != None:
                 partition_object = Partition.objects.get(name=partition_name, cpu=cpu_object)
             
-            ApplicationInstance.objects.create(**application_instance, instance_of=instanceof_object, cpu=cpu_object, node=node_object, partition=partition_object, project=project_object)
+            ApplicationInstance.objects.create(**application_instance, instance_of=instanceof_object, cpu=cpu_object, 
+                                        node=node_object, partition=partition_object, project=project_object)
 
         print("<--- APPLICATION INSTANCES CREATED --->")
 
@@ -117,17 +105,17 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
             provider_is_db = connection.pop('provider_is_domainborder')
             requirer_is_db = connection.pop('requirer_is_domainborder')
-            provider_thread_object = get_object_or_404(Thread.objects.all(), name=provider_thread, project=project_object)
-            requirer_thread_object = get_object_or_404(Thread.objects.all(), name=requirer_thread, project=project_object)
-
-            provider_port_object = get_object_or_404(PacPort.objects.all(), 
-                                        name=provider_port, thread=provider_thread_object, project=project_object)
-            requirer_port_object = get_object_or_404(PacPort.objects.all(), 
-                                        name=requirer_port, thread=requirer_thread_object, project=project_object)
+            provider_thread_object = None
+            requirer_thread_object = None
+            provider_port_object = None
+            requirer_port_object = None
             
             if provider_is_db:
                 provider_owner = None
-            else:      
+            else:  
+                provider_thread_object = get_object_or_404(Thread.objects.all(), name=provider_thread, project=project_object)
+                provider_port_object = get_object_or_404(PacPort.objects.all(), 
+                                    name=provider_port, thread=provider_thread_object, project=project_object)   
                 application_object = getattr(thread_object, 'application')
                 application_name = getattr(application_object, 'name')
                 provider_owner = get_object_or_404(ApplicationInstance.objects.all(), name=application_name, project=project_object)
@@ -135,25 +123,20 @@ class ProjectViewSet(viewsets.ModelViewSet):
             if requirer_is_db:
                 requirer_owner = None
             else:
+                requirer_thread_object = get_object_or_404(Thread.objects.all(), name=requirer_thread, project=project_object)
+                requirer_port_object = get_object_or_404(PacPort.objects.all(), 
+                                    name=requirer_port, thread=requirer_thread_object, project=project_object)
                 application_object = getattr(thread_object, 'application')
                 application_name = getattr(application_object, 'name')
                 requirer_owner = get_object_or_404(ApplicationInstance.objects.all(), name=application_name, project=project_object)
 
+            print('ALL THE WAY TO CREATE')
+
             Connection.objects.create(**connection, provider_app=provider_owner, provider_port=provider_port_object, 
                                     requirer_app=requirer_owner, requirer_port=requirer_port_object, project=project_object)
-
-        
+      
         print("<--- CONNECTIONS CREATED --->")
-
-        # serializer = ProjectSerializer(data=request_data)
-        # serializer.is_valid(raise_exception=True)
         return Response({'name':project_name})
-        # return Response(serializer.data)
-
-# class ProjectViewSet(viewsets.ModelViewSet):
-#     queryset = Project.objects.all()
-#     serializer_class = ProjectSerializer
-#     permissions = permission
 
 class NodeViewSet(viewsets.ModelViewSet):
     queryset = Node.objects.all()
@@ -175,80 +158,30 @@ class ApplicationViewSet(viewsets.ModelViewSet):
     serializer_class = ApplicationSerializer
     permissions = permission
 
-# need to send application_name and project_name for the viewset
-# to figure out which application to connect the instance to
 class ApplicationInstanceViewSet(viewsets.ModelViewSet):
     queryset = ApplicationInstance.objects.all()
     serializer_class = ApplicationInstanceSerializer
     permissions = permission
-
-    # def create(self, request):
-    #     request_data = request.data
-    #     to_send = []
-
-    #     project_name = request_data.pop('project_name')
-    #     project_instance = get_object_or_404(Project.objects.all(), name=project_name)
-    #     application_set = request_data.pop('application_set')
-
-    #     for application_instance in application_set:
-    #         application_object = get_object_or_404(Application.objects.all(), name=application_instance['instanceof'], project=project_instance)
-    #         created_app = ApplicationInstance.objects.create(name=application_instance['name'], instance_of=application_object)
-    #         to_send.append(created_app)
-        
-    #     serializer = ApplicationInstanceSerializer(to_send, many=True)
-    #     serializer.is_valid(raise_exception=True)
-    #     return Response(serializer.data)
 
 class ConnectionViewSet(viewsets.ModelViewSet):
     queryset = Connection.objects.all()
     serializer_class = ConnectionSerializer
     permissions = permission
 
-# need to send application_name and project_name for the viewset
-# to figure out which application to connect the thread to
 class ThreadViewSet(viewsets.ModelViewSet):
     queryset = Thread.objects.all()
     serializer_class = ThreadSerializer
     permissions = permission
-
-    # def create(self, request):
-    #     request_data = request.data
-    #     application_name = request_data.pop('application_name')
-    #     project_name = request_data.pop('project_name')
-    #     project_instance = get_object_or_404(Project.objects.all(), name=project_name)
-    #     application_instance = get_object_or_404(Application.objects.all(), name=application_name, project=project_instance)
-    #     application_id = getattr(application_instance, 'id')
-        
-    #     request_data['application'] = application_id
-    #     serializer = self.get_serializer(data=request_data)
-    #     serializer.is_valid(raise_exception=True)
-    #     self.perform_create(serializer)
-    #     return Response(serializer.data)
-
-
 
 class DomainBorderViewSet(viewsets.ModelViewSet):
     queryset = DomainBorder.objects.all()
     serializer_class = DomainBorderSerializer
     permissions = permission
 
-    # def create(self, request):
-    #     request_data = request.data
-
-    #     project_name = request_data.pop('project_name')
-    #     project_instance = get_object_or_404(Project.objects.all(), name=project_name)
-    #     domain_border_set = request_data.pop('domain_border_set')
-
-    #     for domain_border in domain_border_set:
-    #         DomainBorder.objects.all().create(name=domain_border['name'], project=project_instance)
-    #         port_set = domain_border['port_set']
-    #         for port in port_set:
-    #             PacPort.objects.all().create(**port)
-        
-    #     serializer = self.get_serializer(data=request_data)
-    #     serializer.is_valid(raise_exception=True)
-    #     return Response(serializer.data)
-
+class PacPortViewSet(viewsets.ModelViewSet):
+    queryset = PacPort.objects.all()
+    serializer_class = PacPortSerializer
+    permissions = permission
 
 #------------------------------------------------
 
