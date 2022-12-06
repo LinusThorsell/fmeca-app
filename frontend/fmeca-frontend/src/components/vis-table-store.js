@@ -1,7 +1,10 @@
 import { reactive } from "vue";
+import { onFetched, array_columns, array_rows } from "./VisTable.vue";
 
 export const vis_table_store = reactive({
   array: [[]],
+  have_fetched: false,
+  debug: false,
   setArray(num, new_array) {
     console.log("Setting array to");
     console.log(new_array);
@@ -124,5 +127,69 @@ export const vis_table_store = reactive({
       }
     });
     return index_of_project;
+  },
+  stringifyPartitions(obj) {
+    console.log("To stringify into partitions");
+    console.log(obj);
+    let build_partition_string = "";
+    obj.forEach((partitions) => {
+      build_partition_string += partitions.name + "\n";
+    });
+    console.log("returning: " + build_partition_string);
+    return build_partition_string;
+  },
+  getTableFromBackend(selected_project) {
+    // Simple GET request using fetch
+    if (!this.have_fetched && this.debug) {
+      for (let r = 0; r < 5; r++) {
+        for (let c = 0; c < 5; c++) {
+          vis_table_store.set(
+            selected_project,
+            r,
+            c,
+            "row: " + r + " column: " + c
+          );
+        }
+      }
+      this.have_fetched = true;
+      this.set(selected_project, 1, 2, "yeay|hey|baeee");
+    }
+    if (!this.have_fetched && !this.debug) {
+      fetch("http://localhost:8000/projects/")
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          data.forEach((project, index) => {
+            console.log(index);
+            console.log(project.name);
+            // TODO: MAKE THIS LINE SCALE DYNAMICALLY
+            this.generateEmpty(index, array_rows, array_columns);
+            this.set(index, 0, 0, project);
+
+            project.node_set.forEach((node, n_index) => {
+              vis_table_store.set(index, n_index + 1, 1, node.name);
+              let cpu_string = "";
+              let cpu_partition_string = "";
+              node.cpu_set.forEach((cpu) => {
+                cpu_string += cpu.name + "|";
+
+                cpu_partition_string +=
+                  this.stringifyPartitions(cpu.partition_set) + "|";
+              });
+              cpu_string = cpu_string.slice(0, -1);
+              cpu_partition_string = cpu_partition_string.slice(0, -1);
+              console.log(cpu_string);
+              console.log(cpu_partition_string);
+
+              this.set(index, n_index + 1, 2, cpu_string);
+              this.set(index, n_index + 1, 3, cpu_partition_string);
+            });
+          });
+        })
+        .then(() => {
+          onFetched();
+        });
+      this.have_fetched = true;
+    }
   },
 });
