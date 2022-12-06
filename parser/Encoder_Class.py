@@ -83,6 +83,8 @@ class Encoder:
             self.sema.acquire()
             if response.status_code == 201:
                 DebugFile.success_print("\rThe project_segment was sucessfully sent to the database at {0}.".format(self._url+folder))
+            elif response.status_code == 200:
+                DebugFile.success_print("\rThe project_segment was sucessfully sent to the database at {0}.".format(self._url+folder))
             elif response.status_code == 400:
                 if "project with this name already exists" in response.text:
                     DebugFile.error_print("\rError bad request: 400, project with this name already exists!")
