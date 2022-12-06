@@ -75,7 +75,7 @@ class PacPort(models.Model):
     name = models.CharField(max_length=50, blank=True, null=True)
     interface = models.CharField(max_length=255, blank=True, null=True)
     role = models.CharField(max_length=50, blank=True, null=True)
-    DomainBorderConfig = models.CharField(max_length=50, blank=True, null=True)
+    DomainBorderConfiguration = models.CharField(max_length=50, blank=True, null=True)
     provider = models.CharField(max_length=50, blank=True, null=True)
     #ForeignKeys
     domain_border = models.ForeignKey(DomainBorder, on_delete=models.CASCADE, blank=True, null=True)
