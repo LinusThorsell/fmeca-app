@@ -85,11 +85,7 @@ class PacPort(models.Model):
 class Connection(models.Model):
     identity = models.CharField(max_length=50, blank=True, null=True)
     # ForeignKeys
-    provider_app = models.ForeignKey(ApplicationInstance, related_name="provider_set", on_delete=models.CASCADE, blank=True, null=True)
-    # provider_thread = models.ForeignKey(Thread, related_name="provider_set", on_delete=models.CASCADE, blank=True, null=True)
     provider_port = models.ForeignKey(PacPort, related_name="provider_set", on_delete=models.CASCADE, blank=True, null=True)
-    requirer_app = models.ForeignKey(ApplicationInstance, related_name="requirer_set", on_delete=models.CASCADE, blank=True, null=True)
-    # requirer_thread = models.ForeignKey(Thread, related_name="requirer_set", on_delete=models.CASCADE, blank=True, null=True)
     requirer_port = models.ForeignKey(PacPort, related_name="requirer_set", on_delete=models.CASCADE, blank=True, null=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, blank=True, null=True)
     
