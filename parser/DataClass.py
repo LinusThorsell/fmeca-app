@@ -33,17 +33,18 @@ class Partition_Data_Class:
         self.fixedStartNs = None
         self.partiton_id = id
         self.nodename = node
-        self.cpuname = cpu
-        
+        self.cpuname = cpu  
+    
+    
     def reprJSON(self):
         return {"name":self.name,"is_ltm":self.isLTM,"partition_id":self.partiton_id,"fixed_start":self.fixedStartNs}
 
 class Application_Instance:
     def __init__(self,name, application):
         # Retrieved when parsing application_instances.xml for either mc or fc
+    
         self.name = name
         self.instanceOfApplication = application
-
         # Below attributes are known after parsing sw_topology.xml
         self.rampool = None
         self.instanceOf =  None
@@ -51,6 +52,14 @@ class Application_Instance:
         self.nodename = None
         self.cpuname = None
         self.partitionname = None
+    
+    def __eq__(self, other):
+        if(isinstance(other, str)):
+            return self.name == other 
+        elif(isinstance(other, Application_Instance)):
+            return self.name == other.name
+        else:
+            return False
 
     def reprJSON(self):
         return {"name":self.name, "instance_of_application":self.instanceOfApplication,"rampool":self.rampool,"instance_of":self.instanceOf,"affinity":self.affinity,
@@ -60,16 +69,12 @@ class Application:
     def __init__(self,name, automatedTestLevel = None):
         self.name = name
         self.automatedTestLevel = automatedTestLevel
-    
     def __eq__(self, other):
         return self.name == other.name 
-    
     def __hash__(self):
         return hash(self.name)
-
     def __repr__(self):
         return self.name
-    
     def reprJSON(self):
         return {"name":self.name, "automated_test_level":self.automatedTestLevel}
     # Application also have thread but those are sent separately to the database  
@@ -90,16 +95,17 @@ class DomainBorder:
         return {"name":self.name,"port_set":self.port_set}
     
 class PacPorts:
-    def __init__(self,name, interface, role, provider = None):
+    def __init__(self,name, interface, role, provider = None, DomainBorderConfiguration = None):
         self.name = name
         self.interface = interface
         self.role = role
         self.provider = provider
+        self.DomainBorderConfiguration = DomainBorderConfiguration
     def reprJSON(self):
-        return {"name":self.name,"interface":self.interface,"role":self.role, "provider":self.provider}
+        return {"name":self.name,"interface":self.interface,"role":self.role, "provider":self.provider, 
+            "DomainBorderConfiguration":self.DomainBorderConfiguration}
 
 class Connection:
-    
     def __init__(self, Provider_owner, Provider_thread, Provider_port,provider_is_domainborder,
         Requirer_owner, Requirer_thread, Requirer_port,requirer_is_domainborder, identity):
         self.Provider_owner = Provider_owner
@@ -111,8 +117,7 @@ class Connection:
         self.Requirer_owner = Requirer_owner
         self.Requirer_thread =  Requirer_thread
         self.Requirer_port = Requirer_port
-        self.identity = identity
-        
+        self.identity = identity        
     def reprJSON(self):
         return {"provider_owner":self.Provider_owner,"provider_thread":self.Provider_thread,
                 "provider_port":self.Provider_port,"provider_is_domainborder":self.Provider_is_domainborder,
@@ -128,7 +133,6 @@ class Project_Data_Class:
         self.thread_set = []
         self.domain_border_set = []
         self.connection_set = []
-
     def reprJSON(self):
         return {"name":self.name,"application_set": self.application_set,"application_instance_set":self.application_instance_set,"node_set":self.node_set,
                 "thread_set":self.thread_set,"domain_border_set":self.domain_border_set,"connection_set":self.connection_set}
