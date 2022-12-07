@@ -23,4 +23,12 @@
     </PP>
   </PDCM>
 
+  <PDCM name="TMC2_PDCM1" loadsetTypeRef="PDCM" platformRef="pdcm_v3">
+    <PP name="PP" domainBorder="DB_T12">
+      <CETHNetwork id="TMC-1-PP2-1">
+        <UdpPortReservation firstPortId="28000" lastPortId="31000"/>
+      </CETHNetwork>
+    </PP>
+  </PDCM>
+
 </HWTopology>

@@ -59,7 +59,7 @@ class Parser:
         name = raw_partition_data.get("name")
         isLTM = raw_partition_data.get("isLTM")
         partition_id = raw_partition_data.get("id")
-        
+    
         Partition = DataClass.Partition_Data_Class(name, isLTM, partition_id, node,cpu)
     
         for children in raw_partition_data:
@@ -81,7 +81,6 @@ class Parser:
                 type = "mc"
 
             node = DataClass.Node(type,name,loadsetTypeRef,redundant,platformRef,syncLostBehavior)
-        
             for cpu in raw_node_data:
                 if cpu.tag == "APP" or cpu.tag == "IOP" or cpu.tag == "PP":
                     node.cpus.append(self.cpu(cpu))
@@ -123,10 +122,11 @@ class Parser:
     def get_domain_border_ports(self, path):
         tree = ET.parse(path)
         root = tree.getroot()
+        config = root.get("name")
         port_dict = {}
         for child in root:
             if(child.tag == "PacPort"):
-                port = DataClass.PacPorts(child.get("name"), child.get("interface"),child.get("role"),child.get("provider"))
+                port = DataClass.PacPorts(child.get("name"), child.get("interface"),child.get("role"),child.get("provider"), config)
                 if child.get("domainBorder") in port_dict:
                     port_dict[child.get("domainBorder")].append(port)
                 else:
@@ -245,7 +245,6 @@ class Parser:
                 set_of_application_names.add(child.get("instanceOf"))
 
         for app in set_of_application_names:
-           print(app)
            returnlist.append(DataClass.Application(app))
         return returnlist
   
@@ -286,11 +285,3 @@ class Parser:
             if (cpu.tag == "PP"):
                 returnlist += self.create_applications_in_cpu(project,cpu)
         return returnlist 
-<<<<<<< HEAD
-    
-    def initialisation(self):
-        self.functions = {"PP":self.cpu,"PDCM":self.create_node,"DCM":self.create_node,"APP":self.cpu,"IOP":self.cpu,"Application":self.create_application}
-    
-    
-=======
->>>>>>> ced22dc8fd1c3a3c5b76f62587839e3865e237c4
