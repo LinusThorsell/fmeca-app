@@ -1,5 +1,6 @@
 from gc import get_objects
 from django.shortcuts import render, get_object_or_404
+from django.db import transaction
 from .models import *
 from .serializers import *
 from rest_framework import viewsets
@@ -15,6 +16,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     serializer_class = ProjectSerializer
     permissions = permission
 
+    @transaction.atomic
     def create(self, request):     
         request_data             = request.data
         project_name             = request_data['name']
@@ -94,8 +96,13 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
         print("<--- DOMAIN BORDERS CREATED --->")
 
+        cnt = 0
+
         # connection_set
         for connection in connection_set:
+            
+            print('CONNECTION NUM: ' + str(cnt))
+            
             provider_owner = connection.pop('provider_owner')
             provider_thread = connection.pop('provider_thread')
             provider_port = connection.pop('provider_port')
@@ -129,8 +136,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
                 application_object = getattr(thread_object, 'application')
                 application_name = getattr(application_object, 'name')
                 requirer_owner = get_object_or_404(ApplicationInstance.objects.all(), name=application_name, project=project_object)
-
-            print('ALL THE WAY TO CREATE')
 
             Connection.objects.create(**connection, provider_app=provider_owner, provider_port=provider_port_object, 
                                     requirer_app=requirer_owner, requirer_port=requirer_port_object, project=project_object)
