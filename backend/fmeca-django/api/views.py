@@ -95,14 +95,9 @@ class ProjectViewSet(viewsets.ModelViewSet):
                 PacPort.objects.create(**port, thread=None, domain_border=domain_border_object, project=project_object)
 
         print("<--- DOMAIN BORDERS CREATED --->")
-
-        cnt = 0
-
+        
         # connection_set
-        for connection in connection_set:
-            
-            print('CONNECTION NUM: ' + str(cnt))
-            
+        for connection in connection_set:        
             provider_owner = connection.pop('provider_owner')
             provider_thread = connection.pop('provider_thread')
             provider_port = connection.pop('provider_port')
