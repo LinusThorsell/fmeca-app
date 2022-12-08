@@ -31,9 +31,10 @@ class ProjectViewSet(viewsets.ModelViewSet):
         connection_set           = request_data.pop('connection_set')
         
         # some dictionaries to use later for performance gains and optimization
-        node_object_list = {}
-        app_object_list = {}
-        thread_object_list = {}
+        node_object_list    = {}
+        app_object_list     = {}
+        thread_object_list  = {}
+        db_object_list      = {}
         
         # creates project object in db
         project_object = Project.objects.create(name=project_name)
@@ -51,9 +52,14 @@ class ProjectViewSet(viewsets.ModelViewSet):
                 partition_set = cpu.pop('partition_set')
                 # creates cpu object - important that it has the relation to the node object
                 cpu_object = CPU.objects.create(**cpu, node=node_object)
+                # saves the object to list for later use
+                node_object_list[node['name'] + cpu['name']] = cpu_object
                 for partition in partition_set:
                     # creates partition object - must link to cpu object
-                    partition_object = Partition.objects.create(**partition, cpu=cpu_object)   
+                    partition_object = Partition.objects.create(**partition, cpu=cpu_object)
+                    # saves the object to list for later use
+                    node_object_list[node['name'] + cpu['name'] + partition['name']] = partition_object
+                    
         print("<--- NODES CREATED --->")
 
         # application_set
@@ -81,21 +87,27 @@ class ProjectViewSet(viewsets.ModelViewSet):
             cpu_object = None
             partition_object = None
             application_object = None
-
-            # if node_name != None:
-            #     node_object = get_object_or_404(Node.objects.all(), name=node_name, project=project_object) 
+ 
             if node_name != None:
-                node_object = node_object_list[node_name]      
-            if cpu_name != None:
+                node_object = node_object_list[node_name]
+                    
+            # first check if it is possible to get from object list
+            # since it is much faster performance. if node is null
+            # but partition or cpu exit then get() is necessary
+            if cpu_name != None and node_name != None:
+                cpu_object = node_object_list[node_name + cpu_name]
+            elif cpu_name != None:
                 cpu_object = get_object_or_404(CPU.objects.all(), name=cpu_name, node=node_object)
+            
+            if partition_name != None and cpu_name != None and node_name != None:
+                partition_object = node_object_list[node_name + cpu_name + partition_name]
+            elif partition_name != None:
+                partition_object = get_object_or_404(Partition.objects.all(), name=partition_name, cpu=cpu_object)
                       
-            # if instanceof_name != None:
-            #     instanceof_object = get_object_or_404(Application.objects.all(), name=instanceof_name, project=project_object)
             if application_name != None:
                 application_object = app_object_list[application_name]
-            if partition_name != None:
-                partition_object = get_object_or_404(Partition.objects.all(), name=partition_name, cpu=cpu_object)
             
+            # creates application instance with parameters given
             ApplicationInstance.objects.create(**application_instance, instance_of=application_object, cpu=cpu_object, 
                                         node=node_object, partition=partition_object, project=project_object)
 
@@ -105,7 +117,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
         for thread in thread_set:
             application_name   = thread.pop('application')
             port_set           = thread.pop('port_set')
-            # application_object = get_object_or_404(Application.objects.all(), name=application_name, project=project_object)
             application_object = app_object_list[application_name]
             thread_object = Thread.objects.create(**thread, application=application_object, project=project_object)
             # saves the object to list for later use
@@ -119,51 +130,59 @@ class ProjectViewSet(viewsets.ModelViewSet):
         for domain_border in domain_border_set:
             port_set = domain_border.pop('port_set')
             domain_border_object = DomainBorder.objects.create(**domain_border, project=project_object)
+            db_object_list[domain_border['name']] = domain_border_object
             for port in port_set:
-                PacPort.objects.create(**port, thread=None, domain_border=domain_border_object, project=project_object)
+                port_object = PacPort.objects.create(**port, thread=None, 
+                                                    domain_border=domain_border_object, project=project_object)
+                db_object_list[domain_border['name'] + port['name']] = port_object
 
         print("<--- DOMAIN BORDERS CREATED --->")
         
         # connection_set
         for connection in connection_set:        
-            provider_owner = connection.pop('provider_owner')
+            provider_owner  = connection.pop('provider_owner')
             provider_thread = connection.pop('provider_thread')
-            provider_port = connection.pop('provider_port')
-            requirer_owner = connection.pop('requirer_owner')
+            provider_port   = connection.pop('provider_port')
+            requirer_owner  = connection.pop('requirer_owner')
             requirer_thread = connection.pop('requirer_thread')
-            requirer_port = connection.pop('requirer_port')
+            requirer_port   = connection.pop('requirer_port')
 
-            provider_is_db = connection.pop('provider_is_domainborder')
-            requirer_is_db = connection.pop('requirer_is_domainborder')
-            provider_thread_object = None
-            requirer_thread_object = None
-            provider_port_object = None
-            requirer_port_object = None
+            provider_is_db          = connection.pop('provider_is_domainborder')
+            requirer_is_db          = connection.pop('requirer_is_domainborder')
+            provider_app_object     = None
+            requirer_app_object     = None
+            provider_thread_object  = None
+            requirer_thread_object  = None
+            provider_port_object    = None
+            requirer_port_object    = None
             
             # provider
             if provider_is_db:
-                provider_db_object = get_object_or_404(DomainBorder.objects.all(), name=provider_owner, project=project_object)
-                provider_port_object = get_object_or_404(PacPort.objects.all(), 
-                                    name=provider_port, domain_border=provider_db_object, project=project_object) 
-            else:  
-                provider_thread_object = get_object_or_404(Thread.objects.all(), name=provider_thread, project=project_object)
-                # provider_thread_object = thread_object_list[provider_thread]
-                provider_port_object = get_object_or_404(PacPort.objects.all(), 
-                                    name=provider_port, thread=provider_thread_object, project=project_object)   
-            
+                provider_db_object      = db_object_list[provider_owner]
+                provider_port_object    = db_object_list[provider_owner + provider_port]
+            else:
+                provider_app_object     = app_object_list[provider_owner]
+                provider_thread_object  = thread_object_list[provider_thread]
+                provider_port_object    = thread_object_list[provider_thread + provider_port]  
+                      
             # requirer
             if requirer_is_db:
-                requirer_db_object = get_object_or_404(DomainBorder.objects.all(), name=requirer_owner, project=project_object)
-                requirer_port_object = get_object_or_404(PacPort.objects.all(), 
-                                    name=requirer_port, domain_border=requirer_db_object, project=project_object)
+                requirer_db_object      = db_object_list[requirer_owner]
+                requirer_port_object    = db_object_list[requirer_owner + requirer_port]
             else:
-                requirer_thread_object = get_object_or_404(Thread.objects.all(), name=requirer_thread, project=project_object)
-                # requirer_thread_object = thread_object_list[requirer_thread]
-                requirer_port_object = get_object_or_404(PacPort.objects.all(), 
-                                    name=requirer_port, thread=requirer_thread_object, project=project_object)
+                requirer_app_object     = app_object_list[provider_owner]
+                requirer_thread_object  = thread_object_list[requirer_thread]
+                requirer_port_object    = thread_object_list[requirer_thread + requirer_port]
 
-            Connection.objects.create(**connection, provider_port=provider_port_object, 
-                                    requirer_port=requirer_port_object, project=project_object)
+            Connection.objects.create(**connection, project=project_object,
+                                    provider_domain_border=provider_db_object,
+                                    provider_app_instance=provider_app_object,
+                                    provider_thread=provider_thread_object,
+                                    provider_port=provider_port_object,
+                                    requirer_domain_border=requirer_db_object,
+                                    requirer_app_instance=requirer_app_object,
+                                    requirer_thread=requirer_thread_object,
+                                    requirer_port=requirer_port_object)
       
         print("<--- CONNECTIONS CREATED --->")
         return Response({'name':project_name})
@@ -223,7 +242,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 #             if node_name != None:
 #                 node_object = get_object_or_404(Node.objects.all(), name=node_name, project=project_object)
 #             if cpu_name != None:
-#                 cpu_object = get_object_or_404(CPU.objects.all(), name=cpu_name, node=node_object)      
+#                 cpu_object = get_object_or_404(CPU.objects.all(), name=cpu_name, node=node_object)
 #             if instanceof_name != None:
 #                 instanceof_object = get_object_or_404(Application.objects.all(), name=instanceof_name, project=project_object)
 #             if partition_name != None:

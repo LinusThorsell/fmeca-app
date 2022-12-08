@@ -67,7 +67,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     node_set = NodeSerializer(many=True)
     application_set = ApplicationSerializer(many=True)
     thread_set = ThreadSerializer(many=True)
-    domain_border_set = DomainBorderSerializer(many=True)
+    domainborder_set = DomainBorderSerializer(many=True)
 
     class Meta:
         model = Project
