@@ -55,13 +55,9 @@ class NodeSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ApplicationSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Application
         fields = '__all__'
-
-    def update(self, **validated_data):
-        pass
 
 class ProjectSerializer(serializers.ModelSerializer):
     node_set = NodeSerializer(many=True)
