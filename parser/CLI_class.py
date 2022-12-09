@@ -176,6 +176,20 @@ class CLI:
 
          #-----------------------------------------------------------------------------
                     
+        # Adding domainborder to connection
+        for connection in self.Project_Type.connection_set:
+            if connection.Provider_is_domainborder:
+                for db in self.Project_Type.domain_border_set:
+                    for port in db.port_set:
+                        if port.name == connection.Provider_port:
+                            connection.Provider_owner = db.name
+            if connection.Requirer_is_domainborder:
+                for db in self.Project_Type.domain_border_set:
+                    for port in db.port_set:
+                        if port.name == connection.Requirer_port:
+                            connection.Requirer_owner = db.name
+                            
+
         self.Project_Type.application_set = list(set(self.Project_Type.application_set))
         Tests.run_all(self.Project_Type)
 
