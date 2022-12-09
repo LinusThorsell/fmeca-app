@@ -19,7 +19,6 @@ export default {
       getColumn,
       getClass,
       handleResize,
-      getTableFromBackend,
       vis_table_store,
       getProjects,
       selected_project,
@@ -98,7 +97,7 @@ function restoreColumns() {
   }
 }
 
-function getClass(column, row) {
+export function getClass(column, row) {
   return "vis-column-" + column + " vis-row-" + row;
 }
 
@@ -320,16 +319,21 @@ function getColumnBoxContent(row, column) {
   {{ $log("Rerender") }}
   {{ vis_table_store.getTableFromBackend() }}
 
+  <!-- Container for table -->
   <div id="vis-table">
+    <!-- Main table Content -->
+    <!-- Loops row by row. -->
     <div
       v-for="row in vis_table_store.getRowCount(selected_project)"
       class="vis-row"
     >
       <!-- Only gets drawn on row 0, column 0 in the table -->
       <TableTitle @restoreColumns="restoreColumns" :row="row" />
+
       <!-- Gets drawn on the rest of column 0 -->
       <RowHead :row="row" />
 
+      <!-- Gets drawn on entire row 0 -->
       <div
         v-if="row - 1 === 0"
         v-for="column in vis_table_store.getColumnCount(selected_project)"
@@ -344,20 +348,14 @@ function getColumnBoxContent(row, column) {
         />
       </div>
 
-      <div
-        v-if="row - 1 !== 0"
-        v-for="column in vis_table_store.getColumnCount(selected_project)"
-        class="vis-columnbox"
-        :class="getClass(column - 1, row - 2)"
-      >
-        <ContentColumnBox
-          :row="row"
-          :column="column"
-          :store="vis_table_store"
-          :selected_project="selected_project"
-          @editComment="editComment"
-        />
-      </div>
+      <!-- Main content boxes, drawn on everything that is not row 0 or column 0 -->
+      <ContentColumnBox
+        :row="row"
+        :column="column"
+        :store="vis_table_store"
+        :selected_project="selected_project"
+        @editComment="editComment"
+      />
     </div>
   </div>
 </template>
