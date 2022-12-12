@@ -19,7 +19,6 @@ OKCYAN = '\033[96m'
 debug = False
 slow_mode = False
 
-
 def error_print(string):
     print(CRED + str(string) + ENDC)
 
@@ -38,9 +37,9 @@ def underline_print(string):
 def debug_print(object_to_be_printed, color = ENDC):
     global debug
     if(debug == True):
-        print(color)
+        print(color, end="")
         print(object_to_be_printed)
-        print(ENDC)
+        print(ENDC, end="")
             
 def debug_print_list(object_to_be_printed, color = ENDC):
     global debug

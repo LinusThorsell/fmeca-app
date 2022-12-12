@@ -5,6 +5,8 @@ import requests
 import threading
 import time
 import sys
+
+##This class is used in json to and returns the object as a string assuming you have overloded the "reprJSON" memberfunction in the class you want to serialize
 class ComplexEncoder(json.JSONEncoder):
     def default(self, obj):
         if hasattr(obj,'reprJSON'):
@@ -12,6 +14,7 @@ class ComplexEncoder(json.JSONEncoder):
         else:
             return json.JSONEncoder.default(self, obj)
 
+#This class is used to encode and send the project to database
 class Encoder:
     def __init__(self):
         self._headers = {"Content-Type":"application/json"}
@@ -24,14 +27,18 @@ class Encoder:
         self.finished_request_lock = threading.Lock()
         self.steps = ["⢿", "⣻", "⣽", "⣾", "⣷", "⣯", "⣟", "⡿"]
         self.thread = ""
-    
+
+
     def config_api(self,URL):
+        DebugFile.debug_print("Changing URL from {0} to {1}".format(self._url, URL))
         self._url = URL
 
+    ##This function returns the object as a string
     def get_json(self,object):
         string = json.dumps(object,cls=ComplexEncoder,indent=4)
         return string
         
+    ##This is a loading screen, this will be running using multithreading
     def loading_screen(self,string,color = DebugFile.ENDC):
         many_steps = len(self.steps)
         counter = 0
@@ -100,6 +107,11 @@ class Encoder:
             self.set_finished_request(True)
             self.sema.acquire()
             DebugFile.error_print("\rFailed to connect to the database/API at " + (self._url + folder))
+
+        except requests.exceptions.MissingSchema:
+            self.set_finished_request(True)
+            self.sema.acquire()
+            DebugFile.error_print("\rThe URL: {0} is not a valid URL.".format(self._url + folder))
 
         except Exception as e: 
             self.set_finished_request(True)

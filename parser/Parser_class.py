@@ -132,7 +132,6 @@ class Parser:
                     port_dict[child.get("domainBorder")].append(port)
                 else:
                     port_dict[child.get("domainBorder")] = [port]
-                     
         return port_dict
 
     def get_all_domains(self, path, container):
@@ -246,7 +245,6 @@ class Parser:
                 set_of_application_names.add(child.get("instanceOf"))
 
         for app in set_of_application_names:
-           print(app)
            returnlist.append(DataClass.Application(app))
         return returnlist
   
