@@ -128,14 +128,25 @@ export const vis_table_store = reactive({
     });
     return index_of_project;
   },
-  stringifyPartitions(obj) {
-    console.log("To stringify into partitions");
-    console.log(obj);
+  stringifyPartitions(obj, opt_cpu_applications) {
+    let temp = obj;
+    let delimiter = "\n";
+
+    if (temp.length == 0) {
+      temp = opt_cpu_applications;
+      delimiter = "|";
+    }
+
     let build_partition_string = "";
-    obj.forEach((partitions) => {
-      build_partition_string += partitions.name + "\n";
+    temp.forEach((partitions) => {
+      build_partition_string += partitions.name + delimiter;
     });
-    console.log("returning: " + build_partition_string);
+
+    if (obj.length == 0) {
+      // If there are no partitions, we need to remove the last delimiter
+      build_partition_string = build_partition_string.slice(0, -1);
+    }
+
     return build_partition_string;
   },
   getTableFromBackend(selected_project) {
@@ -158,11 +169,7 @@ export const vis_table_store = reactive({
       fetch("http://localhost:8000/projects/")
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
           data.forEach((project, index) => {
-            console.log(index);
-            console.log(project.name);
-            // TODO: MAKE THIS LINE SCALE DYNAMICALLY
             this.generateEmpty(index, array_rows, array_columns);
             this.set(index, 0, 0, project);
 
@@ -174,12 +181,13 @@ export const vis_table_store = reactive({
                 cpu_string += cpu.name + "|";
 
                 cpu_partition_string +=
-                  this.stringifyPartitions(cpu.partition_set) + "|";
+                  this.stringifyPartitions(
+                    cpu.partition_set,
+                    cpu.application_instance_set
+                  ) + "|";
               });
               cpu_string = cpu_string.slice(0, -1);
               cpu_partition_string = cpu_partition_string.slice(0, -1);
-              console.log(cpu_string);
-              console.log(cpu_partition_string);
 
               this.set(index, n_index + 1, 2, cpu_string);
               this.set(index, n_index + 1, 3, cpu_partition_string);
