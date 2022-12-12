@@ -53,6 +53,9 @@ class CLI:
         DebugFile.debug = True
         DebugFile.debug_print("DEBUG active")
 
+    def ip(self, url):
+        self._encoder.config_api(url)
+
     def send(self):
         DebugFile.send = True
 
@@ -114,17 +117,15 @@ class CLI:
     #in self._flags we should have the flag and how many arguments we should
     # have after that
     def initialize(self):
-        self._flags = {"debug":0,"add":0,"remove":0,"-c":1, "-path":1, "-meta":1, "-tag":1,"print":0}
+        self._flags = {"debug":0,"add":0,"remove":0,"-c":1, "-path":1, "-meta":1, "-tag":1,"print":0, "-ip":1}
         self._functions = {"add":self.add,"remove":self.remove,"print":self.print_f}
-        self._remove_functions = {"remove":self.remove, "-tag":self.tag,"-c":self.config_database,"debug":self.debug}
-        self._add_functions = {"add":self.add,"-meta":self.meta,"-tag":self.tag, "-path":self.path,"-c":self.config_database,"debug":self.debug}
+        self._remove_functions = {"remove":self.remove, "-tag":self.tag,"-c":self.config_database,"debug":self.debug, "-ip":self.ip}
+        self._add_functions = {"add":self.add,"-meta":self.meta,"-tag":self.tag, "-path":self.path,"-c":self.config_database,"debug":self.debug, "-ip":self.ip}
         self._print_functions = {"print":self.print_f,"-meta":self.meta,"-tag":self.tag, "-path":self.path}
         DebugFile.windows = False 
         if platform.system() == "windows":
             DebugFile.windows = True 
     
-
-   
     def parsing(self):
         #Call function that posts to database
         DebugFile.debug_print("Call function: ADD to database")

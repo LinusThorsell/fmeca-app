@@ -15,7 +15,7 @@ def test_application_instances(Project):
                 found = True
         if(not found):
             success = False
-            DebugFile.warning_print("Did not find application for instance {0}".format(instance.name))
+            DebugFile.debug_print("Did not find application for instance {0}".format(instance.name))
             found = False
     
     return success
@@ -31,7 +31,7 @@ def test_threads_refer_to_application(Project):
                 break
         if(not found):
             success = False
-            DebugFile.warning_print("Did not find application for thread {0}".format(thread.name))
+            DebugFile.debug_print("Did not find application for thread {0}".format(thread.name))
         else:
             found = False
     return success
@@ -54,9 +54,9 @@ def test_connection_ports(Project):
                     if connection.Provider_port == port.name:
                         port_found = True
             if(not owner_found):
-                DebugFile.warning_print("{0} domain_border not found, removing connection".format(connection.Provider_owner))
+                DebugFile.debug_print("{0} domain_border not found, removing connection".format(connection.Provider_owner))
             elif(not port_found):
-                DebugFile.warning_print("{0} port not found, removing connection".format(connection.Provider_port))
+                DebugFile.debug_print("{0} port not found, removing connection".format(connection.Provider_port))
 
         else:
 
@@ -69,9 +69,9 @@ def test_connection_ports(Project):
                         port_found = True  
             
             if(not owner_found):
-                DebugFile.warning_print("{0} application instance not found, removing connection".format(connection.Provider_owner))
+                DebugFile.debug_print("{0} application instance not found, removing connection".format(connection.Provider_owner))
             elif(not port_found):
-                DebugFile.warning_print("{0} port not found, removing connection".format(connection.Provider_port))
+                DebugFile.debug_print("{0} port not found, removing connection".format(connection.Provider_port))
         
         if(not owner_found or not port_found):
             success = False
@@ -89,9 +89,9 @@ def test_connection_ports(Project):
                         port_found = True
 
             if(not owner_found):
-                DebugFile.warning_print("{0} domain_border not found, removing connection".format(connection.Requirer_owner))
+                DebugFile.debug_print("{0} domain_border not found, removing connection".format(connection.Requirer_owner))
             elif(not port_found):
-                DebugFile.warning_print("{0} port not found, removing connection".format(connection.Requirer_port))
+                DebugFile.debug_print("{0} port not found, removing connection".format(connection.Requirer_port))
 
         else:
 
@@ -104,9 +104,9 @@ def test_connection_ports(Project):
                         port_found = True  
             
             if(not owner_found):
-                DebugFile.warning_print("{0} application instance not found, removing connection".format(connection.Requirer_owner))
+                DebugFile.debug_print("{0} application instance not found, removing connection".format(connection.Requirer_owner))
             elif(not port_found):
-                DebugFile.warning_print("{0} port not found, removing connection".format(connection.Requirer_port))
+                DebugFile.debug_print("{0} port not found, removing connection".format(connection.Requirer_port))
         
         if(not owner_found or not port_found):
             success = False
@@ -127,17 +127,17 @@ def test_connection_ports(Project):
 #         if(not connection.Provider_is_domainborder):
 #             if not connection.Provider_owner in Project.application_instance_set:
 #                 success = False
-#                 DebugFile.warning_print("Did not found application_instance {0} that a connection refers to".format(connection.Provider_owner)) 
+#                 DebugFile.debug_print("Did not found application_instance {0} that a connection refers to".format(connection.Provider_owner)) 
 #         if(not connection.Requirer_is_domainborder):
 #             if not connection.Requirer_owner in Project.application_instance_set:
 #                 success = False
-#                 DebugFile.warning_print("Did not found application_instance {0} that a connection  refers to".format(connection.Requirer_owner))       
+#                 DebugFile.debug_print("Did not found application_instance {0} that a connection  refers to".format(connection.Requirer_owner))       
 #     return success
 
 tests = [test_application_instances,test_threads_refer_to_application,test_connection_ports]         
         
 def run_all(Project):
-    DebugFile.blue_print("Running tests")
+    DebugFile.debug_print("Running tests", DebugFile.BLUE)
     counter = 0
     i = 0
     while i < len(tests):
@@ -147,8 +147,8 @@ def run_all(Project):
     #counter += test_threads_refer_to_application(Project)
     #counter += test_connection(Project)
     if (counter == len(tests)):
-        DebugFile.success_print("{0} of {1} tests were successful".format(counter,len(tests)))
+        DebugFile.debug_print("{0} of {1} tests were successful".format(counter,len(tests)),  DebugFile.OKGREEN)
     elif counter > 0:
-        DebugFile.warning_print("Only {0} of the {1} tests passed".format(counter,len(tests)))
+        DebugFile.debug_print("Only {0} of the {1} tests passed".format(counter,len(tests)), DebugFile.YELLOW)
     else:
-        DebugFile.error_print("NO TESTS PASSED!")
+        DebugFile.debug_print("NO TESTS PASSED!", DebugFile.CRED)
