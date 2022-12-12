@@ -142,7 +142,8 @@ export const vis_table_store = reactive({
       build_partition_string += partitions.name + delimiter;
     });
 
-    if (obj.length == 0) { // If there are no partitions, we need to remove the last delimiter
+    if (obj.length == 0) {
+      // If there are no partitions, we need to remove the last delimiter
       build_partition_string = build_partition_string.slice(0, -1);
     }
 
