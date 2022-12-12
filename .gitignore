@@ -1,8 +1,7 @@
 .gitsecret/keys/random_seed
-/backend/fmeca-django/backend/settings.py
-/backend/fmeca-venv/
-/backend/fmeca-django/api/__pycache__/
-/backend/fmeca-django/migrations/__pycache__/
+/backend/backend/settings.py
+/backend/api/__pycache__/
+/backend/migrations/__pycache__/
 /parser/__pycache__/
 *.py[cod]
 __pycache__/
