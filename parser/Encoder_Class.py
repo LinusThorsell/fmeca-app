@@ -25,7 +25,7 @@ class Encoder:
         self.sema = threading.Semaphore(0)
         self.finished_request = False
         self.finished_request_lock = threading.Lock()
-        self.steps = ["⢿", "⣻", "⣽", "⣾", "⣷", "⣯", "⣟", "⡿"]
+        self.loading_steps = ["⢿", "⣻", "⣽", "⣾", "⣷", "⣯", "⣟", "⡿"]
         self.thread = ""
 
 
@@ -40,7 +40,7 @@ class Encoder:
         
     ##This is a loading screen, this will be running using multithreading
     def loading_screen(self,string,color = DebugFile.ENDC):
-        many_steps = len(self.steps)
+        many_steps = len(self.loading_steps)
         counter = 0
         while True:
             self.finished_request_lock.acquire()
@@ -48,7 +48,7 @@ class Encoder:
                 self.finished_request_lock.release()
                 break
             self.finished_request_lock.release()
-            print(("\r" + string + color + " {0}" + DebugFile.ENDC).format(self.steps[counter % many_steps]), end="" ,flush=True)
+            print(("\r" + string + color + " {0}" + DebugFile.ENDC).format(self.loading_steps[counter % many_steps]), end="" ,flush=True)
             time.sleep(0.33333)
             counter += 1
         self.sema.release()

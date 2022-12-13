@@ -63,6 +63,7 @@ class CLI:
         self._Paths.initial_path(self._add_path)
         self._Paths.get_paths(self._Paths.fc_path)
         self._Paths.get_paths(self._Paths.mc_path)
+        self._Paths.add__outer_folders_to_paths()
 
     def print_f(self):
         self.PRINT = True
