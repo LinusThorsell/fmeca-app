@@ -1,5 +1,5 @@
 import { reactive } from "vue";
-import { onFetched, array_columns, array_rows } from "./VisTable.vue";
+import { isReady, onFetched, array_columns, array_rows } from "./VisTable.vue";
 
 export const vis_table_store = reactive({
   array: [[]],
@@ -78,6 +78,7 @@ export const vis_table_store = reactive({
     return this.array[num].slice(0);
   },
   set(num, row, column, data) {
+    console.log("Setting " + num + " " + row + " " + column + " to " + data);
     this.array[num][row][column] = data;
   },
   setComment(num, row, column, comment) {
@@ -195,7 +196,9 @@ export const vis_table_store = reactive({
           });
         })
         .then(() => {
-          onFetched();
+          isReady.value = true;
+          console.log("isReady: " + isReady);
+          //onFetched();
         });
       this.have_fetched = true;
     }
