@@ -2,7 +2,7 @@
 
 from ctypes import sizeof
 import sys, string
-from CLI_class import CLI
+from cli_class import CLI
 
 def main():
     _CLI = CLI()

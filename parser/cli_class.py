@@ -1,12 +1,12 @@
-from Parser_class import Parser
+from parser_class import Parser
 import sys, string, os
 from os import path as OSPATH
-from Encoder_Class import *
-import DataClass
-import Paths
-import DebugFile
-import Tests
-import platform
+from encoder_class import *
+import dataclass as dataclass
+import paths as paths
+import debugfile as debugfile
+import tests as tests
+#import platform
 import xml.etree.ElementTree as ET
 import fileinput
 import time
@@ -24,7 +24,7 @@ class CLI:
         self._nr_arguments = 0
         self._parser = Parser()
         self._encoder = Encoder()
-        self._Paths = Paths.Paths()
+        self._Paths = paths.Paths()
         self._add_path = None
         self._meta_path = None
         self._project_name = ""
@@ -50,14 +50,14 @@ class CLI:
         self._project_name = project_name
 
     def debug(self):
-        DebugFile.debug = True
-        DebugFile.debug_print("DEBUG active")
+        debugfile.debug = True
+        debugfile.debug_print("DEBUG active")
 
     def ip(self, url):
         self._encoder.config_api(url)
 
     def send(self):
-        DebugFile.send = True
+        debugfile.send = True
 
     def get_paths(self):
         self._Paths.initial_path(self._add_path)
@@ -70,7 +70,7 @@ class CLI:
         self._functions = self._print_functions
 
     def config_database(self, path):
-        DebugFile.debug_print("Configuring database, path to file = " + str(path))
+        debugfile.debug_print("Configuring database, path to file = " + str(path))
         tree = ET.parse(path)
         root = tree.getroot()
         attributes = {}
@@ -123,17 +123,15 @@ class CLI:
         self._remove_functions = {"remove":self.remove, "-tag":self.tag,"-c":self.config_database,"debug":self.debug, "-ip":self.ip}
         self._add_functions = {"add":self.add,"-meta":self.meta,"-tag":self.tag, "-path":self.path,"-c":self.config_database,"debug":self.debug, "-ip":self.ip}
         self._print_functions = {"print":self.print_f,"-meta":self.meta,"-tag":self.tag, "-path":self.path}
-        DebugFile.windows = False 
-        if platform.system() == "windows":
-            DebugFile.windows = True 
+        debugfile.windows = False 
     
     def parsing(self):
         #Call function that posts to database
-        DebugFile.debug_print("Call function: ADD to database")
-        DebugFile.debug_print(self._add_path)
+        debugfile.debug_print("Call function: ADD to database")
+        debugfile.debug_print(self._add_path)
         self.get_paths()
-        DebugFile.debug_print("PATHS:")
-        DebugFile.debug_print(self._Paths._paths)
+        debugfile.debug_print("PATHS:")
+        debugfile.debug_print(self._Paths._paths)
 
 
         # The order we want to parse the files in
@@ -148,7 +146,7 @@ class CLI:
             self._project_name = self._parser.get_project_name(self._add_path) 
         
         # Init containers
-        self.Project_Type = DataClass.Project_Data_Class(self._project_name)
+        self.Project_Type = dataclass.Project_Data_Class(self._project_name)
 
         # Parse files by order specified by runorder list
         for temppath in runorder:
@@ -193,16 +191,16 @@ class CLI:
                             
 
         self.Project_Type.application_set = list(set(self.Project_Type.application_set))
-        Tests.run_all(self.Project_Type)
+        tests.run_all(self.Project_Type)
 
     def get_arguments(self):
         nrarguments = len(sys.argv)
         if(nrarguments >= 2):
             self._arguments = sys.argv[1:nrarguments]
             self._nr_arguments = len(self._arguments)
-        DebugFile.debug_print("ArgumentList",self._arguments)
+        debugfile.debug_print("ArgumentList",self._arguments)
         if sum([("add" in self._arguments), ("remove" in self._arguments), ("print" in self._arguments)]) != 1:
-            DebugFile.error_print("Can only have one of \"add\", \"remove\", \"print\" in the arguments")
+            debugfile.error_print("Can only have one of \"add\", \"remove\", \"print\" in the arguments")
             exit(1)
         elif "add" in self._arguments:
             self._functions = self._add_functions
@@ -212,7 +210,7 @@ class CLI:
     def add_and_remove(self):
         
         if(self._remove and self._project_name != ""):
-            DebugFile.debug_print("Call function: DELETE from database")
+            debugfile.debug_print("Call function: DELETE from database")
             self._encoder.delete_from_database(self._project_name, "projects/")
         elif (self._add and self._add_path != None and self._project_name != ""):      
             self.parsing()
@@ -229,6 +227,6 @@ class CLI:
             self._encoder.Project = self._project_name
             self._encoder.print_project(self.Project_Type)
         else:
-            DebugFile.error_print("bad")
+            debugfile.error_print("bad")
             exit()
             

@@ -1,11 +1,8 @@
 <?xml version='1.0' ?>
 
 <dummy_config>
-    <ENGINE name="django.db.backends.mysql"/>
-    <NAME name="fmeca_database"/>
-    <USER name="user"/>
-    <PASSWORD name="password123"/>
-    <HOST name="000.00.000.000"/>
-    <PORT name="0000"/>
+
+    <IP name="127.0.0.1"/>
+    <PORT name="7000"/>
 </dummy_config>
 
