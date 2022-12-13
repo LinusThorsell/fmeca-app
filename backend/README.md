@@ -22,6 +22,7 @@ the api.
   and database
 
 # Backend Dependencies
+
 These are the current dependecies used during the development of the backend\
 portion of the poject. As long as the local dependencies match the list below\
 the backend will be able to run. Otherwise nothing can be guaranteed.
