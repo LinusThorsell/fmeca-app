@@ -2,24 +2,12 @@
   <nav id="nav-bar-id" class="nav-background">
     <button @click="generatePdf">Generate PDF</button>
     <br> 
-    <!-- <label for="project-select">Choose a project:</label> -->
     <select name="projects" id="project-select">
         <option value="">Please choose a project</option>
         <option v-for="project in getProjects()" :value="project">{{project}}</option>
-        <!--option value="proj1">Project 1</option>
-        <option value="proj2">Project 2</option-->
     </select>
     <button @click="loadProjectFromStore()">Load Selected Project</button>
-    <!-- TODO TOG BORT <div class="menu-item"><a href="#">fortnite</a></div> -->
-    <!-- TODO TOG BORT <div class="menu-item"><a href="#">Gripen X(Unreleased)</a></div> -->
-    <!-- TODO TOG BORT <Dropdown title="Change view" :items="services" /> -->
-    <!-- <label for="project-select">Choose a project</label> -->
-    <!-- <select name ="projects" id="project-select"> -->
-      <!-- <option value =""> Please choose a project</option> -->
-      <!-- <option v-for="project in getProjects()" value ="project">{{project}}</option> -->
-    <!-- </select> -->
-    <!-- TODO TOG BORT <div class="menu-item"><a href="#">Adam fan page</a></div>-->
-    <!-- sökbar som aktiveras genom enter -->
+    <!-- Searchbar with filtering -->
     <input type="text" @keydown.enter="filteredList(input)" v-model="input" placeholder="Filter..." />
 
   </nav>
@@ -31,28 +19,26 @@ function generatePdf()
 {
 print()
 }
-//Searchbarfunction
+
 import {getProjects, loadProjectFromStore, selected_project, removeAllColumns, createFilteredTable} from './VisTable.vue'
 import {vis_table_store} from './vis-table-store.js'
-
+//Searching and filtering
 function filteredList(input) 
 {  
-console.log(input);
+//Removes the table
 removeAllColumns();
-console.log("removed");
-// console.log(vis_table_store.getArray(selected_project.value))
+//Creates an array that iterates through data from backend
 let temp_array = vis_table_store.getArray(selected_project.value)
 temp_array.forEach((array_outer, index_x) => {
-  //console.log(array_outer);
   array_outer.forEach((array_inner, index_y) => {
-  //console.log(array_inner);
-    console.log("under är index");
-    console.log(index_x + " " + index_y + " input: " + input + " arrayinner: " + array_inner);
-    let fakeinput = input +"";
-    let fakeinner = array_inner + "";
-    if(fakeinner.includes(fakeinput,0) && fakeinner!= "" || input == array_inner && array_inner != "")
+    //Compares the input and data from backend, makes it string and lower case
+    let stringinput = input +"";
+    let stringinner = array_inner + "";
+    stringinput = stringinput.toLowerCase();
+    stringinner = stringinner.toLowerCase();
+    //Prints out the new filtered table
+    if(stringinner.includes(stringinput,0) && stringinner!= "" || input == array_inner && array_inner != "")
         {
-            console.log("träff");
             createFilteredTable(index_x);       
         }
 
@@ -81,36 +67,7 @@ export default {
       generatePdf,
       getProjects,
       loadProjectFromStore,
-      /*services: [
-        {
-          title: 'S',
-          link: '#fortnite',
-          filterFunc: function name() {
-              console.log("hey");
-          }
-        },
-        {
-          title: 'A',
-          link:'#',
-          filterFunc: function name() {
-              console.log("din");
-          }
-        },
-        {
-          title: 'A',
-          link: '#',
-          filterFunc: function name() {
-              console.log("kuk");
-          }
-        },
-        {
-          title: 'B',
-          link: '#',
-          filterFunc: function name() {
-              console.log("nörd");
-          }
-        }
-      ]*/
+      
     }
   },
   
