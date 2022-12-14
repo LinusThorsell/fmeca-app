@@ -41,10 +41,8 @@ temp_array.forEach((array_outer, index_x) => {
         {
             createFilteredTable(index_x);       
         }
-
     });
   });
-
 }
 
 
@@ -67,7 +65,6 @@ export default {
       generatePdf,
       getProjects,
       loadProjectFromStore,
-      
     }
   },
   
