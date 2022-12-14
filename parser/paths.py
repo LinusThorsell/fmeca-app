@@ -1,4 +1,6 @@
 import xml.etree.ElementTree as ET
+
+#Parse the paths form system.xml
 class Paths:
     def __init__(self):
         self.catalogs = []
@@ -71,13 +73,7 @@ class Paths:
             self.build_full_path(counter)
             self.build_relative_paths(counter)
             counter +=1
-        #
-        #for relative_paths in self._paths:
-        #    splited_relative_path = relative_paths.split("/")
-        #    for subpath in splited_relative_path:
-        #        for original_subpath in splited_path:
-        #   print(relative_paths)
-    
+        
     def add__outer_folders_to_paths(self):
         splited_path = self._inital_path.split("/")
         many_subdir_and_files = len(splited_path)
