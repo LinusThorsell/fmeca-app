@@ -2,7 +2,7 @@
 
 <dummy_config>
 
-    <IP name="127.0.0.1"/>
-    <PORT name="7000"/>
+    <IP value="http://127.0.0.1"/>
+    <PORT value="7000"/>
 </dummy_config>
 

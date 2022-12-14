@@ -73,25 +73,14 @@ class CLI:
         debugfile.debug_print("Configuring database, path to file = " + str(path))
         tree = ET.parse(path)
         root = tree.getroot()
-        attributes = {}
-
+        
         for child in root:
-            attributes[child.tag.upper()] = child.get("name")
-
-        nr_prints = 6
-        DATABASES_V = False
-        for line in fileinput.input("backend/fmeca-django/backend/settings.py", inplace=True):
-            for key,value in attributes.items():
-                if "DATABASES" in line:
-                    DATABASES_V = True
-               
-                if DATABASES_V == True and nr_prints > 0:
-                    if key in line :
-                        line = '\t' +'\''+ str(key) +'\'' +  ":" + '\'' + str(value) +'\''+ "," + "\n"
-                        nr_prints -=1
-                        break
-            print('{}'.format( line), end='') # for Python 3
-        fileinput.close()
+            if(child.tag == "IP"):
+                ip = child.get("value")
+            elif(child.tag == "PORT"):
+                port = child.get("value")
+        self.ip(ip + ":"  + port + "/")
+        
 
     def analyse_cli(self):
         i = 0
@@ -214,9 +203,6 @@ class CLI:
             self._encoder.delete_from_database(self._project_name, "projects/")
         elif (self._add and self._add_path != None and self._project_name != ""):      
             self.parsing()
-            
-
-
             self._encoder.Project = self._project_name
             self._encoder.send_to_database(self.Project_Type,"projects/")
         
