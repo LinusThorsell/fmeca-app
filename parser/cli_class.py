@@ -1,15 +1,13 @@
-from Parser_class import Parser
+from parser_class import Parser
 import sys, string, os
 from os import path as OSPATH
-from Encoder_Class import *
-import DataClass
-import Paths
-import DebugFile
-import Tests
-import platform
+from encoder_class import *
+import dataclass as dataclass
+import paths as paths
+import debugfile as debugfile
+import tests as tests
 import xml.etree.ElementTree as ET
-import fileinput
-import time
+
 #CLI - Command Line Interface
 #Handles the command line interface class and functions
 #Finds the file paths where the data is located
@@ -24,74 +22,73 @@ class CLI:
         self._nr_arguments = 0
         self._parser = Parser()
         self._encoder = Encoder()
-        self._Paths = Paths.Paths()
+        self._Paths = paths.Paths()
         self._add_path = None
         self._meta_path = None
-        self._project_name = ""
         self.PRINT = False
-        
+        self._project_name = ""
+    
+    #Tell the database to delete the given project
     def remove(self):
-        #Tell the database to delete the given projec
         self._remove = True
         self._functions = self._remove_functions
 
+    #Add this project given by the path to the database
     def add(self):
-        #Add this project given by the path to the database
         self._add = True
         self._functions = self._add_functions
-        
+    
+    #Not implemented
     def meta(self, meta_path):
         self._meta_path = meta_path
     
+    #Adds the path to folder containing the infrastructure folder
     def path(self, path_to_infrastructure):
         self._add_path = path_to_infrastructure
     
+    #Change tag if one is provided
     def tag(self, project_name):
         self._project_name = project_name
 
+    #Enable debug mode
     def debug(self):
-        DebugFile.debug = True
-        DebugFile.debug_print("DEBUG active")
+        debugfile.debug = True
+        debugfile.debug_print("DEBUG active")
 
+    #Change the api adress of database
     def ip(self, url):
         self._encoder.config_api(url)
 
+    #Should later send to database 
     def send(self):
-        DebugFile.send = True
+        debugfile.send = True
 
+    #Get paths from system.xml file
     def get_paths(self):
         self._Paths.initial_path(self._add_path)
         self._Paths.get_paths(self._Paths.fc_path)
         self._Paths.get_paths(self._Paths.mc_path)
+        self._Paths.add__outer_folders_to_paths()
 
+    #The parsed data will later be printed 
     def print_f(self):
         self.PRINT = True
         self._functions = self._print_functions
 
+    #Config database adress, can be extened to do more
     def config_database(self, path):
-        DebugFile.debug_print("Configuring database, path to file = " + str(path))
+        debugfile.debug_print("Configuring database, path to file = " + str(path))
         tree = ET.parse(path)
         root = tree.getroot()
-        attributes = {}
-
+        
         for child in root:
-            attributes[child.tag.upper()] = child.get("name")
-
-        nr_prints = 6
-        DATABASES_V = False
-        for line in fileinput.input("backend/fmeca-django/backend/settings.py", inplace=True):
-            for key,value in attributes.items():
-                if "DATABASES" in line:
-                    DATABASES_V = True
-               
-                if DATABASES_V == True and nr_prints > 0:
-                    if key in line :
-                        line = '\t' +'\''+ str(key) +'\'' +  ":" + '\'' + str(value) +'\''+ "," + "\n"
-                        nr_prints -=1
-                        break
-            print('{}'.format( line), end='') # for Python 3
-        fileinput.close()
-
+            if(child.tag == "IP"):
+                ip = child.get("value")
+            elif(child.tag == "PORT"):
+                port = child.get("value")
+        self.ip(ip + ":"  + port + "/")
+        
+    #Parse the commands and execute commands
     def analyse_cli(self):
         i = 0
         while i < self._nr_arguments:
@@ -122,17 +119,16 @@ class CLI:
         self._remove_functions = {"remove":self.remove, "-tag":self.tag,"-c":self.config_database,"debug":self.debug, "-ip":self.ip}
         self._add_functions = {"add":self.add,"-meta":self.meta,"-tag":self.tag, "-path":self.path,"-c":self.config_database,"debug":self.debug, "-ip":self.ip}
         self._print_functions = {"print":self.print_f,"-meta":self.meta,"-tag":self.tag, "-path":self.path}
-        DebugFile.windows = False 
-        if platform.system() == "windows":
-            DebugFile.windows = True 
+        debugfile.windows = False 
     
+    #Main parse funtion
     def parsing(self):
         #Call function that posts to database
-        DebugFile.debug_print("Call function: ADD to database")
-        DebugFile.debug_print(self._add_path)
+        debugfile.debug_print("Call function: ADD to database")
+        debugfile.debug_print(self._add_path)
         self.get_paths()
-        DebugFile.debug_print("PATHS:")
-        DebugFile.debug_print(self._Paths._paths)
+        debugfile.debug_print("PATHS:")
+        debugfile.debug_print(self._Paths._paths)
 
 
         # The order we want to parse the files in
@@ -147,7 +143,7 @@ class CLI:
             self._project_name = self._parser.get_project_name(self._add_path) 
         
         # Init containers
-        self.Project_Type = DataClass.Project_Data_Class(self._project_name)
+        self.Project_Type = dataclass.Project_Data_Class(self._project_name)
 
         # Parse files by order specified by runorder list
         for temppath in runorder:
@@ -170,12 +166,9 @@ class CLI:
                     self.Project_Type.connection_set += self._parser.get_connection_list(path)
                 elif temppath in path and "/applications/" in temppath:
                     self.Project_Type.thread_set += self._parser.get_threads(path)
-                    #self.Threads.thread_set += self._parser.get_threads(path)
                 elif temppath in path and "/domain_border" in temppath:
                     self._parser.get_all_domains(path,self.Project_Type.domain_border_set)
-                    #self._parser.get_all_domains(path,self.DomainBorder)
 
-         #-----------------------------------------------------------------------------
                     
         # Adding domainborder to connection
         for connection in self.Project_Type.connection_set:
@@ -190,34 +183,35 @@ class CLI:
                         if port.name == connection.Requirer_port:
                             connection.Requirer_owner = db.name
                             
-
+        #Remove duplicate applications  
         self.Project_Type.application_set = list(set(self.Project_Type.application_set))
-        Tests.run_all(self.Project_Type)
 
+        #Run tests that checks if all data refer to actual obejcts
+        tests.run_all(self.Project_Type)
+
+    #Make sure to only allow one of the main commands: print, add, remove
+    #The subcommands avalible are depending on the main command
     def get_arguments(self):
         nrarguments = len(sys.argv)
         if(nrarguments >= 2):
             self._arguments = sys.argv[1:nrarguments]
             self._nr_arguments = len(self._arguments)
-        DebugFile.debug_print("ArgumentList",self._arguments)
+        debugfile.debug_print("ArgumentList",self._arguments)
         if sum([("add" in self._arguments), ("remove" in self._arguments), ("print" in self._arguments)]) != 1:
-            DebugFile.error_print("Can only have one of \"add\", \"remove\", \"print\" in the arguments")
+            debugfile.error_print("Can only have one of \"add\", \"remove\", \"print\" in the arguments")
             exit(1)
         elif "add" in self._arguments:
             self._functions = self._add_functions
         elif "remove" in self._arguments:
             self._functions = self._remove_functions      
     
-    def add_and_remove(self):
-        
+    #Called by parser.py 
+    def execute_commands(self):
         if(self._remove and self._project_name != ""):
-            DebugFile.debug_print("Call function: DELETE from database")
+            debugfile.debug_print("Call function: DELETE from database")
             self._encoder.delete_from_database(self._project_name, "projects/")
         elif (self._add and self._add_path != None and self._project_name != ""):      
             self.parsing()
-            
-
-
             self._encoder.Project = self._project_name
             self._encoder.send_to_database(self.Project_Type,"projects/")
         
@@ -228,6 +222,6 @@ class CLI:
             self._encoder.Project = self._project_name
             self._encoder.print_project(self.Project_Type)
         else:
-            DebugFile.error_print("bad")
+            debugfile.error_print("bad")
             exit()
             

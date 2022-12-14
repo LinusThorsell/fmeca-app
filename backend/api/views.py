@@ -11,6 +11,10 @@ from . import serializers
 
 permission = '__all__'
 
+# ProjectView and CommentsView are the only Views purposed for
+# posting data to. The rest should be considered as read only
+# currently.
+
 class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
@@ -209,6 +213,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
       
         print("<--- CONNECTIONS CREATED --->")
 
+        # The code below does not work but should be considered best practice
+        # --------------------------
         # serializer =  serializer = self.get_serializer(data=project_name)
         # serializer.is_valid(raise_exception=True)
         # return Response(serializer.data)
@@ -273,7 +279,6 @@ class CommentsViewSet(viewsets.ModelViewSet):
     def create(self, request):
         # Sends in a comments container that has a dictionary
         # with key value pairs of objects and comments.
-
         request_data = request.data
         comments_dict = request_data.pop('comments')
         request_data['comments'] = []
@@ -290,8 +295,4 @@ class CommentsViewSet(viewsets.ModelViewSet):
         # create the new ones
         for key, value in comments_dict.items():
             KeyVal.objects.create(key=key, comment=value, container=container_instance)
-
-        # serializer =  serializer = self.get_serializer(data=request_data)
-        # serializer.is_valid(raise_exception=True)
-
         return Response({'project':request_data['project']})

@@ -1,4 +1,0 @@
-[0mDEBUG active
-[0m[0mCall function: ADD to database
-[0m[0mP
-[0m

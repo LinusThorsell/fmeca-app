@@ -2,7 +2,7 @@
 
 <system>
 
-  <idb key="config_name"               value="Project 3"/>
+  <idb key="config_name"               value="Project_3"/>
   <idb key="config_rel"                value="FMECA_Project/[config_name]"/>
   <idb key="config_dir"                value="[root]/configurations/[config_rel]"/>
 
