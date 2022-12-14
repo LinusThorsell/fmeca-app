@@ -6,10 +6,7 @@ export const vis_table_store = reactive({
   have_fetched: false,
   debug: false,
   setArray(num, new_array) {
-    console.log("Setting array to");
-    console.log(new_array);
     this.array[num] = new_array;
-    console.log(this.array[num]);
   },
   getColumnCount(num) {
     return this.array[num][0].length - 1;
@@ -71,14 +68,12 @@ export const vis_table_store = reactive({
         return [this.array[num][row - 1][column]];
       }
     } catch (error) {
-      console.log("Err: " + error);
     }
   },
   getArray(num) {
     return this.array[num].slice(0);
   },
   set(num, row, column, data) {
-    console.log("Setting " + num + " " + row + " " + column + " to " + data);
     this.array[num][row][column] = data;
   },
   setComment(num, row, column, comment) {
@@ -98,17 +93,12 @@ export const vis_table_store = reactive({
     var projectNames = [];
     this.array.forEach((project) => {
       projectNames.push(project[0][0].name);
-      //console.log(project[0][0].name)
     });
-    console.log(projectNames);
     return projectNames;
   },
   generateEmpty(num, rows, cols) {
     if (this.getRowCount(num) === 0) {
       const temp_array = [];
-      console.log(
-        "Generating empty array: " + num + " Array empty, creating example"
-      );
       for (var col = 0; col < cols; col++) {
         temp_array[col] = [];
         for (var row = 0; row < rows; row++) {
@@ -117,8 +107,6 @@ export const vis_table_store = reactive({
       }
       this.setArray(num, temp_array);
     }
-
-    console.log("Generated empty table for: " + num);
   },
   switchProject(selected_project) {
     let index_of_project = null;
@@ -196,9 +184,7 @@ export const vis_table_store = reactive({
           });
         })
         .then(() => {
-          isReady.value = true;
-          console.log("isReady: " + isReady);
-          //onFetched();
+          onFetched();
         });
       this.have_fetched = true;
     }

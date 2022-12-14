@@ -37,28 +37,18 @@ import {vis_table_store} from './vis-table-store.js'
 
 function filteredList(input) 
 {  
-console.log(input);
 removeAllColumns();
-console.log("removed");
-// console.log(vis_table_store.getArray(selected_project.value))
 let temp_array = vis_table_store.getArray(selected_project.value)
 temp_array.forEach((array_outer, index_x) => {
-  //console.log(array_outer);
   array_outer.forEach((array_inner, index_y) => {
-  //console.log(array_inner);
-    console.log("under är index");
-    console.log(index_x + " " + index_y + " input: " + input + " arrayinner: " + array_inner);
     let fakeinput = input +"";
     let fakeinner = array_inner + "";
     if(fakeinner.includes(fakeinput,0) && fakeinner!= "" || input == array_inner && array_inner != "")
         {
-            console.log("träff");
             createFilteredTable(index_x);       
         }
-
     });
   });
-
 }
 
 
@@ -81,36 +71,6 @@ export default {
       generatePdf,
       getProjects,
       loadProjectFromStore,
-      /*services: [
-        {
-          title: 'S',
-          link: '#fortnite',
-          filterFunc: function name() {
-              console.log("hey");
-          }
-        },
-        {
-          title: 'A',
-          link:'#',
-          filterFunc: function name() {
-              console.log("din");
-          }
-        },
-        {
-          title: 'A',
-          link: '#',
-          filterFunc: function name() {
-              console.log("kuk");
-          }
-        },
-        {
-          title: 'B',
-          link: '#',
-          filterFunc: function name() {
-              console.log("nörd");
-          }
-        }
-      ]*/
     }
   },
   
