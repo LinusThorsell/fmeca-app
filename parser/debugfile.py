@@ -1,6 +1,9 @@
 import time
 import sys
 
+#File to help with debugging
+
+
 #Make print of a certain color by adding color + string + endc
 ENDC = '\033[0m'
 BOLD = '\033[1m'

@@ -27,4 +27,5 @@ _-path_ <'path to system infrastructure'> _-REQUIRED_
  
 #### Example:
  
- - **/parser/parser.py -c Linus_DB.xml -path "Project 2"/infrastructure -tag "name"**
+ - **/parser/parser.py -c Linus_DB.xml -path "Projects/Project_3/ -tag "projectname"**
+ - **/parser/parser.py -tag "projectname"**

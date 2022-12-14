@@ -25,7 +25,6 @@ class Cpu:
         return {"name":self.name,"type":self.type,"unit_id":self.unitid,"iop_ref":self.IOPRef,
         "accs_sync_master":self.ACCSSyncMaster,"domain_border":self.domainBorder,"partition_set":self.partition_set}
 
-
 class Partition_Data_Class:
     def __init__(self,name,ltmbool,id, node,cpu):
         self.name = name
@@ -34,15 +33,12 @@ class Partition_Data_Class:
         self.partiton_id = id
         self.nodename = node
         self.cpuname = cpu  
-    
-    
     def reprJSON(self):
         return {"name":self.name,"is_ltm":self.isLTM,"partition_id":self.partiton_id,"fixed_start":self.fixedStartNs}
 
 class Application_Instance:
     def __init__(self,name, application):
         # Retrieved when parsing application_instances.xml for either mc or fc
-    
         self.name = name
         self.instanceOfApplication = application
         # Below attributes are known after parsing sw_topology.xml
@@ -77,7 +73,8 @@ class Application:
         return self.name
     def reprJSON(self):
         return {"name":self.name, "automated_test_level":self.automatedTestLevel}
-    # Application also have thread but those are sent separately to the database  
+    #Application also have thread but those are sent separately to the database  
+
 class Threads:
     def __init__(self,name,application, rategroup):
         self.name = name
@@ -124,6 +121,7 @@ class Connection:
                 "requirer_owner":self.Requirer_owner,"requirer_thread":self.Requirer_thread,
                 "requirer_port":self.Requirer_port,"requirer_is_domainborder":self.Requirer_is_domainborder,
                 "identity":self.identity} 
+                
 class Project_Data_Class:
     def __init__(self,name):
         self.name = name
@@ -157,9 +155,6 @@ class Project_Data_Class:
     
     def filter(self,objectlist):
         for objecttype in objectlist:
-            #if isinstance(object,Cpu):
-            #    self.Cpu.append(object)
             if isinstance(objecttype, Node):
                 self.node_set.append(objecttype)
-            #elif isinstance(object, Partitions):
-            #    self.Partitions.append(object)
+            

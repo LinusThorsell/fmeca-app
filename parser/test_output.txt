@@ -1,27 +1,27 @@
 [0mDEBUG active
 [0m[0mCall function: ADD to database
-[0m[0mProjects/Project 3/
+[0m[0mProjects/Project_3/
 [0m[0mPATHS:
-[0m[0m{'Projects/Project 3/ifs/my_ifs', 'Projects/Project 3/infrastructure/fc/sw_topology.xml', 'Projects/Project 3/infrastructure/functional_topology/mc', 'Projects/Project 3/applications/eds_ltm', 'Projects/Project 3/infrastructure/mc/sw_topology.xml', 'Projects/Project 3/infrastructure/fc/equipments', 'Projects/Project 3/infrastructure/mc/equipments', 'Projects/Project 3/interfaces', 'Projects/Project 3/infrastructure/mc/hw_topology.xml', 'Projects/Project 3/infrastructure/domain_border', 'Projects/Project 3/message_topology', 'Projects/Project 3/infrastructure/fc/hw_topology.xml', 'Projects/Project 3/applications/results', 'Projects/Project 3/applications/basic_com_event', 'Projects/Project 3/infrastructure/functional_topology/fc'}
+[0m[0m{'Projects/Project_3/ifs/my_ifs', 'Projects/Project_3/infrastructure/mc/sw_topology.xml', 'Projects/Project_3/infrastructure/fc/sw_topology.xml', 'Projects/Project_3/interfaces', 'Projects/Project_3/infrastructure/functional_topology/mc', 'Projects/Project_3/infrastructure/fc/equipments', 'Projects/Project_3/infrastructure/functional_topology/fc', 'Projects/Project_3/infrastructure/domain_border', 'Projects/Project_3/applications/results', 'Projects/Project_3/applications/basic_com_event', 'Projects/Project_3/infrastructure/mc/hw_topology.xml', 'Projects/Project_3/applications/eds_ltm', 'Projects/Project_3/infrastructure/fc/hw_topology.xml', 'Projects/Project_3/infrastructure/mc/equipments', 'Projects/Project_3/message_topology'}
 [0m[34mRunning tests
 [0m[0mFMC_Results application instance not found, removing connection
-[0m[0mTMC21_Results application instance not found, removing connection
 [0m[0mTMC22_Results application instance not found, removing connection
+[0m[0mTMC21_Results application instance not found, removing connection
 [0m[0mFMC_Results application instance not found, removing connection
 [0m[33mOnly 2 of the 3 tests passed
 [0m{
-    "name": "Hej",
+    "name": "testtest",
     "application_set": [
         {
             "name": "EDS_LTM",
             "automated_test_level": null
         },
         {
-            "name": "Basic_Com_Event",
+            "name": "Results",
             "automated_test_level": null
         },
         {
-            "name": "Results",
+            "name": "Basic_Com_Event",
             "automated_test_level": null
         }
     ],
@@ -723,27 +723,6 @@
     ],
     "thread_set": [
         {
-            "name": "EDS_LTM_60",
-            "application": "EDS_LTM",
-            "rategroup": "P60",
-            "port_set": [
-                {
-                    "name": "Test_Results",
-                    "interface": "Results.Test_Status_I",
-                    "role": "Requirer",
-                    "provider": null,
-                    "DomainBorderConfiguration": null
-                },
-                {
-                    "name": "DCM_Results",
-                    "interface": "ACCS_I.HM.TMC.DCM_Results",
-                    "role": "Requirer",
-                    "provider": null,
-                    "DomainBorderConfiguration": null
-                }
-            ]
-        },
-        {
             "name": "Results_60",
             "application": "Results",
             "rategroup": "P60",
@@ -1442,141 +1421,59 @@
                     "DomainBorderConfiguration": null
                 }
             ]
+        },
+        {
+            "name": "EDS_LTM_60",
+            "application": "EDS_LTM",
+            "rategroup": "P60",
+            "port_set": [
+                {
+                    "name": "Test_Results",
+                    "interface": "Results.Test_Status_I",
+                    "role": "Requirer",
+                    "provider": null,
+                    "DomainBorderConfiguration": null
+                },
+                {
+                    "name": "DCM_Results",
+                    "interface": "ACCS_I.HM.TMC.DCM_Results",
+                    "role": "Requirer",
+                    "provider": null,
+                    "DomainBorderConfiguration": null
+                }
+            ]
         }
     ],
     "domain_border_set": [
         {
-            "name": "DB_T11",
+            "name": "DB_T12",
             "port_set": [
                 {
-                    "name": "PDCM11_Results",
-                    "interface": "Results.Test_Status_I",
-                    "role": null,
-                    "provider": "FlightCritical",
-                    "DomainBorderConfiguration": "Separation_1"
-                }
-            ]
-        },
-        {
-            "name": "DB_T22",
-            "port_set": [
-                {
-                    "name": "PDCM22_Results",
-                    "interface": "Results.Test_Status_I",
-                    "role": null,
-                    "provider": "FlightCritical",
-                    "DomainBorderConfiguration": "Separation_1"
-                },
-                {
-                    "name": "FP_Test_PDCM_B",
+                    "name": "FP_Test_PDCM_A",
                     "interface": "FP_I.Float_Test",
                     "role": null,
                     "provider": "FlightCritical",
                     "DomainBorderConfiguration": "Separation_FP"
                 },
                 {
-                    "name": "FP_Test_DCM_B",
+                    "name": "FP_Test_DCM_A",
                     "interface": "FP_I.Float_Test",
                     "role": null,
                     "provider": "MissionCritical",
                     "DomainBorderConfiguration": "Separation_FP"
+                },
+                {
+                    "name": "PDCM12_Results",
+                    "interface": "Results.Test_Status_I",
+                    "role": null,
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "Separation_1"
                 }
             ]
         },
         {
             "name": "DB_T21",
             "port_set": [
-                {
-                    "name": "port_3",
-                    "interface": "ifc3",
-                    "role": null,
-                    "provider": "FlightCritical",
-                    "DomainBorderConfiguration": "Separation_1"
-                },
-                {
-                    "name": "port_1",
-                    "interface": "ifc1",
-                    "role": null,
-                    "provider": "FlightCritical",
-                    "DomainBorderConfiguration": "Separation_1"
-                },
-                {
-                    "name": "Rx_Continuous",
-                    "interface": "ifc3",
-                    "role": null,
-                    "provider": "FlightCritical",
-                    "DomainBorderConfiguration": "Separation_1"
-                },
-                {
-                    "name": "Tx_Continuous",
-                    "interface": "ifc3",
-                    "role": null,
-                    "provider": "MissionCritical",
-                    "DomainBorderConfiguration": "Separation_1"
-                },
-                {
-                    "name": "Ack_Event",
-                    "interface": "events.ack_from_prov",
-                    "role": null,
-                    "provider": "FlightCritical",
-                    "DomainBorderConfiguration": "Separation_1"
-                },
-                {
-                    "name": "No_Id_Event",
-                    "interface": "events.noid_event",
-                    "role": null,
-                    "provider": "FlightCritical",
-                    "DomainBorderConfiguration": "Separation_1"
-                },
-                {
-                    "name": "Simple_To_App_1",
-                    "interface": "mydir.my_simple_event",
-                    "role": null,
-                    "provider": "FlightCritical",
-                    "DomainBorderConfiguration": "Separation_1"
-                },
-                {
-                    "name": "Simple_From_App_1",
-                    "interface": "mydir.my_simple_event",
-                    "role": null,
-                    "provider": "MissionCritical",
-                    "DomainBorderConfiguration": "Separation_1"
-                },
-                {
-                    "name": "LReader_1",
-                    "interface": "mydir.my_simple_event",
-                    "role": null,
-                    "provider": "FlightCritical",
-                    "DomainBorderConfiguration": "Separation_1"
-                },
-                {
-                    "name": "LReader_2",
-                    "interface": "mydir.my_simple_event",
-                    "role": null,
-                    "provider": "FlightCritical",
-                    "DomainBorderConfiguration": "Separation_1"
-                },
-                {
-                    "name": "LReader_3",
-                    "interface": "mydir.my_simple_event",
-                    "role": null,
-                    "provider": "FlightCritical",
-                    "DomainBorderConfiguration": "Separation_1"
-                },
-                {
-                    "name": "PDCM21_Results",
-                    "interface": "Results.Test_Status_I",
-                    "role": null,
-                    "provider": "FlightCritical",
-                    "DomainBorderConfiguration": "Separation_1"
-                },
-                {
-                    "name": "TMC2_PDCM1_Discretes",
-                    "interface": "tmc_pdcm_asap.analog_discrete_i",
-                    "role": null,
-                    "provider": "MissionCritical",
-                    "DomainBorderConfiguration": "Separation_1"
-                },
                 {
                     "name": "FC_P60_To_MC_P60",
                     "interface": "Basic_Com_I.Event.Pac",
@@ -2290,48 +2187,140 @@
                     "role": null,
                     "provider": "MissionCritical",
                     "DomainBorderConfiguration": "DB_Basic_Com_Event_NL"
-                }
-            ]
-        },
-        {
-            "name": "DB_T12",
-            "port_set": [
+                },
                 {
-                    "name": "PDCM12_Results",
+                    "name": "port_3",
+                    "interface": "ifc3",
+                    "role": null,
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "Separation_1"
+                },
+                {
+                    "name": "port_1",
+                    "interface": "ifc1",
+                    "role": null,
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "Separation_1"
+                },
+                {
+                    "name": "Rx_Continuous",
+                    "interface": "ifc3",
+                    "role": null,
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "Separation_1"
+                },
+                {
+                    "name": "Tx_Continuous",
+                    "interface": "ifc3",
+                    "role": null,
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "Separation_1"
+                },
+                {
+                    "name": "Ack_Event",
+                    "interface": "events.ack_from_prov",
+                    "role": null,
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "Separation_1"
+                },
+                {
+                    "name": "No_Id_Event",
+                    "interface": "events.noid_event",
+                    "role": null,
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "Separation_1"
+                },
+                {
+                    "name": "Simple_To_App_1",
+                    "interface": "mydir.my_simple_event",
+                    "role": null,
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "Separation_1"
+                },
+                {
+                    "name": "Simple_From_App_1",
+                    "interface": "mydir.my_simple_event",
+                    "role": null,
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "Separation_1"
+                },
+                {
+                    "name": "LReader_1",
+                    "interface": "mydir.my_simple_event",
+                    "role": null,
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "Separation_1"
+                },
+                {
+                    "name": "LReader_2",
+                    "interface": "mydir.my_simple_event",
+                    "role": null,
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "Separation_1"
+                },
+                {
+                    "name": "LReader_3",
+                    "interface": "mydir.my_simple_event",
+                    "role": null,
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "Separation_1"
+                },
+                {
+                    "name": "PDCM21_Results",
                     "interface": "Results.Test_Status_I",
                     "role": null,
                     "provider": "FlightCritical",
                     "DomainBorderConfiguration": "Separation_1"
                 },
                 {
-                    "name": "FP_Test_PDCM_A",
+                    "name": "TMC2_PDCM1_Discretes",
+                    "interface": "tmc_pdcm_asap.analog_discrete_i",
+                    "role": null,
+                    "provider": "MissionCritical",
+                    "DomainBorderConfiguration": "Separation_1"
+                }
+            ]
+        },
+        {
+            "name": "DB_T22",
+            "port_set": [
+                {
+                    "name": "FP_Test_PDCM_B",
                     "interface": "FP_I.Float_Test",
                     "role": null,
                     "provider": "FlightCritical",
                     "DomainBorderConfiguration": "Separation_FP"
                 },
                 {
-                    "name": "FP_Test_DCM_A",
+                    "name": "FP_Test_DCM_B",
                     "interface": "FP_I.Float_Test",
                     "role": null,
                     "provider": "MissionCritical",
                     "DomainBorderConfiguration": "Separation_FP"
+                },
+                {
+                    "name": "PDCM22_Results",
+                    "interface": "Results.Test_Status_I",
+                    "role": null,
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "Separation_1"
+                }
+            ]
+        },
+        {
+            "name": "DB_T11",
+            "port_set": [
+                {
+                    "name": "PDCM11_Results",
+                    "interface": "Results.Test_Status_I",
+                    "role": null,
+                    "provider": "FlightCritical",
+                    "DomainBorderConfiguration": "Separation_1"
                 }
             ]
         }
     ],
     "connection_set": [
-        {
-            "provider_owner": "TMC11_Results",
-            "provider_thread": "Results_60",
-            "provider_port": "Results",
-            "provider_is_domainborder": false,
-            "requirer_owner": "LTM_TMC1_APP1",
-            "requirer_thread": "EDS_LTM_60",
-            "requirer_port": "Test_Results",
-            "requirer_is_domainborder": false,
-            "identity": "LTM_TMC1_APP1"
-        },
         {
             "provider_owner": "TMC12_Results",
             "provider_thread": "Results_60",
@@ -2344,15 +2333,15 @@
             "identity": "LTM_TMC1_APP2"
         },
         {
-            "provider_owner": "PDCM21_Results",
+            "provider_owner": "TMC11_Results",
             "provider_thread": "Results_60",
             "provider_port": "Results",
             "provider_is_domainborder": false,
-            "requirer_owner": "Event_Res_MC",
-            "requirer_thread": "Results_60",
-            "requirer_port": "Summary",
+            "requirer_owner": "LTM_TMC1_APP1",
+            "requirer_thread": "EDS_LTM_60",
+            "requirer_port": "Test_Results",
             "requirer_is_domainborder": false,
-            "identity": "Event_Res_MC"
+            "identity": "LTM_TMC1_APP1"
         },
         {
             "provider_owner": "DB_T11",
@@ -2408,6 +2397,17 @@
             "requirer_port": "Summary",
             "requirer_is_domainborder": false,
             "identity": "Event_Res_Pdcm"
+        },
+        {
+            "provider_owner": "PDCM21_Results",
+            "provider_thread": "Results_60",
+            "provider_port": "Results",
+            "provider_is_domainborder": false,
+            "requirer_owner": "Event_Res_MC",
+            "requirer_thread": "Results_60",
+            "requirer_port": "Summary",
+            "requirer_is_domainborder": false,
+            "identity": "Event_Res_MC"
         }
     ]
 }

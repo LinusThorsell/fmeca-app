@@ -6,10 +6,8 @@ import dataclass as dataclass
 import paths as paths
 import debugfile as debugfile
 import tests as tests
-#import platform
 import xml.etree.ElementTree as ET
-import fileinput
-import time
+
 #CLI - Command Line Interface
 #Handles the command line interface class and functions
 #Finds the file paths where the data is located
@@ -27,48 +25,57 @@ class CLI:
         self._Paths = paths.Paths()
         self._add_path = None
         self._meta_path = None
-        self._project_name = ""
         self.PRINT = False
-        
+        self._project_name = ""
+    
+    #Tell the database to delete the given project
     def remove(self):
-        #Tell the database to delete the given projec
         self._remove = True
         self._functions = self._remove_functions
 
+    #Add this project given by the path to the database
     def add(self):
-        #Add this project given by the path to the database
         self._add = True
         self._functions = self._add_functions
-        
+    
+    #Not implemented
     def meta(self, meta_path):
         self._meta_path = meta_path
     
+    #Adds the path to folder containing the infrastructure folder
     def path(self, path_to_infrastructure):
         self._add_path = path_to_infrastructure
     
+    #Change tag if one is provided
     def tag(self, project_name):
         self._project_name = project_name
 
+    #Enable debug mode
     def debug(self):
         debugfile.debug = True
         debugfile.debug_print("DEBUG active")
 
+    #Change the api adress of database
     def ip(self, url):
         self._encoder.config_api(url)
 
+    #Should later send to database 
     def send(self):
         debugfile.send = True
 
+    #Get paths from system.xml file
     def get_paths(self):
         self._Paths.initial_path(self._add_path)
         self._Paths.get_paths(self._Paths.fc_path)
         self._Paths.get_paths(self._Paths.mc_path)
         self._Paths.add__outer_folders_to_paths()
 
+    #The parsed data will later be printed 
     def print_f(self):
         self.PRINT = True
         self._functions = self._print_functions
 
+    #Config database adress, can be extened to do more
     def config_database(self, path):
         debugfile.debug_print("Configuring database, path to file = " + str(path))
         tree = ET.parse(path)
@@ -81,7 +88,7 @@ class CLI:
                 port = child.get("value")
         self.ip(ip + ":"  + port + "/")
         
-
+    #Parse the commands and execute commands
     def analyse_cli(self):
         i = 0
         while i < self._nr_arguments:
@@ -114,6 +121,7 @@ class CLI:
         self._print_functions = {"print":self.print_f,"-meta":self.meta,"-tag":self.tag, "-path":self.path}
         debugfile.windows = False 
     
+    #Main parse funtion
     def parsing(self):
         #Call function that posts to database
         debugfile.debug_print("Call function: ADD to database")
@@ -158,12 +166,9 @@ class CLI:
                     self.Project_Type.connection_set += self._parser.get_connection_list(path)
                 elif temppath in path and "/applications/" in temppath:
                     self.Project_Type.thread_set += self._parser.get_threads(path)
-                    #self.Threads.thread_set += self._parser.get_threads(path)
                 elif temppath in path and "/domain_border" in temppath:
                     self._parser.get_all_domains(path,self.Project_Type.domain_border_set)
-                    #self._parser.get_all_domains(path,self.DomainBorder)
 
-         #-----------------------------------------------------------------------------
                     
         # Adding domainborder to connection
         for connection in self.Project_Type.connection_set:
@@ -178,10 +183,14 @@ class CLI:
                         if port.name == connection.Requirer_port:
                             connection.Requirer_owner = db.name
                             
-
+        #Remove duplicate applications  
         self.Project_Type.application_set = list(set(self.Project_Type.application_set))
+
+        #Run tests that checks if all data refer to actual obejcts
         tests.run_all(self.Project_Type)
 
+    #Make sure to only allow one of the main commands: print, add, remove
+    #The subcommands avalible are depending on the main command
     def get_arguments(self):
         nrarguments = len(sys.argv)
         if(nrarguments >= 2):
@@ -196,8 +205,8 @@ class CLI:
         elif "remove" in self._arguments:
             self._functions = self._remove_functions      
     
-    def add_and_remove(self):
-        
+    #Called by parser.py 
+    def execute_commands(self):
         if(self._remove and self._project_name != ""):
             debugfile.debug_print("Call function: DELETE from database")
             self._encoder.delete_from_database(self._project_name, "projects/")

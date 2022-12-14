@@ -59,7 +59,6 @@ class Parser:
         name = raw_partition_data.get("name")
         isLTM = raw_partition_data.get("isLTM")
         partition_id = raw_partition_data.get("id")
-        
         Partition = dataclass.Partition_Data_Class(name, isLTM, partition_id, node,cpu)
     
         for children in raw_partition_data:
