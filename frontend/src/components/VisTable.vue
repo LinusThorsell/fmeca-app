@@ -1,5 +1,11 @@
+<script setup>
+  onUpdated(() => {
+    fixChrome()
+  })
+</script>
+
 <script>
-import { ref } from "vue";
+import { onUpdated, ref } from "vue";
 import ColumnHead from "./ColumnHead.vue";
 import RowHead from "./RowHead.vue";
 import TableTitle from "./TableTitle.vue";
@@ -37,11 +43,7 @@ export default {
       while (this.notes.length <= selected_project.value) {
         this.notes.push({});
       }
-      console.log("edit comment");
-      console.log(target);
       let on = target.parentElement.childNodes[0].innerHTML;
-      console.log(on);
-      console.log(comment);
       this.notes[selected_project.value][on] = comment;
       target.value = this.notes[selected_project.value][on];
     },
@@ -76,7 +78,6 @@ function getColumn(index, table_array) {
 }
 
 function removeColumn(column) {
-  console.log(column);
   colStyles[column - 1].display = "none";
 }
 
@@ -93,11 +94,9 @@ export function createFilteredTable(index_x) {
   rowStyles[index_x - 1].display = "flex";
 }
 function restoreColumns() {
-  console.log(vis_table_store.getColumnCount(selected_project.value));
   for (i = 0; i < vis_table_store.getColumnCount(selected_project.value); i++) {
     colStyles[i].display = "flex";
   }
-  console.log(vis_table_store.getRowCount(selected_project.value));
   for (i = 0; i < vis_table_store.getRowCount(selected_project.value); i++) {
     rowStyles[i].display = "flex";
   }
@@ -138,7 +137,6 @@ function handleResize({ width }, { __currentTarget__ }) {
 // Generates custom stylesheet.
 // Used to effectively resize big amounts of elements fast.
 function generateCustomStylesheet() {
-  console.log("Generating stylesheet");
   document
     .getElementsByTagName("head")[0]
     .appendChild(document.createElement("style"));
@@ -166,16 +164,10 @@ function generateCustomStylesheet() {
   }
 }
 
-var chromeIsFixed = false;
-var initiallyFetched = false;
 function fixChrome() {
-  if (chromeIsFixed) {
-    if (!initiallyFetched) {
-      onFetched();
-      initiallyFetched = true;
+    if (document.getElementsByClassName("chrome_is_messy_fix")[0] == null) {
+        return;
     }
-    return;
-  }
 
   /*
             Function to fix bug on most chromium based browsers.
@@ -185,25 +177,20 @@ function fixChrome() {
             while for example Google Chrome has to be forced to reload the
             styles by nudging the elements downwards slightly.
         */
-  if (hasRendered) {
-    // Get all the 'Loading...' text elements, and nudge the rest down slightly.
-    document.getElementsByClassName("chrome_is_messy_fix")[0].style.height =
-      "100px";
-    // Wait until the stylesheet is triggered to reload, then hide elements.
-    setTimeout(() => {
-      Array.from(
-        document.getElementsByClassName("chrome_is_messy_fix")
-      ).forEach((div) => {
+  // Get all the 'Loading...' text elements, and nudge the rest down slightly.
+  document.getElementsByClassName("chrome_is_messy_fix")[0].style.height =
+    "100px";
+  // Wait until the stylesheet is triggered to reload, then hide elements.
+  setTimeout(() => {
+    Array.from(document.getElementsByClassName("chrome_is_messy_fix")).forEach(
+      (div) => {
         div.style.display = "none";
-      });
-    }, 500);
-    chromeIsFixed = true;
-  }
+      }
+    );
+  }, 500);
 }
 
 export function onFetched() {
-  console.log("Fetched data...");
-
   // Loop through vis_table_store array
   let columns_to_make_bigger = [];
   let rows_to_make_bigger = [];
@@ -251,6 +238,7 @@ export function onFetched() {
         }
       }
     }
+    isReady.value = true;
   }
 
   // remove duplicate elements from columns_to_make_bigger array
@@ -304,8 +292,6 @@ function getXYFromClassName(element) {
 }
 
 function sendCommentsToBackend() {
-  console.log("Sending comments to backend");
-
   let projects = vis_table_store.getProjectNames();
   let comments = this.notes;
 
@@ -322,8 +308,6 @@ function sendCommentsToBackend() {
     },
     body: JSON.stringify(data),
   });
-
-  console.log(JSON.stringify(data));
 }
 
 let columnTitles = ["Padding", "Node", "CPU", "Partitions"];
@@ -386,7 +370,6 @@ function getColumnBoxContent(row, column) {
           @editComment="editComment"
         />
       </div>
-      {{hasRendered = true}}
     </div>
     {{ fixChrome() }}
   </div>

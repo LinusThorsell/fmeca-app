@@ -8,7 +8,6 @@ export default {
   },
   methods: {
     removeColumn() {
-      console.log('remove column ', this.column);
       this.$emit('removeColumn', this.column)
     }
   }
