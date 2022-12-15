@@ -86,7 +86,7 @@ export function removeAllColumns(column) {
 export function createFilteredTable(index_x) {
   rowStyles[index_x - 1].display = "flex";
 }
-function restoreColumns() {
+export function restoreColumns() {
   console.log(vis_table_store.getColumnCount(selected_project.value));
   for (i = 0; i < vis_table_store.getColumnCount(selected_project.value); i++) {
     colStyles[i].display = "flex";
