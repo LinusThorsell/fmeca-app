@@ -20,7 +20,7 @@ function generatePdf()
 print()
 }
 
-import {getProjects, loadProjectFromStore, selected_project, removeAllColumns, createFilteredTable} from './VisTable.vue'
+import {getProjects, loadProjectFromStore, selected_project, removeAllColumns, createFilteredTable, restoreColumns} from './VisTable.vue'
 import {vis_table_store} from './vis-table-store.js'
 //Searching and filtering
 function filteredList(input) 
@@ -36,12 +36,20 @@ temp_array.forEach((array_outer, index_x) => {
     let stringinner = array_inner + "";
     stringinput = stringinput.toLowerCase();
     stringinner = stringinner.toLowerCase();
+  
+    
+    // createFilteredTable(index_x);
     //Prints out the new filtered table
-    if(stringinner.includes(stringinput,0) && stringinner!= "" || input == array_inner && array_inner != "")
+     if(stringinner.includes(stringinput,0) && stringinput!= "")
         {
             createFilteredTable(index_x);       
         }
-    });
+        //Shows the whole table if nothing is written
+      else if(stringinput == "")
+        {
+         restoreColumns();
+        }
+     });
   });
 }
 
@@ -65,6 +73,8 @@ export default {
       generatePdf,
       getProjects,
       loadProjectFromStore,
+      restoreColumns,
+      
     }
   },
   
