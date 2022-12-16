@@ -67,8 +67,7 @@ export const vis_table_store = reactive({
       } else {
         return [this.array[num][row - 1][column]];
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   },
   getArray(num) {
     return this.array[num].slice(0);
