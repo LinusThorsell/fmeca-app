@@ -26,7 +26,7 @@ _/parser.py_
 
 - **print** \
   _Prints the data in the form it will be sent to the database_ \
-  _-path_ <'path to system infrastructure'> \ _-REQUIRED_ *-tag* <'project name'> *-OPTIONAL
+  _-path_ <'path to system infrastructure'> \ _-REQUIRED_ _-tag_ <'project name'> \*-OPTIONAL
 
 #### Example:
 
