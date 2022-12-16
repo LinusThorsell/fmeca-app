@@ -1,5 +1,11 @@
+<script setup>
+  onUpdated(() => {
+    fixChrome()
+  })
+</script>
+
 <script>
-import { ref } from "vue";
+import { onUpdated, ref } from "vue";
 import ColumnHead from "./ColumnHead.vue";
 import RowHead from "./RowHead.vue";
 import TableTitle from "./TableTitle.vue";
@@ -27,6 +33,9 @@ export default {
       notes: [{}],
       getColumnTitle,
       getColumnBoxContent,
+      isReady,
+      hasRendered,
+      fixChrome,
     };
   },
   methods: {
@@ -34,11 +43,7 @@ export default {
       while (this.notes.length <= selected_project.value) {
         this.notes.push({});
       }
-      console.log("edit comment");
-      console.log(target);
       let on = target.parentElement.childNodes[0].innerHTML;
-      console.log(on);
-      console.log(comment);
       this.notes[selected_project.value][on] = comment;
       target.value = this.notes[selected_project.value][on];
     },
@@ -51,8 +56,11 @@ var selector,
   rowStyles = [],
   colStyles = [];
 
-export const array_columns = 6;
-export const array_rows = 6;
+export var isReady = ref(false);
+var hasRendered = ref(false);
+
+export const array_columns = 7;
+export const array_rows = 7;
 const default_column_width = 100;
 export var selected_project = ref(0);
 
@@ -70,7 +78,6 @@ function getColumn(index, table_array) {
 }
 
 function removeColumn(column) {
-  console.log(column);
   colStyles[column - 1].display = "none";
 }
 
@@ -91,7 +98,6 @@ export function restoreColumns() {
   for (i = 0; i < vis_table_store.getColumnCount(selected_project.value); i++) {
     colStyles[i].display = "flex";
   }
-  console.log(vis_table_store.getRowCount(selected_project.value));
   for (i = 0; i < vis_table_store.getRowCount(selected_project.value); i++) {
     rowStyles[i].display = "flex";
   }
@@ -105,6 +111,11 @@ export function getClass(column, row) {
 function calculateWidthOfRows() {
   var max_width = 0;
   var rows = document.querySelector(".vis-row");
+
+  if (rows == null) {
+    return;
+  }
+
   Array.from(rows.childNodes).forEach((column) => {
     if (column.offsetWidth > 0) {
       max_width += column.offsetWidth;
@@ -127,7 +138,6 @@ function handleResize({ width }, { __currentTarget__ }) {
 // Generates custom stylesheet.
 // Used to effectively resize big amounts of elements fast.
 function generateCustomStylesheet() {
-  console.log("Generating stylesheet");
   document
     .getElementsByTagName("head")[0]
     .appendChild(document.createElement("style"));
@@ -155,8 +165,10 @@ function generateCustomStylesheet() {
   }
 }
 
-export function onFetched() {
-  console.log("Fetched data...");
+function fixChrome() {
+    if (document.getElementsByClassName("chrome_is_messy_fix")[0] == null) {
+        return;
+    }
 
   /*
             Function to fix bug on most chromium based browsers.
@@ -166,7 +178,6 @@ export function onFetched() {
             while for example Google Chrome has to be forced to reload the
             styles by nudging the elements downwards slightly.
         */
-
   // Get all the 'Loading...' text elements, and nudge the rest down slightly.
   document.getElementsByClassName("chrome_is_messy_fix")[0].style.height =
     "100px";
@@ -178,7 +189,9 @@ export function onFetched() {
       }
     );
   }, 500);
+}
 
+export function onFetched() {
   // Loop through vis_table_store array
   let columns_to_make_bigger = [];
   let rows_to_make_bigger = [];
@@ -226,6 +239,7 @@ export function onFetched() {
         }
       }
     }
+    isReady.value = true;
   }
 
   // remove duplicate elements from columns_to_make_bigger array
@@ -279,8 +293,6 @@ function getXYFromClassName(element) {
 }
 
 function sendCommentsToBackend() {
-  console.log("Sending comments to backend");
-
   let projects = vis_table_store.getProjectNames();
   let comments = this.notes;
 
@@ -297,8 +309,6 @@ function sendCommentsToBackend() {
     },
     body: JSON.stringify(data),
   });
-
-  console.log(JSON.stringify(data));
 }
 
 let columnTitles = ["Padding", "Node", "CPU", "Partitions"];
@@ -319,44 +329,50 @@ function getColumnBoxContent(row, column) {
   {{ $log("Rerender") }}
   {{ vis_table_store.getTableFromBackend() }}
 
-  <!-- Container for table -->
-  <div id="vis-table">
-    <!-- Main table Content -->
-    <!-- Loops row by row. -->
-    <div
-      v-for="row in vis_table_store.getRowCount(selected_project)"
-      class="vis-row"
-    >
-      <!-- Only gets drawn on row 0, column 0 in the table -->
-      <TableTitle @restoreColumns="restoreColumns" :row="row" />
-
-      <!-- Gets drawn on the rest of column 0 -->
-      <RowHead :row="row" />
-
-      <!-- Gets drawn on entire row 0 -->
+  <div v-if="!isReady">
+    <h1>Loading...</h1>
+  </div>
+  <div v-if="isReady">
+    <!-- Container for table -->
+    <div id="vis-table">
+      <!-- Main table Content -->
+      <!-- Loops row by row. -->
       <div
-        v-if="row - 1 === 0"
-        v-for="column in vis_table_store.getColumnCount(selected_project)"
-        class="vis-columnbox vis-resizable-column"
-        :class="getClass(column - 1, row - 2)"
-        v-resize="handleResize"
+        v-for="row in vis_table_store.getRowCount(selected_project)"
+        class="vis-row"
       >
-        <ColumnHead
-          @removeColumn="removeColumn"
+        <!-- Only gets drawn on row 0, column 0 in the table -->
+        <TableTitle @restoreColumns="restoreColumns" :row="row" />
+
+        <!-- Gets drawn on the rest of column 0 -->
+        <RowHead :row="row" />
+
+        <!-- Gets drawn on entire row 0 -->
+        <div
+          v-if="row - 1 === 0"
+          v-for="column in vis_table_store.getColumnCount(selected_project)"
+          class="vis-columnbox vis-resizable-column"
+          :class="getClass(column - 1, row - 2)"
+          v-resize="handleResize"
+        >
+          <ColumnHead
+            @removeColumn="removeColumn"
+            :column="column"
+            :text="getColumnTitle(column)"
+          />
+        </div>
+
+        <!-- Main content boxes, drawn on everything that is not row 0 or column 0 -->
+        <ContentColumnBox
+          :row="row"
           :column="column"
-          :text="getColumnTitle(column)"
+          :store="vis_table_store"
+          :selected_project="selected_project"
+          @editComment="editComment"
         />
       </div>
-
-      <!-- Main content boxes, drawn on everything that is not row 0 or column 0 -->
-      <ContentColumnBox
-        :row="row"
-        :column="column"
-        :store="vis_table_store"
-        :selected_project="selected_project"
-        @editComment="editComment"
-      />
     </div>
+    {{ fixChrome() }}
   </div>
 </template>
 <style>

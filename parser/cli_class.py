@@ -1,15 +1,13 @@
-from Parser_class import Parser
+from parser_class import Parser
 import sys, string, os
 from os import path as OSPATH
-from Encoder_Class import *
-import DataClass
-import Paths
-import DebugFile
-import Tests
-import platform
+from encoder_class import *
+import dataclass as dataclass
+import paths as paths
+import debugfile as debugfile
+import tests as tests
 import xml.etree.ElementTree as ET
-import fileinput
-import time
+
 #CLI - Command Line Interface
 #Handles the command line interface class and functions
 #Finds the file paths where the data is located
@@ -24,92 +22,122 @@ class CLI:
         self._nr_arguments = 0
         self._parser = Parser()
         self._encoder = Encoder()
-        self._Paths = Paths.Paths()
+        self._Paths = paths.Paths()
         self._add_path = None
         self._meta_path = None
-        self._project_name = ""
         self.PRINT = False
-        
+        self._project_name = ""
+    
+    #Tell the database to delete the given project
     def remove(self):
-        #Tell the database to delete the given projec
         self._remove = True
-        self._functions = self._remove_functions
-
+       
+    #Add this project given by the path to the database
     def add(self):
-        #Add this project given by the path to the database
         self._add = True
-        self._functions = self._add_functions
-        
+    
+    #Not implemented
     def meta(self, meta_path):
         self._meta_path = meta_path
     
+    #Adds the path to folder containing the infrastructure folder
     def path(self, path_to_infrastructure):
         self._add_path = path_to_infrastructure
     
+    #Change tag if one is provided
     def tag(self, project_name):
         self._project_name = project_name
 
+    #Enable debug mode
     def debug(self):
-        DebugFile.debug = True
-        DebugFile.debug_print("DEBUG active")
+        debugfile.debug = True
+        debugfile.debug_print("DEBUG active")
 
+    #Change the api adress of database
     def ip(self, url):
         self._encoder.config_api(url)
 
+    #Should later send to database 
     def send(self):
-        DebugFile.send = True
+        debugfile.send = True
 
+    #Get paths from system.xml file
     def get_paths(self):
         self._Paths.initial_path(self._add_path)
         self._Paths.get_paths(self._Paths.fc_path)
         self._Paths.get_paths(self._Paths.mc_path)
+        self._Paths.add__outer_folders_to_paths()
 
+    #The parsed data will later be printed 
     def print_f(self):
         self.PRINT = True
         self._functions = self._print_functions
 
+    #Config database adress, can be extened to do more
     def config_database(self, path):
-        DebugFile.debug_print("Configuring database, path to file = " + str(path))
+        debugfile.debug_print("Configuring database, path to file = " + str(path))
         tree = ET.parse(path)
         root = tree.getroot()
-        attributes = {}
-
+        
         for child in root:
-            attributes[child.tag.upper()] = child.get("name")
-
-        nr_prints = 6
-        DATABASES_V = False
-        for line in fileinput.input("backend/fmeca-django/backend/settings.py", inplace=True):
-            for key,value in attributes.items():
-                if "DATABASES" in line:
-                    DATABASES_V = True
-               
-                if DATABASES_V == True and nr_prints > 0:
-                    if key in line :
-                        line = '\t' +'\''+ str(key) +'\'' +  ":" + '\'' + str(value) +'\''+ "," + "\n"
-                        nr_prints -=1
-                        break
-            print('{}'.format( line), end='') # for Python 3
-        fileinput.close()
-
+            if(child.tag == "IP"):
+                ip = child.get("value")
+            elif(child.tag == "PORT"):
+                port = child.get("value")
+        self.ip(ip + ":"  + port + "/")
+        
+    #Parse the commands and execute commands
     def analyse_cli(self):
         i = 0
         while i < self._nr_arguments:
             temp_argument = self._arguments[i].lower()
-            if (temp_argument in self._flags):
+            if (temp_argument in self._flags and temp_argument in self._functions):
                 nr_arguments = self._flags[temp_argument]
                 argument_list = self._arguments[i+1:i+1+nr_arguments]
+                for arguments in argument_list:
+                    if arguments in self._functions:
+                        debugfile.error_print("You cant have a flag as a argument to a flag!!")
+                        exit()
                 if (self._flags[temp_argument] != len(argument_list)):
                     print("The Flag \"" + temp_argument + "\" does not have enough arguments, it expects " + str(nr_arguments) + " but " + str(len(argument_list)) + " were given" )
                 else:
                     self._functions[temp_argument](*argument_list)
                 i+=nr_arguments + 1
             else:
-                print("The flag(s) you used is not valid!")
-                print("The valid flags are:")
-                for flags in self._flags:
-                    print(flags)
-                print("If the flag requires a path, you put the path right after the flag\n-flag -path")
+                debugfile.error_print("The flag: \"{0}\" you used is not valid!".format(temp_argument))
+            
+                debugfile.blue_print("The command line tool have 3 main commands: add, remove, print.")
+                debugfile.warning_print("They have the following subcommands:")
+                counter = 0
+                for flag in self._add_functions:
+                    if counter == 0:
+                        print(flag, end = ": ")
+                    else:
+                        print(flag, end = " ")
+                    counter += 1
+                print()
+                counter = 0
+
+                for flag in self._remove_functions:
+                    if counter == 0:
+                        print(flag, end = ": ")
+                    else:
+                        print(flag, end = " ")
+                    counter +=1
+                    
+                print()
+                counter = 0
+
+                for flag in self._print_functions:
+                    if counter == 0:
+                        print(flag, end = ": ")
+                    else:
+                        print(flag, end = " ")
+                    counter +=1
+                    
+                print()
+                
+                print("If the flag is a path, you put the path right after the flag\n-path <the actual path>")
                 exit()
 
     #If you want to add more flags and corresponding functions you simply
@@ -117,22 +145,21 @@ class CLI:
     #in self._flags we should have the flag and how many arguments we should
     # have after that
     def initialize(self):
-        self._flags = {"debug":0,"add":0,"remove":0,"-c":1, "-path":1, "-meta":1, "-tag":1,"print":0, "-ip":1}
+        self._flags = {"debug":0,"add":0,"remove":0,"-c":1, "-path":1, "-tag":1,"print":0, "-ip":1, "-meta":1}
         self._functions = {"add":self.add,"remove":self.remove,"print":self.print_f}
         self._remove_functions = {"remove":self.remove, "-tag":self.tag,"-c":self.config_database,"debug":self.debug, "-ip":self.ip}
         self._add_functions = {"add":self.add,"-meta":self.meta,"-tag":self.tag, "-path":self.path,"-c":self.config_database,"debug":self.debug, "-ip":self.ip}
         self._print_functions = {"print":self.print_f,"-meta":self.meta,"-tag":self.tag, "-path":self.path}
-        DebugFile.windows = False 
-        if platform.system() == "windows":
-            DebugFile.windows = True 
+        debugfile.windows = False 
     
+    #Main parse funtion
     def parsing(self):
         #Call function that posts to database
-        DebugFile.debug_print("Call function: ADD to database")
-        DebugFile.debug_print(self._add_path)
+        debugfile.debug_print("Call function: ADD to database")
+        debugfile.debug_print(self._add_path)
         self.get_paths()
-        DebugFile.debug_print("PATHS:")
-        DebugFile.debug_print(self._Paths._paths)
+        debugfile.debug_print("PATHS:")
+        debugfile.debug_print(self._Paths._paths)
 
 
         # The order we want to parse the files in
@@ -147,7 +174,7 @@ class CLI:
             self._project_name = self._parser.get_project_name(self._add_path) 
         
         # Init containers
-        self.Project_Type = DataClass.Project_Data_Class(self._project_name)
+        self.Project_Type = dataclass.Project_Data_Class(self._project_name)
 
         # Parse files by order specified by runorder list
         for temppath in runorder:
@@ -170,12 +197,9 @@ class CLI:
                     self.Project_Type.connection_set += self._parser.get_connection_list(path)
                 elif temppath in path and "/applications/" in temppath:
                     self.Project_Type.thread_set += self._parser.get_threads(path)
-                    #self.Threads.thread_set += self._parser.get_threads(path)
                 elif temppath in path and "/domain_border" in temppath:
                     self._parser.get_all_domains(path,self.Project_Type.domain_border_set)
-                    #self._parser.get_all_domains(path,self.DomainBorder)
 
-         #-----------------------------------------------------------------------------
                     
         # Adding domainborder to connection
         for connection in self.Project_Type.connection_set:
@@ -190,37 +214,52 @@ class CLI:
                         if port.name == connection.Requirer_port:
                             connection.Requirer_owner = db.name
                             
-
+        #Remove duplicate applications  
         self.Project_Type.application_set = list(set(self.Project_Type.application_set))
-        Tests.run_all(self.Project_Type)
 
+        #Run tests that checks if all data refer to actual obejcts
+        tests.run_all(self.Project_Type)
+
+    #Make sure to only allow one of the main commands: print, add, remove
+    #The subcommands avalible are depending on the main command
     def get_arguments(self):
         nrarguments = len(sys.argv)
         if(nrarguments >= 2):
             self._arguments = sys.argv[1:nrarguments]
             self._nr_arguments = len(self._arguments)
-        DebugFile.debug_print("ArgumentList",self._arguments)
-        if sum([("add" in self._arguments), ("remove" in self._arguments), ("print" in self._arguments)]) != 1:
-            DebugFile.error_print("Can only have one of \"add\", \"remove\", \"print\" in the arguments")
+        debugfile.debug_print("ArgumentList",self._arguments)
+        if sum([("add" in self._arguments), ("remove" in self._arguments), ("print" in self._arguments)]) > 1:
+            debugfile.error_print("Can only have one of \"add\", \"remove\" or \"print\" in the arguments")
+            exit(1)
+        elif sum([("add" in self._arguments), ("remove" in self._arguments), ("print" in self._arguments)]) == 0:
+            debugfile.error_print("Must have one of \"add\", \"remove\" or \"print\" in the arguments")
             exit(1)
         elif "add" in self._arguments:
             self._functions = self._add_functions
         elif "remove" in self._arguments:
-            self._functions = self._remove_functions      
+            self._functions = self._remove_functions
+        elif "print" in self._arguments:
+            self._functions = self._print_functions 
     
-    def add_and_remove(self):
-        
-        if(self._remove and self._project_name != ""):
-            DebugFile.debug_print("Call function: DELETE from database")
-            self._encoder.delete_from_database(self._project_name, "projects/")
-        elif (self._add and self._add_path != None and self._project_name != ""):      
-            self.parsing()
-            
+    #Called by parser.py 
+    def execute_commands(self):
+        if(self._remove):
+            if(self._project_name != ""):
+                debugfile.debug_print("Call function: DELETE from database")
+                self._encoder.delete_from_database(self._project_name, "projects/")
+            else:
+                debugfile.error_print("No tag provided, add the flag -tag <tag of project on database>")
 
-
-            self._encoder.Project = self._project_name
-            self._encoder.send_to_database(self.Project_Type,"projects/")
-        
+        elif (self._add):
+            if(self._add_path != None and self._project_name != ""):      
+                self.parsing()
+                self._encoder.Project = self._project_name
+                self._encoder.send_to_database(self.Project_Type,"projects/")
+            else:
+                debugfile.error_print("Not enough arguments!")
+                if(self._add_path == None):
+                    debugfile.error_print("No path to a project provided, add the flag -path <path to project>")
+                
         elif self.PRINT:
             self.debug()
             self.parsing()
@@ -228,6 +267,6 @@ class CLI:
             self._encoder.Project = self._project_name
             self._encoder.print_project(self.Project_Type)
         else:
-            DebugFile.error_print("bad")
+            debugfile.error_print("bad")
             exit()
             

@@ -13,7 +13,6 @@ export default {
   },
   methods: {
     editComment(target, value) {
-      console.log("emitting editcomment", target, value);
       this.$emit("editComment", target, value);
     },
   },

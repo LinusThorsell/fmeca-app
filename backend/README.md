@@ -23,27 +23,24 @@ the api.
 
 # Backend Dependencies
 
-## Download script and virtual enviorment - WIP
-
-**available soon**
+These are the current dependecies used during the development of the backend\
+portion of the poject. As long as the local dependencies match the list below\
+the backend will be able to run. Otherwise nothing can be guaranteed.
 
 ## Current Dependencies
 
-- **python3 and pip**\
+- **python3 3.8.10 and pip 20.0.2**\
   _python3 install pip_
 
-- **Django**\
+- **django 4.1.1**\
   _pip install django_
 
-- **Django Rest Framework**\
+- **django rest framework 3.13.1**\
   _pip install djangorestframework_
 
-- **Django Cors Headers**\
+- **django cors headers 3.13.0**\
   _pip install django-cors-headers_
 
-- **MySQL and MySQL Client**\
+- **mySQL and mySQL client 2.1.1**\
   _pip install mysql\
   pip install mysqlclient_
-
-- **Django Cors Headers**\
-  _pip install django-cors-headers_

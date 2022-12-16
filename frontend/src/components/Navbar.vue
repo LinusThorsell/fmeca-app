@@ -51,7 +51,6 @@ temp_array.forEach((array_outer, index_x) => {
         }
      });
   });
-
 }
 
 

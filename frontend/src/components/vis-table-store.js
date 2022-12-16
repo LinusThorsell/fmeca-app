@@ -1,15 +1,12 @@
 import { reactive } from "vue";
-import { onFetched, array_columns, array_rows } from "./VisTable.vue";
+import { isReady, onFetched, array_columns, array_rows } from "./VisTable.vue";
 
 export const vis_table_store = reactive({
   array: [[]],
   have_fetched: false,
   debug: false,
   setArray(num, new_array) {
-    console.log("Setting array to");
-    console.log(new_array);
     this.array[num] = new_array;
-    console.log(this.array[num]);
   },
   getColumnCount(num) {
     return this.array[num][0].length - 1;
@@ -71,7 +68,6 @@ export const vis_table_store = reactive({
         return [this.array[num][row - 1][column]];
       }
     } catch (error) {
-      console.log("Err: " + error);
     }
   },
   getArray(num) {
@@ -97,17 +93,12 @@ export const vis_table_store = reactive({
     var projectNames = [];
     this.array.forEach((project) => {
       projectNames.push(project[0][0].name);
-      //console.log(project[0][0].name)
     });
-    console.log(projectNames);
     return projectNames;
   },
   generateEmpty(num, rows, cols) {
     if (this.getRowCount(num) === 0) {
       const temp_array = [];
-      console.log(
-        "Generating empty array: " + num + " Array empty, creating example"
-      );
       for (var col = 0; col < cols; col++) {
         temp_array[col] = [];
         for (var row = 0; row < rows; row++) {
@@ -116,8 +107,6 @@ export const vis_table_store = reactive({
       }
       this.setArray(num, temp_array);
     }
-
-    console.log("Generated empty table for: " + num);
   },
   switchProject(selected_project) {
     let index_of_project = null;

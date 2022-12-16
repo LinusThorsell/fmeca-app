@@ -1,8 +1,8 @@
 import xml.etree.ElementTree as ET
 from os import path as OSPATH
 import os
-import DataClass
-import DebugFile
+import dataclass as dataclass
+import debugfile as debugfile
 
 class Parser:
     def __init__(self):
@@ -22,7 +22,7 @@ class Parser:
         IOPRef = raw_cpu_data.get("IOPRef")
         ACCSSyncMaster = raw_cpu_data.get("ACCSSyncMaster")
         domainBorder = raw_cpu_data.get("domainBorder")         
-        return DataClass.Cpu(name,type,unitid,IOPRef,ACCSSyncMaster,domainBorder)
+        return dataclass.Cpu(name,type,unitid,IOPRef,ACCSSyncMaster,domainBorder)
 
     #Adds rampool,instanceOf, affinity, cpuname, nodename, partitionname attributes to application instances that has them
     def add_info_where_application_instance_is_running(self,Project,children,node,cpu,partition):
@@ -59,8 +59,7 @@ class Parser:
         name = raw_partition_data.get("name")
         isLTM = raw_partition_data.get("isLTM")
         partition_id = raw_partition_data.get("id")
-        
-        Partition = DataClass.Partition_Data_Class(name, isLTM, partition_id, node,cpu)
+        Partition = dataclass.Partition_Data_Class(name, isLTM, partition_id, node,cpu)
     
         for children in raw_partition_data:
             if children.tag == "Application":
@@ -80,13 +79,14 @@ class Parser:
             else:
                 type = "mc"
 
-            node = DataClass.Node(type,name,loadsetTypeRef,redundant,platformRef,syncLostBehavior)
+            node = dataclass.Node(type,name,loadsetTypeRef,redundant,platformRef,syncLostBehavior)
         
             for cpu in raw_node_data:
                 if cpu.tag == "APP" or cpu.tag == "IOP" or cpu.tag == "PP":
                     node.cpus.append(self.cpu(cpu))
             return node
     
+    # Create connection, can be 
     def create_connection(self, raw_connection_data):
         temp_list = []
         for child in raw_connection_data:
@@ -94,10 +94,10 @@ class Parser:
                 providerport_list = child.get('name').split(".")
                 temp_list += providerport_list
                 if(len(providerport_list) == 3):
-                    temp_list.append(False) ## Is not domainborder
+                    temp_list.append(False) # Is not domainborder
                 elif(len(providerport_list) == 2):
                     temp_list.insert(1,None) # Thread parmeter is not valid
-                    temp_list.append(True) ## Is domainborder
+                    temp_list.append(True) # Is domainborder
                 
             elif(child.tag == "RequirerPort"):
                 requirerport_list = child.get('name').split(".")
@@ -110,14 +110,14 @@ class Parser:
 
                 temp_list.append(child.get('identity'))
 
-        return DataClass.Connection(*temp_list)
+        return dataclass.Connection(*temp_list)
 
     def get_domainborders(self, path):
         tree = ET.parse(path)
         root = tree.getroot()
         domain_borders = []
         if("domainborder" in root.tag.lower()):
-            domain_borders.append(DataClass.DomainBorder(root.get("name")))
+            domain_borders.append(dataclass.DomainBorder(root.get("name")))
         return domain_borders
 
     def get_domain_border_ports(self, path):
@@ -127,7 +127,7 @@ class Parser:
         port_dict = {}
         for child in root:
             if(child.tag == "PacPort"):
-                port = DataClass.PacPorts(child.get("name"), child.get("interface"),child.get("role"),child.get("provider"),config_name )
+                port = dataclass.PacPorts(child.get("name"), child.get("interface"),child.get("role"),child.get("provider"),config_name )
                 if child.get("domainBorder") in port_dict:
                     port_dict[child.get("domainBorder")].append(port)
                 else:
@@ -165,7 +165,7 @@ class Parser:
     def create_application_instance(self, raw_application_instance_data):
         name = raw_application_instance_data.get('name')
         instanceOf = raw_application_instance_data.get("instanceOf")
-        return DataClass.Application_Instance(name, instanceOf)
+        return dataclass.Application_Instance(name, instanceOf)
 
     def get_connection_list(self, path):
         connectionlist = []
@@ -192,9 +192,9 @@ class Parser:
         application = root.get("name")
         for child in root:
             if(child.tag == "PeriodicThread"):
-                thread = DataClass.Threads(child.get("name"),application, child.get("rateGroup"))
+                thread = dataclass.Threads(child.get("name"),application, child.get("rateGroup"))
                 for second_child in child:
-                    port = DataClass.PacPorts(second_child.get("name"), second_child.get("interface"), second_child.get("role"))
+                    port = dataclass.PacPorts(second_child.get("name"), second_child.get("interface"), second_child.get("role"))
                     thread.port_set.append(port)
                 returnlist.append(thread)
         return returnlist
@@ -245,7 +245,7 @@ class Parser:
                 set_of_application_names.add(child.get("instanceOf"))
 
         for app in set_of_application_names:
-           returnlist.append(DataClass.Application(app))
+           returnlist.append(dataclass.Application(app))
         return returnlist
   
     def get_application_instances(self,path):

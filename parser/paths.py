@@ -1,4 +1,6 @@
 import xml.etree.ElementTree as ET
+
+#Parse the paths form system.xml
 class Paths:
     def __init__(self):
         self.catalogs = []
@@ -52,13 +54,13 @@ class Paths:
         self._paths.add(newpath)
 
     def initial_path(self,path):
+        self._inital_path = path
         self.fc_path = path + "infrastructure/fc/system.xml"
         self.mc_path = path + "infrastructure/mc/system.xml"
         
     def get_paths(self, path):
         tree = ET.parse(path)
         root = tree.getroot()
-        
         for obj in root:
             if(obj.tag == "idb" and ".xml" not in obj.attrib["value"]):
                 self._dictionary[obj.attrib["key"]] = obj.attrib["value"]
@@ -71,3 +73,21 @@ class Paths:
             self.build_full_path(counter)
             self.build_relative_paths(counter)
             counter +=1
+        
+    def add__outer_folders_to_paths(self):
+        splited_path = self._inital_path.split("/")
+        many_subdir_and_files = len(splited_path)
+        tempset = set()
+        splited_path.pop()
+        splited_path.pop()
+        for paths in self._paths:
+            string = "/"
+            string = string.join(splited_path)
+            string += "/" + paths           
+            tempset.add(string)
+    
+        self._paths = tempset
+
+        
+                
+            
