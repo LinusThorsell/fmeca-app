@@ -86,6 +86,7 @@ class Parser:
                     node.cpus.append(self.cpu(cpu))
             return node
     
+    # Create connection, can be 
     def create_connection(self, raw_connection_data):
         temp_list = []
         for child in raw_connection_data:
@@ -93,10 +94,10 @@ class Parser:
                 providerport_list = child.get('name').split(".")
                 temp_list += providerport_list
                 if(len(providerport_list) == 3):
-                    temp_list.append(False) ## Is not domainborder
+                    temp_list.append(False) # Is not domainborder
                 elif(len(providerport_list) == 2):
                     temp_list.insert(1,None) # Thread parmeter is not valid
-                    temp_list.append(True) ## Is domainborder
+                    temp_list.append(True) # Is domainborder
                 
             elif(child.tag == "RequirerPort"):
                 requirerport_list = child.get('name').split(".")

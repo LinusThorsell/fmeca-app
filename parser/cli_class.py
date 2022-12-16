@@ -31,12 +31,10 @@ class CLI:
     #Tell the database to delete the given project
     def remove(self):
         self._remove = True
-        self._functions = self._remove_functions
-
+       
     #Add this project given by the path to the database
     def add(self):
         self._add = True
-        self._functions = self._add_functions
     
     #Not implemented
     def meta(self, meta_path):
@@ -93,20 +91,53 @@ class CLI:
         i = 0
         while i < self._nr_arguments:
             temp_argument = self._arguments[i].lower()
-            if (temp_argument in self._flags):
+            if (temp_argument in self._flags and temp_argument in self._functions):
                 nr_arguments = self._flags[temp_argument]
                 argument_list = self._arguments[i+1:i+1+nr_arguments]
+                for arguments in argument_list:
+                    if arguments in self._functions:
+                        debugfile.error_print("You cant have a flag as a argument to a flag!!")
+                        exit()
                 if (self._flags[temp_argument] != len(argument_list)):
                     print("The Flag \"" + temp_argument + "\" does not have enough arguments, it expects " + str(nr_arguments) + " but " + str(len(argument_list)) + " were given" )
                 else:
                     self._functions[temp_argument](*argument_list)
                 i+=nr_arguments + 1
             else:
-                print("The flag(s) you used is not valid!")
-                print("The valid flags are:")
-                for flags in self._flags:
-                    print(flags)
-                print("If the flag requires a path, you put the path right after the flag\n-flag -path")
+                debugfile.error_print("The flag: \"{0}\" you used is not valid!".format(temp_argument))
+            
+                debugfile.blue_print("The command line tool have 3 main commands: add, remove, print.")
+                debugfile.warning_print("They have the following subcommands:")
+                counter = 0
+                for flag in self._add_functions:
+                    if counter == 0:
+                        print(flag, end = ": ")
+                    else:
+                        print(flag, end = " ")
+                    counter += 1
+                print()
+                counter = 0
+
+                for flag in self._remove_functions:
+                    if counter == 0:
+                        print(flag, end = ": ")
+                    else:
+                        print(flag, end = " ")
+                    counter +=1
+                    
+                print()
+                counter = 0
+
+                for flag in self._print_functions:
+                    if counter == 0:
+                        print(flag, end = ": ")
+                    else:
+                        print(flag, end = " ")
+                    counter +=1
+                    
+                print()
+                
+                print("If the flag is a path, you put the path right after the flag\n-path <the actual path>")
                 exit()
 
     #If you want to add more flags and corresponding functions you simply
@@ -114,7 +145,7 @@ class CLI:
     #in self._flags we should have the flag and how many arguments we should
     # have after that
     def initialize(self):
-        self._flags = {"debug":0,"add":0,"remove":0,"-c":1, "-path":1, "-meta":1, "-tag":1,"print":0, "-ip":1}
+        self._flags = {"debug":0,"add":0,"remove":0,"-c":1, "-path":1, "-tag":1,"print":0, "-ip":1, "-meta":1}
         self._functions = {"add":self.add,"remove":self.remove,"print":self.print_f}
         self._remove_functions = {"remove":self.remove, "-tag":self.tag,"-c":self.config_database,"debug":self.debug, "-ip":self.ip}
         self._add_functions = {"add":self.add,"-meta":self.meta,"-tag":self.tag, "-path":self.path,"-c":self.config_database,"debug":self.debug, "-ip":self.ip}
@@ -197,24 +228,38 @@ class CLI:
             self._arguments = sys.argv[1:nrarguments]
             self._nr_arguments = len(self._arguments)
         debugfile.debug_print("ArgumentList",self._arguments)
-        if sum([("add" in self._arguments), ("remove" in self._arguments), ("print" in self._arguments)]) != 1:
-            debugfile.error_print("Can only have one of \"add\", \"remove\", \"print\" in the arguments")
+        if sum([("add" in self._arguments), ("remove" in self._arguments), ("print" in self._arguments)]) > 1:
+            debugfile.error_print("Can only have one of \"add\", \"remove\" or \"print\" in the arguments")
+            exit(1)
+        elif sum([("add" in self._arguments), ("remove" in self._arguments), ("print" in self._arguments)]) == 0:
+            debugfile.error_print("Must have one of \"add\", \"remove\" or \"print\" in the arguments")
             exit(1)
         elif "add" in self._arguments:
             self._functions = self._add_functions
         elif "remove" in self._arguments:
-            self._functions = self._remove_functions      
+            self._functions = self._remove_functions
+        elif "print" in self._arguments:
+            self._functions = self._print_functions 
     
     #Called by parser.py 
     def execute_commands(self):
-        if(self._remove and self._project_name != ""):
-            debugfile.debug_print("Call function: DELETE from database")
-            self._encoder.delete_from_database(self._project_name, "projects/")
-        elif (self._add and self._add_path != None and self._project_name != ""):      
-            self.parsing()
-            self._encoder.Project = self._project_name
-            self._encoder.send_to_database(self.Project_Type,"projects/")
-        
+        if(self._remove):
+            if(self._project_name != ""):
+                debugfile.debug_print("Call function: DELETE from database")
+                self._encoder.delete_from_database(self._project_name, "projects/")
+            else:
+                debugfile.error_print("No tag provided, add the flag -tag <tag of project on database>")
+
+        elif (self._add):
+            if(self._add_path != None and self._project_name != ""):      
+                self.parsing()
+                self._encoder.Project = self._project_name
+                self._encoder.send_to_database(self.Project_Type,"projects/")
+            else:
+                debugfile.error_print("Not enough arguments!")
+                if(self._add_path == None):
+                    debugfile.error_print("No path to a project provided, add the flag -path <path to project>")
+                
         elif self.PRINT:
             self.debug()
             self.parsing()
