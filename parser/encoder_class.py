@@ -22,7 +22,6 @@ class Encoder:
         self.Project = ""
         self.send_succeded = True
         self.project_already_exists = False
-        self.sema = threading.Semaphore(0)
         self.finished_request = False
         self.finished_request_lock = threading.Lock()
         self.loading_steps = ["⢿", "⣻", "⣽", "⣾", "⣷", "⣯", "⣟", "⡿"]
@@ -51,7 +50,6 @@ class Encoder:
             print(("\r" + string + color + " {0}" + debugfile.ENDC).format(self.loading_steps[counter % many_steps]), end="" ,flush=True)
             time.sleep(0.33333)
             counter += 1
-        self.sema.release()
 
     def set_finished_request(self,boolean : bool):
         self.finished_request_lock.acquire()
@@ -61,20 +59,36 @@ class Encoder:
     def delete_from_database(self,project,folder):
         
         try:
+            #Creates the thread that will print out the loadingscreen
             self.thread = threading.Thread(target=self.loading_screen,args=("Deleting from database",debugfile.CRED))
             self.thread.start()
+            #Sending the delete request to the database, this function is blocking the thread
             response = requests.delete(self._url + folder + project)
+            #Tell the loadingscreen-thread to stop 
             self.set_finished_request(True)
-            self.sema.acquire()
+            #Wait for the loadingscreen to finish
+            self.thread.join()
+
+            #Print the correct message depending on the response
             if response.status_code == 204:
                 debugfile.success_print("\rThe project \"{0}\" was succesfully removed at {1}".format(project,self._url + folder + project))
             elif response.status_code == 404:
                 debugfile.error_print("\rError 404, There were no project with the name \"{0}\"".format(project))
             else:
                 debugfile.error_print("\rUnhandled statuscode code: {0}".format(response.status_code))
-        except requests.exceptions.ConnectionError:
+        
+        except requests.exceptions.MissingSchema:
+            #Tell the loadingscreen-thread to stop 
             self.set_finished_request(True)
-            self.sema.acquire()
+            #Wait for the loadingscreen-thread to finish
+            self.thread.join()
+            debugfile.error_print("\rThe URL: {0} is not a valid URL.".format(self._url + folder))
+        
+        except requests.exceptions.ConnectionError:
+            #Tell the loadingscreen-thread to stop 
+            self.set_finished_request(True)
+            #Wait for the loadingscreen to finish
+            self.thread.join()
             debugfile.error_print("\rWas not able to connect to database when trying to remove project \"{0}\"".format(project))
         
     def send_to_database(self,project_segment,folder):
@@ -83,11 +97,17 @@ class Encoder:
         debugfile.debug_print("Sending to: \n\n", self._url + folder)
         response = ""
         try:
+            #Creates the thread that will print out the loadingscreen
             self.thread = threading.Thread(target=self.loading_screen,args=("Sending to database",debugfile.OKGREEN))
             self.thread.start()
+            #Sending the post request to the database, this function is blocking the thread
             response = requests.post(self._url + folder,string,headers=self._headers)
+            #Tell the loadingscreen-thread to stop 
             self.set_finished_request(True)
-            self.sema.acquire()
+            #Wait for the loadingscreen-thread to finish
+            self.thread.join()
+
+            #Print the correct response message
             if response.status_code == 201:
                 debugfile.success_print("\rThe project_segment was sucessfully sent to the database at {0}.".format(self._url+folder))
             elif response.status_code == 200:
@@ -104,18 +124,24 @@ class Encoder:
                 debugfile.warning_print("\rUnhandled status code {0}".format(response.status_code))
                 exit()
         except requests.exceptions.ConnectionError:
+            #Tell the loadingscreen-thread to stop 
             self.set_finished_request(True)
-            self.sema.acquire()
+            #Wait for the loadingscreen-thread to finish
+            self.thread.join()
             debugfile.error_print("\rFailed to connect to the database/API at " + (self._url + folder))
 
         except requests.exceptions.MissingSchema:
+            #Tell the loadingscreen-thread to stop 
             self.set_finished_request(True)
-            self.sema.acquire()
+            #Wait for the loadingscreen-thread to finish
+            self.thread.join()
             debugfile.error_print("\rThe URL: {0} is not a valid URL.".format(self._url + folder))
 
         except Exception as e: 
+            #Tell the loadingscreen-thread to stop 
             self.set_finished_request(True)
-            self.sema.acquire()
+            #Wait for the loadingscreen-thread to finish
+            self.thread.join()
             debugfile.error_print("\rSomething went wrong: {0}".format(e))
 
     def print_project(self,project_segment):
