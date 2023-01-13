@@ -1,5 +1,4 @@
 .gitsecret/keys/random_seed
-/backend/backend/settings.py
 /backend/api/__pycache__/
 /backend/migrations/__pycache__/
 /parser/__pycache__/
