@@ -1,5 +1,11 @@
 <?xml version='1.0' ?>
 
+<!--
+
+    This is a dummy example of how the config can look
+    Right now it can only take the IP of the API but 
+    can be expanded in the future
+-->
 <dummy_config>
 
     <IP value="http://127.0.0.1"/>
