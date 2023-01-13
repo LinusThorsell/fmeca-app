@@ -7,7 +7,7 @@ Here you can find the implementation of the database and the api.
 
 This guide takes for granted that the backend is capable of connecting to an\
 external database and shows how to update the django database models for \
-the api.
+the api. To connect to database go to backend/settings.py
 
 - **python3 manage.py makemigrations**\
   Creates new models based on django code in _/api/models.py_
