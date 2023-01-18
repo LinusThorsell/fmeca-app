@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-
-<idb:ResourceRequirements xmlns:idb="Test1234"
-     application="EDS_LTM" initializeStackSize="0" rampoolSize="0">
-  <PeriodicResourceRequirements thread="EDS_LTM_60" executionStackSize="16384" executionTime="750000"/>
-</idb:ResourceRequirements>

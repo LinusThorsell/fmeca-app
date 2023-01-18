@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-
-<ns2:ApplicationInstances xmlns:ns2="Can_Be_Here" domain="MissionCritical">  
-  <ApplicationInstance name="Sched_Test" instanceOf="pdcm_scheduler_test"/>
-</ns2:ApplicationInstances>
