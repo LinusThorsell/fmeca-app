@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-
-<idb:Connections xmlns:idb="Test1234" domain="FlightCritical">
-  <Connection>
-    <ProviderPort name="FMC_Results.Results_60.Results"/>
-    <RequirerPort name="LTM_FMC.EDS_LTM_60.Test_Results" identity="LTM_FMC"/>
-  </Connection>
-</idb:Connections>

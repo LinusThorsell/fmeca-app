@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<idb:Application xmlns:idb="Test1234" name="EDS_LTM">
-
-  <PeriodicThread name="EDS_LTM_60" rateGroup="P60" startWithoutSync="true">
-    <PACPort name="Test_Results"           interface="Results.Test_Status_I"            role="Requirer" maximumConnections="1"/>
-    <PACPort name="DCM_Results"            interface="ACCS_I.HM.TMC.DCM_Results"        role="Requirer"/>
-  </PeriodicThread>
-</idb:Application>

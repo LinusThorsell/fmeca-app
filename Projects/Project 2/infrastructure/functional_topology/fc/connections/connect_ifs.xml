@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-
-<idb:Connections xmlns:idb="Can_Be_Here" domain="FlightCritical">
-
-  <ConnectIFS name="LTM_FMC.LTM.EventTest">
-    <IdentityArgument name="ifs_const" value="1"/>
-  </ConnectIFS>
-
-</idb:Connections>
